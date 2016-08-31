@@ -1,0 +1,7 @@
+FROM {{ project_name }}/base:1.0.1
+LABEL "application"="{{ project_name }}-testing"
+RUN mkdir -p $DIRPATH/{{ project_name }}-testing
+WORKDIR $DIRPATH/{{ project_name }}-testing
+COPY . .
+RUN pip3 install -U pip \
+	&& pip3 install -r requirements.txt

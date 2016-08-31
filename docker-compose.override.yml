@@ -1,0 +1,8 @@
+version: '2'
+services:
+  web:
+    volumes:
+      - ./{{ project_name }}-web/:/opt/{{ project_name }}/{{ project_name }}-web/
+      - ./docs/build:/opt/{{ project_name }}/docs/
+    command: ./web-development.sh
+

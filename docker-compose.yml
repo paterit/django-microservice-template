@@ -1,0 +1,67 @@
+version: '2'
+
+services:
+  web:
+    env_file: .env
+    container_name: "{{ project_name }}-web"
+    image: "{{ project_name }}-web:1.0.1"
+    build: 
+      context: ./{{ project_name }}-web
+      dockerfile: Dockerfile-web
+    labels:
+      application: "{{ project_name }}-web"
+    volumes:
+      - /opt/{{ project_name }}/static
+      - ./docs/build:/opt/{{ project_name }}/docs/:ro
+    expose:
+      - "8000"
+    depends_on:
+      - db    
+
+  db:
+    image: "{{ project_name }}-db:1.0.1"
+    container_name: "{{ project_name }}-db"
+    build:
+      context: ./db
+      dockerfile: Dockerfile-db
+    labels:
+      application: "{{ project_name }}-db"
+    expose:
+      - "5432"
+    volumes_from:
+      - data
+
+  data:
+    image: "{{ project_name }}-data:1.0.1"
+    container_name: "{{ project_name }}-data"
+    build:
+      context: ./db
+      dockerfile: Dockerfile-data
+    volumes:
+      - /var/lib/postgresql
+    command: /bin/true
+
+  nginx:
+    container_name: "{{ project_name }}-nginx"
+    image: "{{ project_name }}-nginx:1.0.1"
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile-nginx
+    volumes_from:
+      - web
+    ports:
+      - "80:80"
+    labels:
+      application: "{{ project_name }}-nginx"
+    depends_on:
+      - web
+
+  testing:
+    container_name: "{{ project_name }}-testing"
+    image: "{{ project_name }}-testing:1.0.1"
+    build:
+      context: ./testing
+      dockerfile: Dockerfile-testing
+    volumes_from:
+      - web:ro
+    command: when-changed -r /opt/{{ project_name }}/{{ project_name }}-web/{{ project_name }} behave

@@ -1,0 +1,14 @@
+version: '2'
+services:
+  web:
+    build:
+      context: ./{{ project_name }}-web
+      dockerfile: Dockerfile-web.docker
+    restart: always
+    command: ./web-production.sh
+
+  db:
+    restart: always
+
+  nginx:
+    restart: always

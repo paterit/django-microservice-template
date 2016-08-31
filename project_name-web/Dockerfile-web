@@ -1,0 +1,5 @@
+FROM {{ project_name }}/base:1.0.1
+LABEL "application"="{{ project_name }}-web"
+COPY . .
+RUN chmod +x web-development.sh \
+	&& chmod +x web-production.sh

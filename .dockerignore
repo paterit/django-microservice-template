@@ -1,0 +1,4 @@
+virtenv
+.git
+db.sqlite3
+docs/virtenv
