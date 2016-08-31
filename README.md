@@ -25,7 +25,7 @@ Configuration:
 	pip3 install docker-compose==1.8
 
 	django-admin startproject \
-		--template=django-microservice-template \
+		--template=https://github.com/paterit/django-microservice-template/archive/master.zip \
 		--extension=py,rst,yml,sh,md,conf,feature \
 		--name=Makefile,Dockerfile-base,Dockerfile-web,Dockerfile-db,Dockerfile-data,Dockerfile-nginx,Dockerfile-testing \
 		project_name
