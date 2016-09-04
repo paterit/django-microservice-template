@@ -66,7 +66,7 @@ stop-nginx:
 stop-testing:
 	-@docker stop $(CONTS-TESTING)
 stop:
-	@docker-compose down
+	@docker-compose stop
 
 #start docker containers
 start-db:
@@ -135,6 +135,14 @@ shell-db:
 shell-testing:
 	@docker exec -it {{ project_name }}-testing bash
 
+logs-web:
+	@docker-compose logs | grep {{ project_name }}-web
+logs-db:
+	@docker-compose logs | grep {{ project_name }}-db
+logs-nginx:
+	@docker-compose logs | grep {{ project_name }}-nginx
+logs-testing:
+	@docker-compose logs | grep {{ project_name }}-testing
 logs:
 	@docker-compose logs
 
