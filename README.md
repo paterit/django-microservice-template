@@ -32,11 +32,7 @@ Configuration:
 
 	cd project_name
 
-Because chmod doesn't work from Dockerfile-web you need to add x permission to files:
-
-	chmod +x project_name-web/web-development.sh
-
-	chmod +x project_name-web/web-production.sh
+Building and running:
 
 	make build-base
 

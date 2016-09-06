@@ -5,7 +5,7 @@ services:
       context: ./{{ project_name }}-web
       dockerfile: Dockerfile-web.docker
     restart: always
-    command: ./web-production.sh
+    command: bash web-production.sh
 
   db:
     restart: always
