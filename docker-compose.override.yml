@@ -4,5 +4,5 @@ services:
     volumes:
       - ./{{ project_name }}-web/:/opt/{{ project_name }}/{{ project_name }}-web/
       - ./docs/build:/opt/{{ project_name }}/docs/
-    command: ./web-development.sh
+    command: bash web-development.sh
 
