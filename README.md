@@ -2,7 +2,7 @@
 
 ### What is this repository for? ###
 
-It is a django template for django-admin startproject that provides you contenerized (docker) components Postgresql + Django + Gunicorn + Nginx + SBE testing ready to add you services.
+It is a django template for django-admin startproject that provides you contenerized (docker) components  DB (Postgresql) + WebApp (Django + Gunicorn) + Https (Nginx) + SBE (behave) testing ready to add you services.
 
 ### How do I get set up? ###
 
@@ -27,7 +27,7 @@ Configuration:
 	django-admin startproject \
 		--template=https://github.com/paterit/django-microservice-template/archive/master.zip \
 		--extension=py,rst,yml,sh,md,conf,feature \
-		--name=Makefile,Dockerfile-base,Dockerfile-web,Dockerfile-db,Dockerfile-data,Dockerfile-nginx,Dockerfile-testing \
+		--name=Makefile,Dockerfile-base,Dockerfile-web,Dockerfile-db,Dockerfile-data,Dockerfile-https,Dockerfile-testing \
 		project_name
 
 	cd project_name
@@ -43,7 +43,7 @@ To check if it runs propely verify if there are four new containters runing:
 	project_name-testing
 	project_name-web
 	project_name-db
-	project_name-nginx
+	project_name-https
 
 If they are up and runing you shoul be able to se [admin panel](http://127.0.0.1/admin)
 

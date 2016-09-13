@@ -1,5 +1,5 @@
 FROM nginx
-LABEL "application"="{{ project_name }}-nginx"
+LABEL "application"="{{ project_name }}-https"
 ENV DIRPATH /opt/{{ project_name }}
 RUN mkdir -p $DIRPATH/static \
 	&& rm /etc/nginx/conf.d/default.conf

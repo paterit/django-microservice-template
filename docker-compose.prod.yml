@@ -10,5 +10,5 @@ services:
   db:
     restart: always
 
-  nginx:
+  https:
     restart: always

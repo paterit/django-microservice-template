@@ -51,7 +51,7 @@ You should see containers with names::
   
   {{ project_name }}-db
   {{ project_name }}-web
-  {{ project_name }}-nginx
+  {{ project_name }}-https
   {{ project_name }}-testing
 
 To stop all containers::
@@ -59,10 +59,10 @@ To stop all containers::
   docker-compose down
 
 Changes in web are dynamically reloading
-to reload nginx container run::
+to reload https container run::
 
-   docker-compose build nginx
-   docker-compose up --no-deps -d nginx
+   docker-compose build https
+   docker-compose up --no-deps -d https
 
 to recreate base container run::
 

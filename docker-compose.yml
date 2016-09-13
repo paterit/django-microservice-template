@@ -42,18 +42,18 @@ services:
       - /var/lib/postgresql
     command: /bin/true
 
-  nginx:
-    container_name: "{{ project_name }}-nginx"
-    image: "{{ project_name }}-nginx:1.0.1"
+  https:
+    container_name: "{{ project_name }}-https"
+    image: "{{ project_name }}-https:1.0.1"
     build:
-      context: ./nginx
-      dockerfile: Dockerfile-nginx
+      context: ./https
+      dockerfile: Dockerfile-https
     volumes_from:
       - web
     ports:
       - "80:80"
     labels:
-      application: "{{ project_name }}-nginx"
+      application: "{{ project_name }}-https"
     depends_on:
       - web
 

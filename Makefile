@@ -14,11 +14,11 @@ build-web:
 	@docker-compose build web
 build-base:
 	@docker build -t {{ project_name }}/base:$(VERSION) -f ./base/Dockerfile-base ./base
-build-nginx:
-	@docker-compose build nginx
+build-https:
+	@docker-compose build https
 build-testing:
 	@docker-compose build testing
-build: build-data build-db build-nginx build-base build-web build-testing
+build: build-data build-db build-https build-base build-web build-testing
 
 
 #run docker images
@@ -26,8 +26,8 @@ run-db:
 	@docker-compose up data db
 run-web:
 	@docker-compose up web
-run-nginx:
-	@docker-compose up nginx
+run-https:
+	@docker-compose up https
 run-testing:
 	@docker-compose up testing
 run:
@@ -46,8 +46,8 @@ IMGS-DATA=$(shell docker images -q -f "label=application={{ project_name }}-data
 CONTS-WEB=$(shell docker ps -a -q -f "name={{ project_name }}-web")
 IMGS-WEB=$(shell docker images -q -f "label=application={{ project_name }}-web")
 
-CONTS-NGINX=$(shell docker ps -a -q -f "name={{ project_name }}-nginx")
-IMGS-NGINX=$(shell docker images -q -f "label=application={{ project_name }}-nginx")
+CONTS-https=$(shell docker ps -a -q -f "name={{ project_name }}-https")
+IMGS-https=$(shell docker images -q -f "label=application={{ project_name }}-https")
 
 IMGS-BASE=$(shell docker images -q -f "label=application={{ project_name }}-base")
 
@@ -61,8 +61,8 @@ stop-data:
 	-@docker stop $(CONTS-DATA)
 stop-web:
 	-@docker stop --time=1 $(CONTS-WEB)
-stop-nginx:
-	-@docker stop $(CONTS-NGINX)
+stop-https:
+	-@docker stop $(CONTS-https)
 stop-testing:
 	-@docker stop $(CONTS-TESTING)
 stop:
@@ -74,8 +74,8 @@ start-db:
 	@docker start {{ project_name }}-db
 start-web:
 	@docker start {{ project_name }}-web
-start-nginx:
-	@docker start {{ project_name }}-nginx
+start-https:
+	@docker start {{ project_name }}-https
 start-testing:
 	@docker start {{ project_name }}-testing
 start: 
@@ -88,11 +88,11 @@ rm-db:
 	-@docker rm $(CONTS-DB)
 rm-web:
 	-@docker rm $(CONTS-WEB)
-rm-nginx:
-	-@docker rm $(CONTS-NGINX)
+rm-https:
+	-@docker rm $(CONTS-https)
 rm-testing:
 	-@docker rm $(CONTS-TESTING)
-rm: rm-db rm-web rm-nginx
+rm: rm-db rm-web rm-https
 
 
 #remove docker images
@@ -102,31 +102,31 @@ rmi-db:
 	-@docker rmi -f $(IMGS-DB)
 rmi-web:
 	-@docker rmi -f $(IMGS-WEB)
-rmi-nginx:
-	-@docker rmi -f $(IMGS-NGINX)
+rmi-https:
+	-@docker rmi -f $(IMGS-https)
 rmi-base:
 	-@docker rmi -f $(IMGS-BASE)
 rmi-testing:
 	-@docker rmi -f $(IMGS-TESTING)
-rmi: rmi-db rmi-web rmi-nginx
+rmi: rmi-db rmi-web rmi-https
 
 
 # stop containters, rmove containers, remove images
 clean-db: stop-db rm-db rmi-db
 clean-web: stop-web rm-web rmi-web
-clean-nginx: stop-nginx rm-nginx rmi-nginx
+clean-https: stop-https rm-https rmi-https
 clean-testing: stop-testing rm-testing rmi-testing
-clean-apps: clean-db clean-web clean-nginx clean-testing
+clean-apps: clean-db clean-web clean-https clean-testing
 clean-base: rmi-base
 clean-data: stop-data rm-data rmi-data
 clean-compose:
 	@docker-compose rm -f
-clean-all: clean-db clean-web clean-nginx clean-testing clean-data clean-base clean-compose
+clean-all: clean-db clean-web clean-https clean-testing clean-data clean-base clean-compose
 
-reload-nginx:
-	@make clean-nginx
-	@make build-nginx
-	@make run-nginx
+reload-https:
+	@make clean-https
+	@make build-https
+	@make run-https
 
 # open shell in container
 shell-web:
@@ -140,8 +140,8 @@ logs-web:
 	@docker-compose logs -f | grep {{ project_name }}-web
 logs-db:
 	@docker-compose logs -f | grep {{ project_name }}-db
-logs-nginx:
-	@docker-compose logs -f | grep {{ project_name }}-nginx
+logs-https:
+	@docker-compose logs -f | grep {{ project_name }}-https
 logs-testing:
 	@docker-compose logs -f | grep {{ project_name }}-testing
 logs:
