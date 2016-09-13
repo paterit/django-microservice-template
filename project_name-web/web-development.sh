@@ -12,6 +12,8 @@ touch /opt/{{ project_name }}/logs/gunicorn-access.log
 touch /opt/{{ project_name }}/logs/gunicorn-error.log
 touch /opt/{{ project_name }}/logs/nginx-access.log
 touch /opt/{{ project_name }}/logs/nginx-error.log
+touch /opt/{{ project_name }}/logs/django-errors.log
+touch /opt/{{ project_name }}/logs/django-debug.log
 tail -n 0 -f /opt/{{ project_name }}/logs/*.log &
 
 # create admin user if doesn't exist

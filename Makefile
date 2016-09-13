@@ -78,7 +78,8 @@ start-nginx:
 	@docker start {{ project_name }}-nginx
 start-testing:
 	@docker start {{ project_name }}-testing
-start: start-db start-web start-nginx start-testing
+start: 
+	@docker-compose start
 
 #remove docker containers
 rm-data:
@@ -136,15 +137,15 @@ shell-testing:
 	@docker exec -it {{ project_name }}-testing bash
 
 logs-web:
-	@docker-compose logs | grep {{ project_name }}-web
+	@docker-compose logs -f | grep {{ project_name }}-web
 logs-db:
-	@docker-compose logs | grep {{ project_name }}-db
+	@docker-compose logs -f | grep {{ project_name }}-db
 logs-nginx:
-	@docker-compose logs | grep {{ project_name }}-nginx
+	@docker-compose logs -f | grep {{ project_name }}-nginx
 logs-testing:
-	@docker-compose logs | grep {{ project_name }}-testing
+	@docker-compose logs -f | grep {{ project_name }}-testing
 logs:
-	@docker-compose logs
+	@docker-compose logs -f
 
 # run sbe test in {{ project_name }}-web container
 sbe:
