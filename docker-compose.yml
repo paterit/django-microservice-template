@@ -13,6 +13,7 @@ services:
     volumes:
       - /opt/{{ project_name }}/static
       - ./docs/build:/opt/{{ project_name }}/docs/:ro
+      - /opt/{{ project_name }}/logs
     expose:
       - "8000"
     depends_on:
