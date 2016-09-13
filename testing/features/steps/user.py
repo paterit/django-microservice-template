@@ -1,12 +1,14 @@
-@given(u'User login and passwrod')
-def step_impl(context):
-    raise NotImplementedError(u'STEP: Given User login and passwrod')
+from behave import *
 
-@when(u'Calling API for adding user')
-def step_impl(context):
-    raise NotImplementedError(u'STEP: When Calling API for adding user')
 
-@then(u'New user is able to login to')
+@given(u'User login and passwrod entered on admin panel login url')
 def step_impl(context):
-    raise NotImplementedError(u'STEP: Then New user is able to login to')
+    context.browser.get('http://{{ project_name }}-web:8000/admin/login')
+    context.browser.find_element_by_id('id_username').send_keys('admin')
+    context.browser.find_element_by_id('id_password').send_keys('admin')
+    context.browser.find_element_by_id('login-form').submit()
 
+
+@then(u'User is able to login')
+def step_impl(context):
+    assert 'Site administration' in context.browser.title

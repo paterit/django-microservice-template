@@ -1,10 +1,9 @@
-Feature: Create {{ project_name }} user for admin panel
+Feature: Login as a superuser to admin panel
   In order tu use admin panel,
-  As a new user
+  As a superuser user
   I want to authenticate to system
-  using standard {{ project_name }} admin account
+  using standard test1 admin account
 
-  Scenario: Add {{ project_name }} user
-    Given User login and passwrod
-     When Calling API for adding user
-     Then New user is able to login to 
+  Scenario: Login as admin user
+    Given User login and passwrod entered on admin panel login url
+     Then User is able to login

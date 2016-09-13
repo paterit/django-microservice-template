@@ -65,4 +65,6 @@ services:
       dockerfile: Dockerfile-testing
     volumes_from:
       - web:ro
+    depends_on:
+      - web
     command: when-changed -r /opt/{{ project_name }}/{{ project_name }}-web/{{ project_name }} behave
