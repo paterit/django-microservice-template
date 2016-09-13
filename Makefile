@@ -13,6 +13,7 @@ build-data:
 build-web:
 	@docker-compose build web
 build-base:
+	@docker build -t paterit/python-phantomjs -f ./base/Dockerfile-python-phantomjs ./base
 	@docker build -t {{ project_name }}/base:$(VERSION) -f ./base/Dockerfile-base ./base
 build-https:
 	@docker-compose build https
