@@ -10,6 +10,8 @@ mkdir -p /opt/{{ project_name }}/logs
 touch /opt/{{ project_name }}/logs/gunicorn.log
 touch /opt/{{ project_name }}/logs/gunicorn-access.log
 touch /opt/{{ project_name }}/logs/gunicorn-error.log
+touch /opt/{{ project_name }}/logs/nginx-access.log
+touch /opt/{{ project_name }}/logs/nginx-error.log
 tail -n 0 -f /opt/{{ project_name }}/logs/*.log &
 
 # create admin user if doesn't exist
