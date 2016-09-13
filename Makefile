@@ -1,7 +1,7 @@
 # keeping for docker commands
 
 all:
-	@make build
+	@make build-base
 	@make run
 
 VERSION=$(shell cat VERSION)

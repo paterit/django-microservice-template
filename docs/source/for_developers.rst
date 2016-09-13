@@ -23,11 +23,14 @@ To build base image for django applications (this will take a while)::
 
 To build all needed containers and make them up and running::
 
-    build run
+    make run
 
 * `Admin page <http://127.0.0.1/admin/>`_ 
 * `Documentation <http://127.0.0.1/docs/>`_
 
+You can also run basic SBE test::
+
+    make sbe
 
 Staging / integration environment
 ---------------------------------
@@ -78,14 +81,14 @@ to reload changes in docs run::
 Shortcuts
 *********
 
-If you are lasy (like we are) you can take look into Makefile and use some shortcuts like::
+If you are lazy (like we are) you can take look into Makefile and use some shortcuts like::
 
-  make clean
+  make clean-apps
 
 to stop and remove all containers and images build by docker-compose.
-To remove image for {{ project_name }}/base as well (base image for django app container) run ::
+To clean up images and containers used for {{ project_name }}/base run ::
 
-  make rmi-base
+  make clean-all
 
 If you just run ::
 
