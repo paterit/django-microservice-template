@@ -151,3 +151,11 @@ logs:
 # run sbe test in {{ project_name }}-web container
 sbe:
 	@docker exec -t {{ project_name }}-testing behave
+	
+# Reload static files in web container
+reload_static:
+	@docker exec zenfocoder-web python manage.py collectstatic --no-input
+
+# Reload static files automatically after every change.
+dev_static:
+	@when-changed -1 -v -r `find ./zenofcoder-web/* -name 'static'` -c make reload_static
