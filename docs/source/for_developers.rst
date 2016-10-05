@@ -100,14 +100,14 @@ it will build and start all you need to have working {{ project_name }}.
 Logs
 ----
 
-Logs from django, nginx and gunicorn are write to /opt/{{ project_name }}/logs folder. You can access them by:
+Logs from django, nginx and gunicorn are write to /opt/{{ project_name }}/logs folder. You can access them by::
 
     make logs-web
 
 Docker shell
 ------------
 
-To easily open shell for conteiners you can use:
+To easily open shell for conteiners you can use::
 
     make shell-web
 
