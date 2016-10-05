@@ -13,6 +13,7 @@ build-data:
 build-web:
 	@docker-compose build web
 build-base:
+	@bash build_pip_requirements.sh
 	@docker build -t paterit/python-phantomjs -f ./base/Dockerfile-python-phantomjs ./base
 	@docker build -t {{ project_name }}/base:$(VERSION) -f ./base/Dockerfile-base ./base
 build-https:
@@ -47,8 +48,8 @@ IMGS-DATA=$(shell docker images -q -f "label=application={{ project_name }}-data
 CONTS-WEB=$(shell docker ps -a -q -f "name={{ project_name }}-web")
 IMGS-WEB=$(shell docker images -q -f "label=application={{ project_name }}-web")
 
-CONTS-https=$(shell docker ps -a -q -f "name={{ project_name }}-https")
-IMGS-https=$(shell docker images -q -f "label=application={{ project_name }}-https")
+CONTS-HTTPS=$(shell docker ps -a -q -f "name={{ project_name }}-https")
+IMGS-HTTPS=$(shell docker images -q -f "label=application={{ project_name }}-https")
 
 IMGS-BASE=$(shell docker images -q -f "label=application={{ project_name }}-base")
 
@@ -63,7 +64,7 @@ stop-data:
 stop-web:
 	-@docker stop --time=1 $(CONTS-WEB)
 stop-https:
-	-@docker stop $(CONTS-https)
+	-@docker stop $(CONTS-HTTPS)
 stop-testing:
 	-@docker stop $(CONTS-TESTING)
 stop:
@@ -90,7 +91,7 @@ rm-db:
 rm-web:
 	-@docker rm $(CONTS-WEB)
 rm-https:
-	-@docker rm $(CONTS-https)
+	-@docker rm $(CONTS-HTTPS)
 rm-testing:
 	-@docker rm $(CONTS-TESTING)
 rm: rm-db rm-web rm-https
@@ -104,7 +105,7 @@ rmi-db:
 rmi-web:
 	-@docker rmi -f $(IMGS-WEB)
 rmi-https:
-	-@docker rmi -f $(IMGS-https)
+	-@docker rmi -f $(IMGS-HTTPS)
 rmi-base:
 	-@docker rmi -f $(IMGS-BASE)
 rmi-testing:

@@ -1,12 +1,10 @@
 # README #
 
-### What is this repository for? ###
-
-It is a django template for django-admin startproject that provides you contenerized (docker) components  DB (Postgresql) + WebApp (Django + Gunicorn) + Https (Nginx) + SBE (behave) testing ready to add you services.
+It is a django template for django-admin [startproject](https://docs.djangoproject.com/en/1.10/ref/django-admin/#startproject) command that provides you contenerized ([docker](https://www.docker.com/)) components: DB ([Postgresql](https://www.postgresql.org/)) + WebApp ([Django](https://www.djangoproject.com/) + [Gunicorn](http://gunicorn.org/)) + http server ([Nginx](https://nginx.org/)) + balckbox testing (SBE by [behave](http://pythonhosted.org/behave/)) ready to add you services.
 
 ### How do I get set up? ###
 
-You need Linux machine (tested on Ubuntu 14.04) with docker engine and virtualenv with Django.
+You need Linux machine (tested on Ubuntu 14.04) with docker engine and virtualenv with Django and docker-compose.
 
 Dependencies:
 
@@ -34,11 +32,13 @@ Configuration:
 
 Building and running:
 
-	make build-base
+	make
 
-	make run
+To check if it runs propely verify if new containters are runing by typing:
 
-To check if it runs propely verify if there are four new containters runing:
+	docker ps
+
+You should see among running containters four with names like :
 
 	project_name-testing
 	project_name-web
@@ -46,5 +46,7 @@ To check if it runs propely verify if there are four new containters runing:
 	project_name-https
 
 If they are up and runing you shoul be able to se [admin panel](http://127.0.0.1/admin)
+
+To read how it can be used go to [docs](https://127.0.0.1/docs) for just created project.
 
 * [Learn Markdown](https://bitbucket.org/tutorials/markdowndemo)

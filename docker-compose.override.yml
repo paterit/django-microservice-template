@@ -3,7 +3,7 @@ services:
   web:
     volumes:
       - ./{{ project_name }}-web/:/opt/{{ project_name }}/{{ project_name }}-web/
-      - ./docs/build:/opt/{{ project_name }}/docs/
+      - ./docs:/opt/{{ project_name }}/docs/
     command: bash web-development.sh
   testing:
     volumes:

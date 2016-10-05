@@ -12,7 +12,7 @@ services:
       application: "{{ project_name }}-web"
     volumes:
       - /opt/{{ project_name }}/static
-      - ./docs/build:/opt/{{ project_name }}/docs/:ro
+      - ./docs:/opt/{{ project_name }}/docs/
       - /opt/{{ project_name }}/logs
     expose:
       - "8000"
