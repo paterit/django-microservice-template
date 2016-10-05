@@ -152,3 +152,6 @@ logs:
 # run sbe test in {{ project_name }}-web container
 sbe:
 	@docker exec -t {{ project_name }}-testing behave
+
+build-docs:
+	@docker exec -t test1-web bash -c 'cd ../docs; make html'
