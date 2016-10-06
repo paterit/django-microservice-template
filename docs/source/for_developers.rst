@@ -141,6 +141,15 @@ To run SBE tests ::
     make sbe
 
 
+Unit testing
+------------
+
+When you run ::
+
+    make test
+
+then the standard Django mechanism for testing will be fired inside your docker images. 
+
 Production
 **********
 

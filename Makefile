@@ -155,3 +155,6 @@ sbe:
 
 build-docs:
 	@docker exec -t test1-web bash -c 'cd ../docs; make html'
+
+test:
+	@docker exec -t {{ project_name }}-web python manage.py test --failfast
