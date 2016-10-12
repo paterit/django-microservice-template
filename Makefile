@@ -154,8 +154,8 @@ sbe:
 	
 # Reload static files in web container
 reload_static:
-	@docker exec zenfocoder-web python manage.py collectstatic --no-input
+	@docker exec {{ project_name }}-web python manage.py collectstatic --no-input
 
 # Reload static files automatically after every change.
 dev_static:
-	@when-changed -1 -v -r `find ./zenofcoder-web/* -name 'static'` -c make reload_static
+	@when-changed -1 -v -r `find ./{{ project_name }}-web/* -name 'static'` -c make reload_static
