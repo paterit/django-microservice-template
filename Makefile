@@ -158,3 +158,11 @@ build-docs:
 
 test:
 	@docker exec -t {{ project_name }}-web python manage.py test --failfast
+	
+# Reload static files in web container
+reload_static:
+	@docker exec {{ project_name }}-web python manage.py collectstatic --no-input
+
+# Reload static files automatically after every change.
+dev_static:
+	@when-changed -1 -v -r `find ./{{ project_name }}-web/* -name 'static'` -c make reload_static
