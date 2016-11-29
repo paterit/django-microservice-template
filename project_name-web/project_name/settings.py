@@ -135,7 +135,7 @@ LOGGING = {
         'error_log': {
             'level': 'ERROR',
             'class': 'logging.handlers.RotatingFileHandler',
-            'filename': '/opt/{{ project_name }}/logs/django-errors.log',
+            'filename': '/opt/{{ project_name }}/logs/web/django-errors.log',
             'maxBytes': 1024 * 1024 * 5,  # 5 MB
             'backupCount': 10,
             'formatter': 'standard'
@@ -143,7 +143,7 @@ LOGGING = {
         'debug_log': {
             'level': 'DEBUG',
             'class': 'logging.handlers.RotatingFileHandler',
-            'filename': '/opt/{{ project_name }}/logs/django-debugmess.log',
+            'filename': '/opt/{{ project_name }}/logs/web/django-debugmess.log',
             'maxBytes': 1024 * 1024 * 5,  # 5 MB
             'backupCount': 10,
             'formatter': 'standard'

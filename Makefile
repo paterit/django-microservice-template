@@ -16,6 +16,7 @@ build-base:
 	@bash build_pip_requirements.sh
 	@docker build -t paterit/python-phantomjs -f ./base/Dockerfile-python-phantomjs ./base
 	@docker build -t {{ project_name }}/base:$(VERSION) -f ./base/Dockerfile-base ./base
+	@docker build -t {{ project_name }}/logs-data:$(VERSION) -f ./base/Dockerfile-logs-data ./base
 build-https:
 	@docker-compose build https
 build-testing:
@@ -25,13 +26,15 @@ build: build-data build-db build-https build-base build-web build-testing
 
 #run docker images
 run-db:
-	@docker-compose up data db
+	@docker-compose up -d data db
 run-web:
-	@docker-compose up web
+	@docker-compose up -d web
 run-https:
-	@docker-compose up https
+	@docker-compose up -d https
 run-testing:
-	@docker-compose up testing
+	@docker-compose up -d testing
+run-logs:
+	@docker-compose up -d logs
 run:
 	@docker-compose up -d
 # the only right way to run it on production
@@ -56,6 +59,12 @@ IMGS-BASE=$(shell docker images -q -f "label=application={{ project_name }}-base
 CONTS-TESTING=$(shell docker ps -a -q -f "name={{ project_name }}-testing")
 IMGS-TESTING=$(shell docker images -q -f "label=application={{ project_name }}-testing")
 
+CONTS-LOGS=$(shell docker ps -a -q -f "name={{ project_name }}-logs")
+IMGS-LOGS=$(shell docker images -q -f "label=application={{ project_name }}-logs")
+
+CONTS-LOGSPOUT=$(shell docker ps -a -q -f "name={{ project_name }}-logspout")
+IMGS-LOGSPOUT=$(shell docker images -q -f "label=application={{ project_name }}-logspout")
+
 #stop docker containers
 stop-db:
 	-@docker stop $(CONTS-DB)
@@ -67,6 +76,10 @@ stop-https:
 	-@docker stop $(CONTS-HTTPS)
 stop-testing:
 	-@docker stop $(CONTS-TESTING)
+stop-logs:
+	-@docker stop $(CONTS-LOGS)
+stop-logspout:
+	-@docker stop $(CONTS-LOGSPOUT)
 stop:
 	@docker-compose stop
 
@@ -80,6 +93,8 @@ start-https:
 	@docker start {{ project_name }}-https
 start-testing:
 	@docker start {{ project_name }}-testing
+start-logs:
+	@docker start {{ project_name }}-logs
 start: 
 	@docker-compose start
 
@@ -94,7 +109,12 @@ rm-https:
 	-@docker rm $(CONTS-HTTPS)
 rm-testing:
 	-@docker rm $(CONTS-TESTING)
-rm: rm-db rm-web rm-https
+rm-logs:
+	-@docker rm $(CONTS-LOGS)
+rm-logspout:
+	-@docker rm $(CONTS-LOGSPOUT)
+
+rm: rm-db rm-web rm-https rm-logspout rm-logs
 
 
 #remove docker images
@@ -110,7 +130,11 @@ rmi-base:
 	-@docker rmi -f $(IMGS-BASE)
 rmi-testing:
 	-@docker rmi -f $(IMGS-TESTING)
-rmi: rmi-db rmi-web rmi-https
+rmi-logs:
+	-@docker rmi -f $(IMGS-LOGS)
+rmi-logspout:
+	-@docker rmi -f $(IMGS-LOGSPOUT)
+rmi: rmi-db rmi-web rmi-https rmi-logspout rmi-logs
 
 
 # stop containters, rmove containers, remove images
@@ -121,9 +145,12 @@ clean-testing: stop-testing rm-testing rmi-testing
 clean-apps: clean-db clean-web clean-https clean-testing
 clean-base: rmi-base
 clean-data: stop-data rm-data rmi-data
+clean-logs: stop-logs rm-logs rmi-logs
+clean-logspout: stop-logspout rm-logspout rmi-logspout
 clean-compose:
 	@docker-compose rm -f
-clean-all: clean-db clean-web clean-https clean-testing clean-data clean-base clean-compose
+clean-apps: clean-db clean-web clean-https clean-testing clean-logspout clean-logs clean-compose
+clean-all: clean-apps clean-data clean-base
 
 reload-https:
 	@make clean-https
@@ -137,6 +164,10 @@ shell-db:
 	@docker exec -it {{ project_name }}-db bash
 shell-testing:
 	@docker exec -it {{ project_name }}-testing bash
+shell-logs:
+	@docker exec -it {{ project_name }}-logs bash
+shell-https:
+	@docker exec -it {{ project_name }}-https bash
 
 logs-web:
 	@docker-compose logs -f | grep {{ project_name }}-web
@@ -146,6 +177,8 @@ logs-https:
 	@docker-compose logs -f | grep {{ project_name }}-https
 logs-testing:
 	@docker-compose logs -f | grep {{ project_name }}-testing
+logs-logs:
+	@docker-compose logs -f | grep {{ project_name }}-logs
 logs:
 	@docker-compose logs -f
 
@@ -154,15 +187,15 @@ sbe:
 	@docker exec -t {{ project_name }}-testing behave
 
 build-docs:
-	@docker exec -t test1-web bash -c 'cd ../docs; make html'
+	@docker exec -t {{ project_name }}-web bash -c 'cd ../docs; make html'
 
 test:
 	@docker exec -t {{ project_name }}-web python manage.py test --failfast
-	
+
 # Reload static files in web container
-reload_static:
+reload-static:
 	@docker exec {{ project_name }}-web python manage.py collectstatic --no-input
 
 # Reload static files automatically after every change.
-dev_static:
+dev-static:
 	@when-changed -1 -v -r `find ./{{ project_name }}-web/* -name 'static'` -c make reload_static

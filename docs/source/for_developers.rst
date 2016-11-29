@@ -9,26 +9,57 @@ For developers
 Installation
 ************
 
-Below is description how to use it in local development. On staging environment and production.
+Below is description how to use it in local development, on staging environment and production.
+
+Requirements for ElasticSerch to work.
+---------------------------------------
+
+In order to have ElasticSearch working you have to set on your host for {{ project_name }}-logs container::
+
+  sudo sysctl -w vm.max_map_count=262144
+
+
+On Ubuntu based host.
+---------------------
+
+When you will notice any network related problems (like being unable to reach internet during images building or from a built container; very slow network response within containers' network), check if in file on host machine::
+
+  /etc/default/docker
+
+you have uncommented::
+
+  DOCKER_OPTS="--dns 8.8.8.8 --dns 8.8.4.4"
+
+If you change this don't forget to restart docker-engine servie. For Ubuntu::
+
+  sudo service docker restart
 
 Local development
 ----------------- 
 
 All what you need is to have `Docker Engine <https://docs.docker.com/>`_ and `Docker Compose <https://docs.docker.com/>`_   installed on your OS.
-Current version of {{ project_name }} (1.0.1) was tested with Docker Engine 1.10.1 and Docker Compose 1.8
+Current version of {{ project_name }} (1.0.1) was tested with Docker Engine 1.12.3 and Docker Compose 1.8
 
-To build base image for django applications (this will take a while)::
+
+To build and run type::
+
+    make
+
+This will build your base images then with docker compose build and start all your containers.
+
+Later on if you need only to build base images run::
 
     make build-base
 
-To build all needed containers and make them up and running::
+and all needed containers to make them up and running::
 
     make run
 
 * `Admin page <http://127.0.0.1/admin/>`_ 
 * `Documentation <http://127.0.0.1/docs/>`_
+* `Logs collector <http://127.0.0.1:5601/>`_
 
-You can also run basic SBE test::
+To verify if all is working you can run SBE tests::
 
     make sbe
 
@@ -49,45 +80,49 @@ Developing changes
 
 When all docker containers are up and running, what can be checked by runing::
 
-	docker ps
+  docker ps
 
 You should see containers with names::
   
-  {{ project_name }}-db
-  {{ project_name }}-web
-  {{ project_name }}-https
-  {{ project_name }}-testing
+  {{ project_name }}-db - PostgeSQL 
+  {{ project_name }}-web - Django application with gunicorn
+  {{ project_name }}-https - Nginx
+  {{ project_name }}-testing - Behave, Selenium, PhantomJS
+  {{ project_name }}-logs - ELK stack
+  {{ project_name }}-logspout - Logspout - log forwarder from Docker to Logstash 
 
 To stop all containers::
 
-  docker-compose down
+    make stop
 
-Changes in web are dynamically reloading
-to reload https container run::
+And start them again::
 
-   docker-compose build https
-   docker-compose up --no-deps -d https
+    make start
+
+Changes in web are dynamically reloaded after each change in code.
+To reload https container run::
+
+   make reload-https
 
 to recreate base container run::
 
    docker-compose down
-   make rmi-base
+   make clean-base
    make build-base
 
 to reload changes in docs run::
 
-   cd docs
-   make html
+   make build-docs
 
 Shortcuts
 *********
 
-If you are lazy (like we are) you can take look into Makefile and use some shortcuts like::
+Makefile basicly covers all docker and docker-compose commands. Some of them can be usfeful like::
 
   make clean-apps
 
-to stop and remove all containers and images build by docker-compose.
-To clean up images and containers used for {{ project_name }}/base run ::
+wchich stops and removes all containers and images build by docker-compose.
+Additionally to clean up base images and containers run ::
 
   make clean-all
 
@@ -100,9 +135,18 @@ it will build and start all you need to have working {{ project_name }}.
 Logs
 ----
 
-Logs from django, nginx and gunicorn are write to /opt/{{ project_name }}/logs folder. You can access them by::
+Logs from django and gunicorn are stored in volume container and written to /opt/{{ project_name }}/logs/web folder. You can access them by::
 
     make logs-web
+
+Logs for Nginx are stored in volume container https-logs and written to /opt/{{ project_name }}/logs/https folder.. You can access them by::
+
+    make logs-https
+
+Both web application's logs and Nginx' logs are transported to log collector container (ELK stack). You can analizy and watch them through `Kibana web intrface <http://127.0.0.1:5601/>`_.
+Idea of delivering logs to logs collector is to have volume container for each application which logs should be transmited to logs collector. Application is writing the logs to that container in the same tame the logs are delivered to stdout to transfer them to docker. From docker logs are shipped to Logstash with Logspout containter.
+
+
 
 Docker shell
 ------------
@@ -110,22 +154,11 @@ Docker shell
 To easily open shell for conteiners you can use::
 
     make shell-web
+    make shell-https
+    make shell-testing
+    make shell-db
+    make shell-logs
 
-
-Troubleshooting
-***************
-
-When you will notice any network related problems (like being unable to reach internet during images building or from a built container; very slow network response within containers' network), check if in file on host machine::
-
-  /etc/default/docker
-
-You have uncommented::
-
-  DOCKER_OPTS="--dns 8.8.8.8 --dns 8.8.4.4"
-
-After that don't forget to restart docker-engine servie. For Ubuntu::
-
-  sudo service docker restart
 
 
 Testing

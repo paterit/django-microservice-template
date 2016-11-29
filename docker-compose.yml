@@ -1,6 +1,47 @@
 version: '2'
 
 services:
+
+  logs:
+      image: "{{ project_name }}-logs:1.0.1"
+      container_name: {{ project_name }}-logs
+      build:
+        context: ./logs
+        dockerfile: Dockerfile
+      labels:
+        application: "{{ project_name }}-logs"
+      environment:
+        LOGSPOUT: ignore
+      ports:
+        - "5601:5601"
+        - "9200:9200"
+        - "5000:5000"
+
+  logs-logspout:
+      image: gliderlabs/logspout
+      container_name: {{ project_name }}-logspout
+      labels:
+        application: "{{ project_name }}-logspout"
+      depends_on:
+        - logs
+      links:
+        - logs
+      environment:
+        DEBUG: "true"
+        LOGSPOUT: ignore
+      volumes:
+        - /var/run/docker.sock:/var/run/docker.sock
+      command: syslog://logs:5000
+
+  web-logs:
+    image: "{{ project_name }}/logs-data:1.0.1"
+    container_name: "{{ project_name }}-web-logs"
+    labels:
+      application: "{{ project_name }}-web-logs"
+    volumes:
+      - /opt/{{ project_name }}/logs/web
+    command: /bin/true
+
   web:
     env_file: .env
     container_name: "{{ project_name }}-web"
@@ -13,11 +54,14 @@ services:
     volumes:
       - /opt/{{ project_name }}/static
       - ./docs:/opt/{{ project_name }}/docs/
-      - /opt/{{ project_name }}/logs
+    volumes_from:
+      - web-logs
     expose:
       - "8000"
     depends_on:
-      - db    
+      - db
+      - logs
+      - web-logs
 
   db:
     image: "{{ project_name }}-db:1.0.1"
@@ -35,11 +79,22 @@ services:
   data:
     image: "{{ project_name }}-data:1.0.1"
     container_name: "{{ project_name }}-data"
+    labels:
+      application: "{{ project_name }}-data"
     build:
       context: ./db
       dockerfile: Dockerfile-data
     volumes:
       - /var/lib/postgresql
+    command: /bin/true
+
+  https-logs:
+    image: "{{ project_name }}/logs-data:1.0.1"
+    container_name: "{{ project_name }}-https-logs"
+    labels:
+      application: "{{ project_name }}-https-logs"
+    volumes:
+      - /opt/{{ project_name }}/logs/https
     command: /bin/true
 
   https:
@@ -50,12 +105,15 @@ services:
       dockerfile: Dockerfile-https
     volumes_from:
       - web
+      - https-logs
     ports:
       - "80:80"
     labels:
       application: "{{ project_name }}-https"
     depends_on:
       - web
+      - https-logs
+    command: bash entry-point.sh
 
   testing:
     container_name: "{{ project_name }}-testing"
@@ -67,4 +125,6 @@ services:
       - web:ro
     depends_on:
       - web
+    links:
+      - logs
     command: when-changed -r /opt/{{ project_name }}/{{ project_name }}-web/{{ project_name }} behave

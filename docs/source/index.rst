@@ -12,5 +12,6 @@ Welcome to {{ project_name }} documentation!
    :maxdepth: 2
 
    for_developers
+   links_page
 
 

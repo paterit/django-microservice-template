@@ -3,7 +3,7 @@ services:
   web:
     build:
       context: ./{{ project_name }}-web
-      dockerfile: Dockerfile-web.docker
+      dockerfile: Dockerfile-web
     restart: always
     command: bash web-production.sh
 

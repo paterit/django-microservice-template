@@ -6,15 +6,13 @@ python manage.py migrate
 python manage.py collectstatic --no-input
 
 # Prepare log files and start outputting logs to stdout
-mkdir -p /opt/{{ project_name }}/logs
-touch /opt/{{ project_name }}/logs/gunicorn.log
-touch /opt/{{ project_name }}/logs/gunicorn-access.log
-touch /opt/{{ project_name }}/logs/gunicorn-error.log
-touch /opt/{{ project_name }}/logs/nginx-access.log
-touch /opt/{{ project_name }}/logs/nginx-error.log
-touch /opt/{{ project_name }}/logs/django-errors.log
-touch /opt/{{ project_name }}/logs/django-debug.log
-tail -n 0 -f /opt/{{ project_name }}/logs/*.log &
+mkdir -p /opt/{{ project_name }}/logs/web
+touch /opt/{{ project_name }}/logs/web/gunicorn.log
+touch /opt/{{ project_name }}/logs/web/gunicorn-access.log
+touch /opt/{{ project_name }}/logs/web/gunicorn-error.log
+touch /opt/{{ project_name }}/logs/web/django-errors.log
+touch /opt/{{ project_name }}/logs/web/django-debug.log
+tail -n 0 -f /opt/{{ project_name }}/logs/web/*.log &
 
 # build docs
 (cd /opt/{{ project_name }}/docs && exec make html)
@@ -27,7 +25,7 @@ echo "from django.contrib.auth.models import User;User.objects.create_superuser(
 --bind 0.0.0.0:8000 \
 --workers 2 \
 --log-level=info \
---error-logfile=/opt/{{ project_name }}/logs/gunicorn-error.log \
---log-file=/opt/{{ project_name }}/logs/gunicorn.log \
---access-logfile=/opt/{{ project_name }}/logs/gunicorn-access.log \
+--error-logfile=/opt/{{ project_name }}/logs/web/gunicorn-error.log \
+--log-file=/opt/{{ project_name }}/logs/web/gunicorn.log \
+--access-logfile=/opt/{{ project_name }}/logs/web/gunicorn-access.log \
 "$@"

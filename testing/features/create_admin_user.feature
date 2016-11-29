@@ -1,5 +1,5 @@
 Feature: Login as a superuser to admin panel
-  In order tu use admin panel,
+  In order to use admin panel,
   As a superuser user
   I want to authenticate to system
   using standard test1 admin account
