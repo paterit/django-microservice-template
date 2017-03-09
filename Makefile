@@ -4,6 +4,15 @@ all:
 	@make build-base
 	@make run
 
+all-prod:
+	@make build-base
+	@make run-prod
+
+cicd-local:
+	bash cicd/set_local_docker_machine.sh
+	bash cicd/copy_docker_images_to_machine.sh
+	@make run-cicd
+
 VERSION=$(shell cat VERSION)
 #building docker images for each service
 build-db:
@@ -14,7 +23,6 @@ build-web:
 	@docker-compose build web
 build-base:
 	@bash build_pip_requirements.sh
-	@docker build -t paterit/python-phantomjs -f ./base/Dockerfile-python-phantomjs ./base
 	@docker build -t {{ project_name }}/base:$(VERSION) -f ./base/Dockerfile-base ./base
 	@docker build -t {{ project_name }}/logs-data:$(VERSION) -f ./base/Dockerfile-logs-data ./base
 build-https:
@@ -38,8 +46,14 @@ run-logs:
 run:
 	@docker-compose up -d
 # the only right way to run it on production
+run-cicd:
+	@docker-compose -f docker-compose.cicd.yml up -d
 run-prod:
+	@echo "Start of make run-prod"
+	@date +%T.%N
 	@docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d
+	@date +%T.%N
+	@echo "End of make run-prod"
 
 #containers and images ids
 CONTS-DB=$(shell docker ps -a -q -f "name={{ project_name }}-db")
@@ -65,6 +79,12 @@ IMGS-LOGS=$(shell docker images -q -f "label=application={{ project_name }}-logs
 CONTS-LOGSPOUT=$(shell docker ps -a -q -f "name={{ project_name }}-logspout")
 IMGS-LOGSPOUT=$(shell docker images -q -f "label=application={{ project_name }}-logspout")
 
+CONTS-CICD=$(shell docker ps -a -q -f "name={{ project_name }}-cicd")
+
+IMGS-CICD-MASTER=$(shell docker images -q -f "label=application={{ project_name }}-cicd-master")
+IMGS-CICD-WORKER=$(shell docker images -q -f "label=application={{ project_name }}-cicd-worker")
+IMGS-CICD-DB=$(shell docker images -q -f "label=application={{ project_name }}-cicd-db")
+
 #stop docker containers
 stop-db:
 	-@docker stop $(CONTS-DB)
@@ -80,6 +100,8 @@ stop-logs:
 	-@docker stop $(CONTS-LOGS)
 stop-logspout:
 	-@docker stop $(CONTS-LOGSPOUT)
+stop-cicd:
+	@docker-compose -f docker-compose.cicd.yml stop
 stop:
 	@docker-compose stop
 
@@ -113,8 +135,10 @@ rm-logs:
 	-@docker rm $(CONTS-LOGS)
 rm-logspout:
 	-@docker rm $(CONTS-LOGSPOUT)
+rm-cicd:
+	-@docker rm $(CONTS-CICD)
 
-rm: rm-db rm-web rm-https rm-logspout rm-logs
+rm: rm-db rm-web rm-https rm-logspout rm-logs rm-cicd
 
 
 #remove docker images
@@ -134,7 +158,12 @@ rmi-logs:
 	-@docker rmi -f $(IMGS-LOGS)
 rmi-logspout:
 	-@docker rmi -f $(IMGS-LOGSPOUT)
-rmi: rmi-db rmi-web rmi-https rmi-logspout rmi-logs
+rmi-cicd:
+	-@docker rmi -f $(IMGS-CICD-MASTER)
+	-@docker rmi -f $(IMGS-CICD-WORKER)
+	-@docker rmi -f $(IMGS-CICD-DB)
+
+rmi: rmi-db rmi-web rmi-https rmi-logspout rmi-logs rmi-cicd
 
 
 # stop containters, rmove containers, remove images
@@ -147,10 +176,15 @@ clean-base: rmi-base
 clean-data: stop-data rm-data rmi-data
 clean-logs: stop-logs rm-logs rmi-logs
 clean-logspout: stop-logspout rm-logspout rmi-logspout
+clean-cicd: stop-cicd rm-cicd rmi-cicd
 clean-compose:
 	@docker-compose rm -f
-clean-apps: clean-db clean-web clean-https clean-testing clean-logspout clean-logs clean-compose
-clean-all: clean-apps clean-data clean-base
+clean-orphaned-volumes:
+	@docker volume rm $(docker volume ls -qf dangling=true) || exit 0
+clean-apps: clean-web clean-testing clean-compose clean-orphaned-volumes
+clean-non-apps: clean-logspout clean-logs clean-db clean-https 
+clean-all: clean-apps clean-non-apps clean-data clean-base
+clean-cicd: clean-cicd
 
 reload-https:
 	@make clean-https
@@ -168,6 +202,10 @@ shell-logs:
 	@docker exec -it {{ project_name }}-logs bash
 shell-https:
 	@docker exec -it {{ project_name }}-https bash
+shell-cicd-master:
+	@docker exec -it {{ project_name }}-cicd-master bash
+shell-cicd-worker:
+	@docker exec -it {{ project_name }}-cicd-worker bash
 
 logs-web:
 	@docker-compose logs -f | grep {{ project_name }}-web
@@ -179,8 +217,18 @@ logs-testing:
 	@docker-compose logs -f | grep {{ project_name }}-testing
 logs-logs:
 	@docker-compose logs -f | grep {{ project_name }}-logs
+logs-cicd:
+	@docker-compose -f docker-compose.cicd.yml logs -f --tail 20 | grep {{ project_name }}-cicd | grep -v {{ project_name }}-cicd-db
 logs:
 	@docker-compose logs -f
+
+# wait till postgresql is ready
+wait-for-postgres:
+	@docker exec -t {{ project_name }}-web python wait_for_postgres.py
+
+# wait till elastic is ready (max 30s)
+wait-for-elk:
+	@docker exec -t {{ project_name }}-logs bash -c "./wait_for_elk.sh"
 
 # run sbe test in {{ project_name }}-web container
 sbe:
@@ -190,7 +238,11 @@ build-docs:
 	@docker exec -t {{ project_name }}-web bash -c 'cd ../docs; make html'
 
 test:
+	@echo "Start of make test"
+	@date +%T.%N
 	@docker exec -t {{ project_name }}-web python manage.py test --failfast
+	@date +%T.%N
+	@echo "End of make test"
 
 # Reload static files in web container
 reload-static:
@@ -199,3 +251,26 @@ reload-static:
 # Reload static files automatically after every change.
 dev-static:
 	@when-changed -1 -v -r `find ./{{ project_name }}-web/* -name 'static'` -c make reload_static
+
+down:
+	@docker-compose down
+
+cicd-reconfig:
+	@docker exec -t {{ project_name }}-cicd-master buildbot --verbose reconfig
+
+cicd-validate:
+	@docker exec -t {{ project_name }}-cicd-master buildbot checkconfig master.cfg
+
+upload-docs:
+	@docker cp ./docs {{ project_name }}-web:/opt/{{ project_name }}/
+	@docker exec -t {{ project_name }}-web bash -c 'cd ../docs; make html'
+	@mkdir -p ./docs/build
+	@docker cp {{ project_name }}-web:/opt/{{ project_name }}/docs/build/html ./docs/build/
+	@docker exec -t {{ project_name }}-https mkdir -p /opt/{{ project_name }}/docs/build
+	@docker cp ./docs/build/html {{ project_name }}-https:/opt/{{ project_name }}/docs/build/
+
+upload-static:
+	mkdir -p static
+	@docker exec -t {{ project_name }}-web python manage.py collectstatic --no-input
+	@docker cp {{ project_name }}-web:/opt/{{ project_name }}/static/ .
+	@docker cp ./static {{ project_name }}-https:/opt/{{ project_name }}/

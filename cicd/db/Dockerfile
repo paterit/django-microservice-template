@@ -1,0 +1,3 @@
+FROM postgres:9.5
+LABEL "application"="{{ project_name }}-cicd-db"
+

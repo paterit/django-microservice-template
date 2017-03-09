@@ -1,3 +1,5 @@
 FROM {{ project_name }}/base:1.0.1
 LABEL "application"="{{ project_name }}-web"
+RUN mkdir -p $DIRPATH/{{ project_name }}-web
+WORKDIR $DIRPATH/{{ project_name }}-web
 COPY . .

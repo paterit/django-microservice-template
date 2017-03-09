@@ -5,7 +5,11 @@ services:
       - ./{{ project_name }}-web/:/opt/{{ project_name }}/{{ project_name }}-web/
       - ./docs:/opt/{{ project_name }}/docs/
     command: bash web-development.sh
+
   testing:
     volumes:
       - ./testing/:/opt/{{ project_name }}/{{ project_name }}-testing/
 
+  https:
+    volumes_from:
+      - web

@@ -43,7 +43,7 @@ services:
     command: /bin/true
 
   web:
-    env_file: .env
+    env_file: env
     container_name: "{{ project_name }}-web"
     image: "{{ project_name }}-web:1.0.1"
     build: 
@@ -53,7 +53,6 @@ services:
       application: "{{ project_name }}-web"
     volumes:
       - /opt/{{ project_name }}/static
-      - ./docs:/opt/{{ project_name }}/docs/
     volumes_from:
       - web-logs
     expose:
@@ -104,7 +103,6 @@ services:
       context: ./https
       dockerfile: Dockerfile-https
     volumes_from:
-      - web
       - https-logs
     ports:
       - "80:80"
@@ -121,10 +119,6 @@ services:
     build:
       context: ./testing
       dockerfile: Dockerfile-testing
-    volumes_from:
-      - web:ro
-    depends_on:
-      - web
     links:
       - logs
     command: when-changed -r /opt/{{ project_name }}/{{ project_name }}-web/{{ project_name }} behave

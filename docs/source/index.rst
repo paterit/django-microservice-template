@@ -6,7 +6,7 @@
 Welcome to {{ project_name }} documentation!
 =========================================
 
-{{ project_name }} is a project that brings value to it's users.
+{{ project_name }} is a project that brings value to it's users. This is the place where you can document your service.
 
 .. toctree::
    :maxdepth: 2

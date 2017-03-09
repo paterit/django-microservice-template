@@ -1,0 +1,57 @@
+version: '2'
+
+services:
+  
+  cicd-master:
+    image: "{{ project_name }}-cicd-master:1.0.1"
+    container_name: "{{ project_name }}-cicd-master"
+    build:
+      context: ./cicd/master
+    env_file:
+        - ./cicd/master/db.env
+    environment:
+        - BUILDBOT_CONFIG_DIR=config
+        - BUILDBOT_WORKER_PORT=9989
+        - BUILDBOT_WEB_URL=http://localhost:8010/
+        - BUILDBOT_WEB_PORT=8010
+    links:
+      - cicd-db
+    depends_on:
+      - cicd-db
+    ports:
+      - "8010:8010"
+    volumes:
+      - ./cicd/master/config/:/var/lib/cicd/config/
+    
+  cicd-db:
+    image: "{{ project_name }}-cicd-db:1.0.1"
+    container_name: "{{ project_name }}-cicd-db"
+    build:
+      context: ./cicd/db
+    env_file:
+        - ./cicd/master/db.env
+    expose:
+        - "5432"
+
+  cicd-worker:
+    image: "{{ project_name }}-cicd-worker:1.0.1"
+    container_name: "{{ project_name }}-cicd-worker"
+    build:
+        context: ./cicd/worker
+    env_file:
+        - ./cicd/cicd.docker.env
+    environment:
+        BUILDMASTER: {{ project_name }}-cicd-master
+        BUILDMASTER_PORT: 9989
+        WORKERNAME: {{ project_name }}-worker
+        WORKERPASS: pass
+        WORKER_ENVIRONMENT_BLACKLIST: DOCKER_BUILDBOT* BUILDBOT_ENV_* BUILDBOT_1* WORKER_ENVIRONMENT_BLACKLIST
+        DOCKER_HOST: "tcp://192.168.99.100:2376"
+        DOCKER_TLS_VERIFY: "1"
+        DOCKER_CERT_PATH: "//buildbot/certs"
+    volumes:
+        - ./:/buildbot/src:ro
+    links:
+        - cicd-master   
+    depends_on:
+        - cicd-master
