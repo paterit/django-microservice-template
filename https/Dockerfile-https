@@ -1,4 +1,4 @@
-FROM nginx
+FROM nginx:1.11
 LABEL "application"="{{ project_name }}-https"
 ENV DIRPATH /opt/{{ project_name }}
 RUN mkdir -p $DIRPATH/static \

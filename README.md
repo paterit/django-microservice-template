@@ -30,25 +30,25 @@ You need Linux machine (tested on Ubuntu 14.04) with [docker engine](https://doc
 
 Dependencies:
 
-	Docker >= 1.12.5
-	Docker-compose >= 1.8
-	Django >= 1.10
+    Docker >= 1.12.5
+    Docker-compose >= 1.8
+    Django >= 1.10
 
 How to insall docker see [here](https://docs.docker.com/engine/installation/).
 
 Configuration for docker-compose and Django:
 
-	virtualenv -p /usr/bin/python3 virtenv
-	source ./virtenv/bin/activate
-	pip install Django==1.10
-	pip install docker-compose==1.8
+    virtualenv -p /usr/bin/python3 virtenv
+    source ./virtenv/bin/activate
+    pip install Django==1.10
+    pip install docker-compose==1.8
 To create source code for your service based on this template you need to run:
 
-	django-admin startproject \
-		--template=https://github.com/paterit/django-microservice-template/archive/master.zip \
-		--extension=py,rst,yml,sh,md,conf,feature \
-		--name=Makefile,Dockerfile-base,Dockerfile-web,Dockerfile-db,Dockerfile-data,Dockerfile-https,Dockerfile-testing,Dockerfile-logs-data,Dockerfile,master.cfg,db.env,cicd.docker.env \
-		your_service
+    django-admin startproject \
+        --template=https://github.com/paterit/django-microservice-template/archive/master.zip \
+        --extension=py,rst,yml,sh,md,conf,feature \
+        --name=Makefile,Dockerfile-base,Dockerfile-web,Dockerfile-db,Dockerfile-data,Dockerfile-https,Dockerfile-testing,Dockerfile-logs-data,Dockerfile,master.cfg,db.env,cicd.docker.env \
+        your_service
 
 Mainly due to resource hungry ELK stack you should have at least 4GB of RAM on your dev machine.
 
@@ -60,20 +60,20 @@ In order to have ElasticSearch (part of ELK stack) working on your machine you h
 Now you can download all needed docker images and build your conteiners just by typing make in your_service directory:
 
     cd your_service
-	make
+    make
 
 To check if it runs propely verify if new containters are runing by typing:
 
-	docker ps
+    docker ps
 
 You should see among running containters some with names like :
 
-	your_service-db - PostgeSQL
-	your_service-web - Django application with Gunicorn
-	your_service-https - Nginx
-	your_service-testing - Behave, Selenium, PhantomJS
-	your_service-logs - ELK stack
-	your_service-logspout - Logspout - log forwarder from Docker to Logstash
+    your_service-db - PostgeSQL
+    your_service-web - Django application with Gunicorn
+    your_service-https - Nginx
+    your_service-testing - Behave, Selenium, PhantomJS
+    your_service-logs - ELK stack
+    your_service-logspout - Logspout - log forwarder from Docker to Logstash
 
 And couple of data containers to better manage logs:
 
@@ -90,11 +90,11 @@ To see any other useful links go to [docs](https://127.0.0.1/docs/links_page.htm
 It will set up docker-machine and docker containers with buildbot which will allows you to run and test your code with in docker-machine. Start with:
 
     cd your_service
-	make cicd-local
+    make cicd-local
 
 To check if it runs propely verify if new containters are runing by typing:
 
-	docker ps
+    docker ps
 
 You should see among running containters with names like :
 
@@ -112,9 +112,6 @@ You should see among others machines one with the name:
     
 Now you are able to use Buildbot through its [web interface](http://localhost:8010/). There are prepared [builders](http://localhost:8010/#/builders) that allows to build, run and test all containers in docker-machine.
 For the first time you have to run at least once "Full rebuild" builder. While runing it for the first time couple GBs of data will be downloaded so it make take a while. All base images for docker need to be downloaded to docker machine (just to name a few: Python, PostgreSQL, ELK, Nginx).
-If by any chance you already have those images localy on your machine you can use slightly faster way to copy them to your docker-machine. Simple bash script to do that is stored in yor_service project dir in the path:
-
-    cicd/copy_docker_images_to_machine.sh
 
 Now using IP generated for your docker-machine machine (in my case it is 192.168.99.100) you can start using your services.
 [Django admin panel](http://192.168.99.100/admin)
