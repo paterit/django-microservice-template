@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 docker-machine create {{ project_name }}-cicd --driver virtualbox --virtualbox-memory 4096 --virtualbox-cpu-count 2
+docker-machine start dmt-cicd
 eval $(docker-machine env {{ project_name }}-cicd)
 cp $DOCKER_CERT_PATH/ca.pem ./cicd/worker/certs
 cp $DOCKER_CERT_PATH/cert.pem ./cicd/worker/certs

@@ -20,6 +20,7 @@ services:
       - cicd-db
     ports:
       - "8010:8010"
+      - "9999:9999"
     volumes:
       - ./cicd/master/config/:/var/lib/cicd/config/
     

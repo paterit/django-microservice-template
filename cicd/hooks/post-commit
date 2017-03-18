@@ -1,0 +1,12 @@
+#!/bin/sh
+
+eval $(python cicd/hooks/git_buildbot.py)
+
+docker exec -t {{ project_name }}-cicd-master buildbot sendchange --master localhost:9999 --auth {{ project_name }}:{{ project_name }} \
+    --who "$DMT_GIT_AUTHOR" \
+    --revision "$DMT_GIT_REVISION" \
+    --comments "$DMT_GIT_MSG" \
+    --repository "$DMT_GIT_REPO" \
+    --category "$DMT_GIT_CATEGORY" \
+    --vc "git" \
+    --branch master $DMT_GIT_FILES

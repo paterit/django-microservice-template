@@ -12,6 +12,13 @@ cicd-local:
 	bash cicd/set_local_docker_machine.sh
 	bash cicd/copy_docker_images_to_machine.sh
 	@make run-cicd
+	@docker exec -t {{ project_name }}-cicd-master bash -c "./wait_for_master.sh"
+	@git init
+	@ln -s -f ../../cicd/hooks/post-commit .git/hooks/post-commit
+	@git add .
+	@git commit -q -m "Initial commit."
+	@echo ""
+	@echo "Full rebuild has just started. You my verify progress at http://localhost:8010/#/builders"
 
 VERSION=$(shell cat VERSION)
 #building docker images for each service
@@ -45,8 +52,8 @@ run-logs:
 	@docker-compose up -d logs
 run:
 	@docker-compose up -d
-# the only right way to run it on production
 run-cicd:
+	-@docker-machine start dmt-cicd
 	@docker-compose -f docker-compose.cicd.yml up -d
 run-prod:
 	@echo "Start of make run-prod"
@@ -229,6 +236,10 @@ wait-for-postgres:
 # wait till elastic is ready (max 30s)
 wait-for-elk:
 	@docker exec -t {{ project_name }}-logs bash -c "./wait_for_elk.sh"
+
+# wait till cicd master is ready
+wait-for-cicd-master:
+	@docker exec -t dmt-cicd-master bash -c "./wait_for_master.sh"
 
 # run sbe test in {{ project_name }}-web container
 sbe:
