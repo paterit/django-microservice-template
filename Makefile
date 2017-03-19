@@ -12,8 +12,8 @@ cicd-local:
 	bash cicd/set_local_docker_machine.sh
 	bash cicd/copy_docker_images_to_machine.sh
 	@chmod +x ./logs/wait_for_elk.sh
-    @chmod +x ./cicd/master/wait_for_master.sh
-    @chmod +x ./cicd/hooks/post-commit
+	@chmod +x ./cicd/master/wait_for_master.sh
+	@chmod +x ./cicd/hooks/post-commit
 	@make run-cicd
 	@docker exec -t {{ project_name }}-cicd-master bash -c "./wait_for_master.sh"
 	@git init
