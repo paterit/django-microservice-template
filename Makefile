@@ -11,6 +11,9 @@ all-prod:
 cicd-local:
 	bash cicd/set_local_docker_machine.sh
 	bash cicd/copy_docker_images_to_machine.sh
+	@chmod +x ./logs/wait_for_elk.sh
+    @chmod +x ./cicd/master/wait_for_master.sh
+    @chmod +x ./cicd/hooks/post-commit
 	@make run-cicd
 	@docker exec -t {{ project_name }}-cicd-master bash -c "./wait_for_master.sh"
 	@git init
@@ -18,7 +21,7 @@ cicd-local:
 	@git add .
 	@git commit -q -m "Initial commit."
 	@echo ""
-	@echo "Full rebuild has just started. You my verify progress at http://localhost:8010/#/builders"
+	@echo "Full rebuild has just started. You my verify progress at \033[1;33mhttp://localhost:8010/#/builders\033[0m."
 
 VERSION=$(shell cat VERSION)
 #building docker images for each service
@@ -53,7 +56,7 @@ run-logs:
 run:
 	@docker-compose up -d
 run-cicd:
-	-@docker-machine start dmt-cicd
+	-@docker-machine start {{ project_name }}-cicd
 	@docker-compose -f docker-compose.cicd.yml up -d
 run-prod:
 	@echo "Start of make run-prod"
@@ -239,7 +242,7 @@ wait-for-elk:
 
 # wait till cicd master is ready
 wait-for-cicd-master:
-	@docker exec -t dmt-cicd-master bash -c "./wait_for_master.sh"
+	@docker exec -t {{ project_name }}-cicd-master bash -c "./wait_for_master.sh"
 
 # run sbe test in {{ project_name }}-web container
 sbe:

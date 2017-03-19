@@ -51,8 +51,9 @@ To create source code for your service based on this template you need to run:
         --template=https://github.com/paterit/django-microservice-template/archive/master.zip \
         --extension=py,rst,yml,sh,md,conf,feature \
         --name=Makefile,Dockerfile-base,Dockerfile-web,Dockerfile-db,Dockerfile-data,Dockerfile-https,Dockerfile-testing,Dockerfile-logs-data,Dockerfile,master.cfg,db.env,cicd.docker.env,post-commit \
-        your_service
+        yourservice
 
+Due to docker-machine limits on naming machines don't use "_" (underscore) sign when naming your project.
 Mainly due to resource hungry ELK stack you should have at least 4GB of RAM on your dev machine.
 
 ### Building and running localy without CI/CD machinery (to use local CI/CD - jump to next section)
@@ -60,9 +61,9 @@ In order to have ElasticSearch (part of ELK stack) working on your machine you h
 
     sudo sysctl -w vm.max_map_count=262144
 
-Now you can download all needed docker images and build your conteiners just by typing make in your_service directory:
+Now you can download all needed docker images and build your conteiners just by typing make in yourservice directory:
 
-    cd your_service
+    cd yourservice
     make
 
 To check if it runs propely verify if new containters are runing by typing:
@@ -71,17 +72,17 @@ To check if it runs propely verify if new containters are runing by typing:
 
 You should see among running containters some with names like :
 
-    your_service-db - PostgeSQL
-    your_service-web - Django application with Gunicorn
-    your_service-https - Nginx
-    your_service-testing - Behave, Selenium, PhantomJS
-    your_service-logs - ELK stack
-    your_service-logspout - Logspout - log forwarder from Docker to Logstash
+    yourservice-db - PostgeSQL
+    yourservice-web - Django application with Gunicorn
+    yourservice-https - Nginx
+    yourservice-testing - Behave, Selenium, PhantomJS
+    yourservice-logs - ELK stack
+    yourservice-logspout - Logspout - log forwarder from Docker to Logstash
 
 And couple of data containers to better manage logs:
 
-    your_service-https-logs - Logs for Nginx
-    your_service-web-logs - Logs for Django and Gunicorn
+    yourservice-https-logs - Logs for Nginx
+    yourservice-web-logs - Logs for Django and Gunicorn
 
 If they are up and runing you shoul be able to se [admin panel](http://127.0.0.1/admin)
 
@@ -92,7 +93,7 @@ To see any other useful links go to [this page](https://127.0.0.1/docs/links_pag
 ### Building and running localy with CI/CD machinery
 It will set up docker-machine and docker containers with buildbot which will allows you to run and test your code with in docker-machine. Start with:
 
-    cd your_service
+    cd yourservice
     make cicd-local
 
 To check if it runs propely verify if new containters are runing by typing:
@@ -101,9 +102,9 @@ To check if it runs propely verify if new containters are runing by typing:
 
 You should see among running containters with names like :
 
-    your_service-cicd-worker - Buildbot worker
-    your_service-cicd-master - Buidbot master
-    your_service-cicd-db - Buildbot database
+    yourservice-cicd-worker - Buildbot worker
+    yourservice-cicd-master - Buidbot master
+    yourservice-cicd-db - Buildbot database
     
 Verify if docker-machine is running by typing:
 
@@ -111,7 +112,7 @@ Verify if docker-machine is running by typing:
     
 You should see among others machines one with the name:
 
-    your_service-cicd
+    yourservice-cicd
     
 Now you are able to use Buildbot through its [web interface](http://localhost:8010/). There are prepared [builders](http://localhost:8010/#/builders) that allows to build, run and test all containers in docker-machine.
 For the first time you have to run at least once "Full rebuild" builder. While runing it for the first time couple GBs of data will be downloaded so it may take a while. All base images for docker need to be downloaded to docker machine (just to name a few: Python, PostgreSQL, ELK, Nginx).
