@@ -1,4 +1,3 @@
-# keeping for docker commands
 
 all:
 	@make build-base
@@ -23,7 +22,7 @@ cicd-local:
 	@echo ""
 	@echo "Full rebuild has just started. You my verify progress at \033[1;33mhttp://localhost:8010/#/builders\033[0m."
 
-VERSION=$(shell cat VERSION)
+VERSION:=$(shell cat VERSION)
 #building docker images for each service
 build-db:
 	@docker-compose build db

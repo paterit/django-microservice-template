@@ -41,9 +41,7 @@ Configuration for docker-compose and Django:
 
     virtualenv -p /usr/bin/python3 virtenv
     source ./virtenv/bin/activate
-    pip install Django==1.10
-    pip install docker-compose==1.8
-    pip install GitPython==2.1.3
+    pip install Django==1.10 docker-compose==1.8 GitPython==2.1.3
     
 To create source code for your service based on this template you need to run:
 
