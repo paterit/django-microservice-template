@@ -121,4 +121,4 @@ services:
       dockerfile: Dockerfile-testing
     links:
       - logs
-    command: when-changed -r /opt/{{ project_name }}/{{ project_name }}-web/{{ project_name }} behave
+    command: when-changed -r /opt/{{ project_name }}/{{ project_name }}-testing behave

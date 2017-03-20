@@ -1,4 +1,4 @@
-PROJECT_NAME = "dmttest"
+PROJECT_NAME = "yourservice"
 
 all:
 	make clean
@@ -11,6 +11,7 @@ all:
 clean:
 	-cd $(PROJECT_NAME); \
 	make clean-cicd
+	-docker-machine stop $(PROJECT_NAME)-cicd
 	-docker-machine rm -y $(PROJECT_NAME)-cicd
 	rm -rf ./dmt-template
 	rm -rf ./virtenv
@@ -21,7 +22,7 @@ virtualenv:
 	. virtenv/bin/activate; \
 	python --version; \
 	pip install --upgrade pip; \
-    pip install Django==1.10 docker-compose==1.8 GitPython==2.1.3; \
+    pip install -r ../requirements.txt; \
 
 check-docker-machine:
 	@docker-machine ls | grep $(PROJECT_NAME) && { echo "Docker machine with this name: $(PROJECT_NAME) exists!"; exit 1; } || exit 0;

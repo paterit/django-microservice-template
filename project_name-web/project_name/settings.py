@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/1.8/ref/settings/
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
+from socket import gethostname, gethostbyname
 
 LOGS_DIR = '/opt/{{ project_name }}/logs/'
 
@@ -27,8 +28,7 @@ SECRET_KEY = '=ol$^&d*^9eh)=&!qn4w5a!f+_ctgai7*agx@nd&st&oq3^3to'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
-
+ALLOWED_HOSTS = [gethostname(), gethostbyname(gethostname()), 'yourservice-web', 'https', 'localhost' ]
 
 # Application definition
 
