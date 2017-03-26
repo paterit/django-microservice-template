@@ -1,11 +1,22 @@
 PROJECT_NAME = "yourservice"
 
+all-git:
+	make prepare-env
+	make create-project-git
+	make build
+
 all:
+	make prepare-env
+	make copy-current-dir
+	make create-project
+	make build
+
+prepare-env:
 	make clean
 	make virtualenv
 	make check-docker-machine
-	make copy-current-dir
-	make create-project
+
+build:
 	make build-cicd
 	make wait_for_full_rebuild
 	make test_commit
@@ -51,6 +62,14 @@ check-docker-machine:
 
 copy-current-dir:
 	rsync -avq ../ ./dmt-template --exclude dmt-testing
+
+create-project-git:
+	. virtenv/bin/activate; \
+	django-admin startproject \
+        --template=https://github.com/paterit/django-microservice-template/archive/master.zip \
+        --extension=py,rst,yml,sh,md,conf,feature \
+        --name=Makefile,Dockerfile-base,Dockerfile-web,Dockerfile-db,Dockerfile-data,Dockerfile-https,Dockerfile-testing,Dockerfile-logs-data,Dockerfile,master.cfg,db.env,cicd.docker.env,post-commit \
+        $(PROJECT_NAME)
 
 create-project:
 	. virtenv/bin/activate; \
