@@ -18,7 +18,7 @@ services:
         - "5000:5000"
 
   logs-logspout:
-      image: gliderlabs/logspout
+      image: gliderlabs/logspout:v3.1
       container_name: {{ project_name }}-logspout
       labels:
         application: "{{ project_name }}-logspout"
@@ -121,4 +121,4 @@ services:
       dockerfile: Dockerfile-testing
     links:
       - logs
-    command: when-changed -r /opt/{{ project_name }}/{{ project_name }}-testing behave
+    command: tail -f /dev/null

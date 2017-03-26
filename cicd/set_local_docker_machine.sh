@@ -1,5 +1,10 @@
 #!/usr/bin/env bash
 
+# if virtualbox fail creation and start asking you for password use this to resolve the problem
+# to find out the <vm-uuid> type ps ax | grep vbox
+# vboxmanage startvm 37573512-780e-4eed-ae2a-570e752ecde0 --type emergencystop
+# http://stackoverflow.com/questions/35169724/vm-in-virtualbox-is-already-locked-for-a-session-or-being-unlocked
+
 docker-machine create {{ project_name }}-cicd --driver virtualbox --virtualbox-memory 4096 --virtualbox-cpu-count 2
 docker-machine start {{ project_name }}-cicd
 eval $(docker-machine env {{ project_name }}-cicd)
@@ -11,3 +16,7 @@ docker-machine ssh {{ project_name }}-cicd 'sudo /bin/su -c "echo sysctl -w -q v
 docker-machine ssh {{ project_name }}-cicd 'sudo chmod +x /var/lib/boot2docker/bootlocal.sh'
 docker-machine ssh {{ project_name }}-cicd sudo sysctl -w -q vm.max_map_count=262144
 docker-machine env {{ project_name }}-cicd | sed s/export\ // | sed s/\"//g > cicd/cicd.docker.env
+
+
+DOCKER_MACHINE_IP=$(docker-machine ip {{ project_name }}-cicd)
+sed -i s/DOCKER_MACHINE_IP\=localhost/DOCKER_MACHINE_IP\=$DOCKER_MACHINE_IP/ ./env

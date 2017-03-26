@@ -3,7 +3,7 @@
 #URL="192.168.99.100:9200"
 URL="localhost:8010/api/v2/builders"
 EXITCODE=1
-MAXRETR=30
+MAXRETR=60
 i="0"
 
 echo "Waiting for CICD Master ..."

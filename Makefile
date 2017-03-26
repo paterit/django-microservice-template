@@ -8,19 +8,29 @@ all-prod:
 	@make run-prod
 
 cicd-local:
-	bash cicd/set_local_docker_machine.sh
-	bash cicd/copy_docker_images_to_machine.sh
+	@make cicd-set-local-docker-machine
+	bash cicd/pull_base_docker_images.sh
+	-bash cicd/copy_docker_images_to_machine.sh
 	@chmod +x ./logs/wait_for_elk.sh
 	@chmod +x ./cicd/master/wait_for_master.sh
 	@chmod +x ./cicd/hooks/post-commit
 	@make run-cicd
-	@docker exec -t {{ project_name }}-cicd-master bash -c "./wait_for_master.sh"
+	@make cicd-wait-for-master
+	@make cicd-initial-commit
+
+cicd-initial-commit:
 	@git init
 	@ln -s -f ../../cicd/hooks/post-commit .git/hooks/post-commit
 	@git add .
 	@git commit -q -m "Initial commit."
 	@echo ""
 	@echo "Full rebuild has just started. You my verify progress at \033[1;33mhttp://localhost:8010/#/builders\033[0m."
+
+cicd-set-local-docker-machine:
+	bash cicd/set_local_docker_machine.sh
+
+cicd-wait-for-master:
+	docker exec -t {{ project_name }}-cicd-master bash -c "./wait_for_master.sh"
 
 VERSION:=$(shell cat VERSION)
 #building docker images for each service
@@ -128,6 +138,8 @@ start-logs:
 	@docker start {{ project_name }}-logs
 start: 
 	@docker-compose start
+start-prod:
+	@docker-compose -f docker-compose.yml -f docker-compose.prod.yml start
 
 #remove docker containers
 rm-data:
@@ -146,6 +158,8 @@ rm-logspout:
 	-@docker rm $(CONTS-LOGSPOUT)
 rm-cicd:
 	-@docker rm $(CONTS-CICD)
+rm-cicd-db:
+	-@docker rm {{ project_name }}-cicd-db
 
 rm: rm-db rm-web rm-https rm-logspout rm-logs rm-cicd
 
@@ -171,6 +185,8 @@ rmi-cicd:
 	-@docker rmi -f $(IMGS-CICD-MASTER)
 	-@docker rmi -f $(IMGS-CICD-WORKER)
 	-@docker rmi -f $(IMGS-CICD-DB)
+rmi-cicd-db:
+	-@docker rmi -f $(IMGS-CICD-DB)
 
 rmi: rmi-db rmi-web rmi-https rmi-logspout rmi-logs rmi-cicd
 
@@ -193,7 +209,13 @@ clean-orphaned-volumes:
 clean-apps: clean-web clean-testing clean-compose clean-orphaned-volumes
 clean-non-apps: clean-logspout clean-logs clean-db clean-https 
 clean-all: clean-apps clean-non-apps clean-data clean-base
-clean-cicd: clean-cicd
+
+reload-cicd-db:
+	@make stop-cicd
+	@make rm-cicd-db
+	@make rmi-cicd-db
+	@docker-compose -f docker-compose.cicd.yml up -d
+	@make cicd-wait-for-master
 
 reload-https:
 	@make clean-https
@@ -217,19 +239,21 @@ shell-cicd-worker:
 	@docker exec -it {{ project_name }}-cicd-worker bash
 
 logs-web:
-	@docker-compose logs -f | grep {{ project_name }}-web
+	@docker logs -f {{ project_name }}-web
 logs-db:
-	@docker-compose logs -f | grep {{ project_name }}-db
+	@docker logs -f {{ project_name }}-db
 logs-https:
-	@docker-compose logs -f | grep {{ project_name }}-https
+	@docker logs -f {{ project_name }}-https
 logs-testing:
-	@docker-compose logs -f | grep {{ project_name }}-testing
+	@docker logs -f {{ project_name }}-testing
 logs-logs:
-	@docker-compose logs -f | grep {{ project_name }}-logs
-logs-cicd:
-	@docker-compose -f docker-compose.cicd.yml logs -f --tail 20 | grep {{ project_name }}-cicd | grep -v {{ project_name }}-cicd-db
-logs:
-	@docker-compose logs -f
+	@docker logs -f {{ project_name }}-logs
+logs-cicd-master:
+	@docker  logs -f {{ project_name }}-cicd-master
+logs-cicd-worker:
+	@docker  logs -f {{ project_name }}-cicd-worker
+logs-cicd-db:
+	@docker  logs -f {{ project_name }}-cicd-db
 
 # wait till postgresql is ready
 wait-for-postgres:

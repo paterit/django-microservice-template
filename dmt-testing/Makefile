@@ -7,6 +7,28 @@ all:
 	make copy-current-dir
 	make create-project
 	make build-cicd
+	make wait_for_full_rebuild
+	make test_commit
+	make wait_for_test_build
+	#make clean
+	make success
+
+reload:
+	rm -rf ./dmt-template
+	rm -rf ./$(PROJECT_NAME)
+	make copy-current-dir
+	make create-project
+	make reload-cicd-db
+	#make reload-cicd
+	make cicd-initial-commit
+	make wait_for_full_rebuild
+	make test_commit
+	make wait_for_test_build
+	make success
+
+success:
+	@echo "\033[1;32mGreat! All works!\033[0m."
+
 
 clean:
 	-cd $(PROJECT_NAME); \
@@ -42,3 +64,37 @@ build-cicd:
 	. virtenv/bin/activate; \
 	cd $(PROJECT_NAME); \
 	make cicd-local
+
+cicd-initial-commit:
+	. virtenv/bin/activate; \
+	cd $(PROJECT_NAME); \
+	make cicd-initial-commit
+
+wait_for_full_rebuild:
+	. virtenv/bin/activate; \
+	python wait_for_build.py 1
+
+wait_for_test_build:
+	. virtenv/bin/activate; \
+	python wait_for_build.py 2
+
+reload-cicd-db:
+	. virtenv/bin/activate; \
+	cd $(PROJECT_NAME); \
+	make cicd-set-local-docker-machine; \
+	make reload-cicd-db
+
+reload-cicd:
+	. virtenv/bin/activate; \
+	cd $(PROJECT_NAME); \
+	make cicd-set-local-docker-machine; \
+	make clean-cicd; \
+	make run-cicd; \
+	make cicd-wait-for-master
+
+test_commit:
+	. virtenv/bin/activate; \
+	cd $(PROJECT_NAME); \
+	echo "Test commit." > test.txt; \
+	git add test.txt; \
+	git commit -q -m "Test commit."

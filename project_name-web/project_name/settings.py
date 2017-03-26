@@ -27,8 +27,14 @@ SECRET_KEY = '=ol$^&d*^9eh)=&!qn4w5a!f+_ctgai7*agx@nd&st&oq3^3to'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
+DOCKER_MACHINE_IP = os.environ.get('DOCKER_MACHINE_IP', 'localhost')
 
-ALLOWED_HOSTS = [gethostname(), gethostbyname(gethostname()), 'yourservice-web', 'https', 'localhost' ]
+ALLOWED_HOSTS = [gethostname(), gethostbyname(gethostname()),
+                 '{{ project_name }}-web',
+                 '{{ project_name }}-https',
+                 '{{ project_name }}-testing',
+                 'web', 'https', 'testing',
+                 'localhost', DOCKER_MACHINE_IP]
 
 # Application definition
 
@@ -86,7 +92,6 @@ DATABASES = {
         'PORT': int(os.environ["DB_PORT"])
     }
 }
-
 
 
 # Internationalization
