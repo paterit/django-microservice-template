@@ -1,6 +1,6 @@
 # README #
 
-It is a django template for django-admin [startproject](https://docs.djangoproject.com/en/1.10/ref/django-admin/#startproject) command that provides you contenerized ([docker](https://www.docker.com/)) sets of components cooperating toghether which should allow you to focus mainly on the code and solving problem you want to solve with it.
+It is a django template for django-admin [startproject](https://docs.djangoproject.com/en/1.10/ref/django-admin/#startproject) command that provides you contenerized ([docker](https://www.docker.com/)) sets of components cooperating toghether which should allow you to focus mainly on the code having all devops stuff ready to improve.
 This project aims to be python centric, although there are some tools where good python replacement does not exit. Yet.
 
 Currently available components to build your services:
@@ -98,7 +98,7 @@ To check if it runs propely verify if new containters are runing by typing:
 
     docker ps
 
-You should see among running containters with names like :
+You should see among running containters some with names like :
 
     yourservice-cicd-worker - Buildbot worker
     yourservice-cicd-master - Buidbot master
