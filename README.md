@@ -84,9 +84,9 @@ And couple of data containers to better manage logs:
 
 If they are up and runing you shoul be able to se [admin panel](http://127.0.0.1/admin)
 
-To read how it can be used go to [docs](https://127.0.0.1/docs).
+To read how it can be used go to [docs](http://127.0.0.1/docs).
 
-To see any other useful links go to [this page](https://127.0.0.1/docs/links_page.html) in docs.
+To see any other useful links go to [this page](http://127.0.0.1/docs/links_page.html) in docs.
 
 ### Building and running localy with CI/CD machinery
 It will set up docker-machine and docker containers with buildbot which will allows you to run and test your code with in docker-machine. Start with:
@@ -119,8 +119,8 @@ From now on whenever you commit any change localy to your project there will be 
 
 Now using IP generated for your docker-machine machine (in my case it is 192.168.99.100 - you can verify it by reading otupt from docker-machine ls ) you can start using your services.
 [Django admin panel](http://192.168.99.100/admin)
-To read how it can be further used go to [docs](https://192.168.99.100/docs).
-To see any other useful links go to [this page](https://127.0.0.1/docs/links_page.html) in docs.
+To read how it can be further used go to [docs](http://192.168.99.100/docs).
+To see any other useful links go to [this page](http://127.0.0.1/docs/links_page.html) in docs.
 
 Whenever you do changes in your code, when you run any builders in Buildbot the fresh copy of your sources will be copied to Buildbot worker and tested.
 
