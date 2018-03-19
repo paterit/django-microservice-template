@@ -1,0 +1,7 @@
+FROM {{ project_name }}/base:1.0.1
+LABEL "application"="{{ project_name }}-docs"
+RUN mkdir -p $DIRPATH/{{ project_name }}-docs
+WORKDIR $DIRPATH/{{ project_name }}-docs
+COPY . .
+RUN pip install -U pip \
+  && pip install -r requirements.txt

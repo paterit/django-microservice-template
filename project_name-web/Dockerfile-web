@@ -3,3 +3,5 @@ LABEL "application"="{{ project_name }}-web"
 RUN mkdir -p $DIRPATH/{{ project_name }}-web
 WORKDIR $DIRPATH/{{ project_name }}-web
 COPY . .
+RUN pip install -U pip \
+  && pip install -r requirements.txt

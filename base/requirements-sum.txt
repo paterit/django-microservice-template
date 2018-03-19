@@ -1,3 +1,0 @@
-#it should be sum of all other requirements.txt files from subfolders just to make easier manage images for docker
-#it can be done by executing:
-#find . -name requirements.txt -exec cat {}  >> requirements-sum.txt \;

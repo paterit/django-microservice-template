@@ -38,7 +38,7 @@ reload:
 	make success
 
 success:
-	@echo "\033[1;32mGreat! All works!\033[0m."
+	@echo "\033[1;32mGreat! All works! Go to your docker-machine address in your browser (most propably - http://192.168.99.100/docs/ ).\033[0m"
 
 
 clean:

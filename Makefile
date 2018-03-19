@@ -40,15 +40,19 @@ build-data:
 	@docker-compose build data
 build-web:
 	@docker-compose build web
+build-docs:
+	@docker-compose build docs
+build-docs:
+	@docker-compose build docs
 build-base:
-	@bash build_pip_requirements.sh
+	#@bash build_pip_requirements.sh
 	@docker build -t {{ project_name }}/base:$(VERSION) -f ./base/Dockerfile-base ./base
 	@docker build -t {{ project_name }}/logs-data:$(VERSION) -f ./base/Dockerfile-logs-data ./base
 build-https:
 	@docker-compose build https
 build-testing:
 	@docker-compose build testing
-build: build-data build-db build-https build-base build-web build-testing
+build: build-data build-db build-https build-base build-web build-docs build-testing
 
 
 #run docker images
@@ -97,6 +101,9 @@ IMGS-LOGS=$(shell docker images -q -f "label=application={{ project_name }}-logs
 
 CONTS-LOGSPOUT=$(shell docker ps -a -q -f "name={{ project_name }}-logspout")
 IMGS-LOGSPOUT=$(shell docker images -q -f "label=application={{ project_name }}-logspout")
+
+CONTS-DOCS=$(shell docker ps -a -q -f "name={{ project_name }}-docs")
+IMGS-DOCS=$(shell docker images -q -f "label=application={{ project_name }}-docs")
 
 CONTS-CICD=$(shell docker ps -a -q -f "name={{ project_name }}-cicd")
 
@@ -148,6 +155,8 @@ rm-db:
 	-@docker rm $(CONTS-DB)
 rm-web:
 	-@docker rm $(CONTS-WEB)
+rm-docs:
+	-@docker rm $(CONTS-DOCS)
 rm-https:
 	-@docker rm $(CONTS-HTTPS)
 rm-testing:
@@ -161,7 +170,7 @@ rm-cicd:
 rm-cicd-db:
 	-@docker rm {{ project_name }}-cicd-db
 
-rm: rm-db rm-web rm-https rm-logspout rm-logs rm-cicd
+rm: rm-db rm-web rm-docs rm-https rm-logspout rm-logs rm-cicd
 
 
 #remove docker images
@@ -171,6 +180,8 @@ rmi-db:
 	-@docker rmi -f $(IMGS-DB)
 rmi-web:
 	-@docker rmi -f $(IMGS-WEB)
+rmi-docs:
+    -@docker rmi -f $(IMGS-DOCS)
 rmi-https:
 	-@docker rmi -f $(IMGS-HTTPS)
 rmi-base:
@@ -198,6 +209,7 @@ clean-https: stop-https rm-https rmi-https
 clean-testing: stop-testing rm-testing rmi-testing
 clean-apps: clean-db clean-web clean-https clean-testing
 clean-base: rmi-base
+clean-docs: rm-docs rmi-docs
 clean-data: stop-data rm-data rmi-data
 clean-logs: stop-logs rm-logs rmi-logs
 clean-logspout: stop-logspout rm-logspout rmi-logspout
@@ -208,7 +220,7 @@ clean-orphaned-volumes:
 	@docker volume rm $(docker volume ls -qf dangling=true) || exit 0
 clean-apps: clean-web clean-testing clean-compose clean-orphaned-volumes
 clean-non-apps: clean-logspout clean-logs clean-db clean-https 
-clean-all: clean-apps clean-non-apps clean-data clean-base
+clean-all: clean-apps clean-non-apps clean-data clean-docs clean-base
 
 reload-cicd-db:
 	@make stop-cicd
@@ -248,6 +260,8 @@ logs-testing:
 	@docker logs -f {{ project_name }}-testing
 logs-logs:
 	@docker logs -f {{ project_name }}-logs
+logs-docs:
+	@docker logs -f {{ project_name }}-docs
 logs-cicd-master:
 	@docker  logs -f {{ project_name }}-cicd-master
 logs-cicd-worker:
@@ -271,8 +285,8 @@ wait-for-cicd-master:
 sbe:
 	@docker exec -t {{ project_name }}-testing behave
 
-build-docs:
-	@docker exec -t {{ project_name }}-web bash -c 'cd ../docs; make html'
+rebuild-docs:
+	@docker start {{ project_name }}-docs
 
 test:
 	@echo "Start of make test"
@@ -299,11 +313,11 @@ cicd-validate:
 	@docker exec -t {{ project_name }}-cicd-master buildbot checkconfig master.cfg
 
 upload-docs:
-	@docker cp ./docs {{ project_name }}-web:/opt/{{ project_name }}/
-	@docker exec -t {{ project_name }}-web bash -c 'cd ../docs; make html'
+	@docker cp ./docs {{ project_name }}-docs:/opt/{{ project_name }}/
++   @docker start -a {{ project_name }}-docs
 	@mkdir -p ./docs/build
-	@docker cp {{ project_name }}-web:/opt/{{ project_name }}/docs/build/html ./docs/build/
-	@docker exec -t {{ project_name }}-https mkdir -p /opt/{{ project_name }}/docs/build
+	@docker cp {{ project_name }}-docs:/opt/{{ project_name }}/docs/build/html ./docs/build/
+	@docker exec -t {{ project_name }}-https mkdir -p /opt/{{ project_name }}/{{ project_name }}-docs/build
 	@docker cp ./docs/build/html {{ project_name }}-https:/opt/{{ project_name }}/docs/build/
 
 upload-static:

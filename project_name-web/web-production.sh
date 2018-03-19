@@ -18,10 +18,6 @@ touch /opt/{{ project_name }}/logs/web/django-errors.log
 touch /opt/{{ project_name }}/logs/web/django-debug.log
 tail -n 0 -f /opt/{{ project_name }}/logs/web/*.log &
 
-# build docs
-echo "Building docs ..."
-(cd /opt/{{ project_name }}/docs && exec make html)
-
 # create admin user if doesn't exist
 echo "Create django admin user if one doesn't exist ..."
 echo "from django.contrib.auth.models import User;User.objects.create_superuser('admin', 'wojtek.semik@gmail.com', 'admin') if not User.objects.filter(username='admin').exists() else print('admin already created')" | python manage.py shell

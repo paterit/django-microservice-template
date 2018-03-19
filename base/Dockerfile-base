@@ -7,7 +7,3 @@ RUN apt-get update && \
 
 ENV DIRPATH /opt/{{ project_name }}
 LABEL "application"="{{ project_name }}-base"
-
-COPY requirements-sum.txt .
-RUN pip install -U pip \
-	&& pip install -r requirements-sum.txt

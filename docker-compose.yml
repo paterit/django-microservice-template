@@ -42,6 +42,16 @@ services:
       - /opt/{{ project_name }}/logs/web
     command: /bin/true
 
+  docs:
+    container_name: "{{ project_name }}-docs"
+    image: "{{ project_name }}-docs:1.0.1"
+    build:
+      context: ./docs
+      dockerfile: Dockerfile-docs
+    labels:
+      application: "{{ project_name }}-docs"
+    command: make html
+
   web:
     env_file: env
     container_name: "{{ project_name }}-web"

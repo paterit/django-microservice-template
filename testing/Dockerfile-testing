@@ -8,3 +8,5 @@ RUN mv phantomjs-2.1.1-linux-x86_64/bin/phantomjs /usr/local/bin/
 
 WORKDIR $DIRPATH/{{ project_name }}-testing
 COPY . .
+RUN pip install -U pip \
+  && pip install -r requirements.txt
