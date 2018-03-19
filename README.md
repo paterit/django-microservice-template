@@ -5,8 +5,8 @@ This project aims to be python centric, although there are some tools where good
 
 Currently available components to build your services:
 - Relational DB: [Postgresql](https://www.postgresql.org/)
-- Web application: [Django](https://www.djangoproject.com/) + [Gunicorn](http://gunicorn.org/) (HA component)
-- Http server: [Nginx](https://nginx.org/) (HA component)
+- Web application: [Django](https://www.djangoproject.com/) + [Gunicorn](http://gunicorn.org/) 
+- Http server: [Nginx](https://nginx.org/) 
 - Balckbox testing: SBE by [Behave](http://pythonhosted.org/behave/)
 - Logs aggreagator: [ELK](https://www.elastic.co/products) stack
 - CI/CD machinery: [Buildbot](http://buildbot.net/)
@@ -17,16 +17,16 @@ Planned to be added:
 - NoSql DB
 - Key-value store
 - Cache
-- Persistent queues (HA component)
+- Persistent queues 
 - Docker swarm
 - Alerting
-- Load balancing (HA component)
+- Load balancing 
 - Service discovery
-- API gateway (HA component)
+- API gateway 
 
 ### Set up an environment ###
 
-You need Linux machine (tested on Ubuntu 14.04) with [docker engine](https://docs.docker.com/engine/), [virtualenv](https://virtualenv.pypa.io/en/stable/) with [Django](https://www.djangoproject.com/) and [docker-compose](https://docs.docker.com/compose/). If you want to set up CI-CD env locally, than you need [docker-machine](https://docs.docker.com/machine/) and [Git](https://git-scm.com/) as well.
+You need Linux machine (tested on Ubuntu 16.04) with [docker engine](https://docs.docker.com/engine/), [virtualenv](https://virtualenv.pypa.io/en/stable/) with [Django](https://www.djangoproject.com/) and [docker-compose](https://docs.docker.com/compose/). If you want to set up CI-CD env locally, than you need [docker-machine](https://docs.docker.com/machine/) and [Git](https://git-scm.com/) as well.
 
 Dependencies:
 
@@ -82,15 +82,15 @@ And couple of data containers to better manage logs:
     yourservice-https-logs - Logs for Nginx
     yourservice-web-logs - Logs for Django and Gunicorn
 
-If they are up and runing you shoul be able to see [admin panel](http://127.0.0.1/admin)
+If they are up and runing you should be able to see [admin panel](http://127.0.0.1/admin)
 
 To read how it can be used go to [docs](http://127.0.0.1/docs).
 
 To see any other useful links go to [this page](http://127.0.0.1/docs/links_page.html) in docs.
 
 ### Building and running localy with CI/CD machinery
-To crate virtual machine with local CI/CD machinery you need to [install](https://docs.docker.com/machine/install-machine/#install-machine-directly) docker-machine and pv command ( sudo apt-get install pv ).
-Below commands will set up docker-machine and docker containers with buildbot which will allows you to run and test your code within docker-machine. Start with:
+To create virtual machine with local CI/CD machinery you need to [install](https://docs.docker.com/machine/install-machine/#install-machine-directly) docker-machine and pv command ( sudo apt-get install pv ).
+Below commands will set up docker-machine and docker containers with buildbot which will allow you to run and test your code within docker-machine. Start with:
 
     cd yourservice
     make cicd-local
