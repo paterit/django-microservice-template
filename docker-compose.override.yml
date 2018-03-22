@@ -3,8 +3,10 @@ services:
   web:
     volumes:
       - ./{{ project_name }}-web/:/opt/{{ project_name }}/{{ project_name }}-web/
-      - ./docs:/opt/{{ project_name }}/docs/
-    command: bash web-development.sh
+      #- ./docs:/opt/{{ project_name }}/docs/
+    environment:
+        RUN_MODE: DEVELOPMENT
+    command: bash web.sh
 
   testing:
     volumes:

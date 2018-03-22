@@ -48,7 +48,7 @@ To create source code for your service based on this template you need to run:
     django-admin startproject \
         --template=https://github.com/paterit/django-microservice-template/archive/master.zip \
         --extension=py,rst,yml,sh,md,conf,feature \
-        --name=Makefile,Dockerfile-base,Dockerfile-web,Dockerfile-db,Dockerfile-data,Dockerfile-https,Dockerfile-testing,Dockerfile-logs-data,Dockerfile,master.cfg,db.env,cicd.docker.env,post-commit \
+        --name=Makefile,Dockerfile-docs,Dockerfile-base,Dockerfile-web,Dockerfile-db,Dockerfile-data,Dockerfile-https,Dockerfile-testing,Dockerfile-logs-data,Dockerfile,master.cfg,db.env,cicd.docker.env,post-commit \
         yourservice
 
 Due to docker-machine limits on naming machines don't use "_" (underscore) sign when naming your project.
@@ -82,11 +82,11 @@ And couple of data containers to better manage logs:
     yourservice-https-logs - Logs for Nginx
     yourservice-web-logs - Logs for Django and Gunicorn
 
-If they are up and runing you should be able to see [admin panel](http://127.0.0.1/admin)
+If they are up and runing you should be able to see [admin panel](http://localhost/admin)
 
-To read how it can be used go to [docs](http://127.0.0.1/docs).
+To read how it can be used go to [docs](http://localhost/docs).
 
-To see any other useful links go to [this page](http://127.0.0.1/docs/links_page.html) in docs.
+To see any other useful links go to [this page](http://localhost/docs/links_page.html) in docs.
 
 ### Building and running localy with CI/CD machinery
 To create virtual machine with local CI/CD machinery you need to [install](https://docs.docker.com/machine/install-machine/#install-machine-directly) docker-machine and pv command ( sudo apt-get install pv ).

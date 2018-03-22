@@ -34,7 +34,7 @@ ALLOWED_HOSTS = [gethostname(), gethostbyname(gethostname()),
                  '{{ project_name }}-https',
                  '{{ project_name }}-testing',
                  'web', 'https', 'testing',
-                 'localhost', DOCKER_MACHINE_IP]
+                 'localhost','127.0.0.1', DOCKER_MACHINE_IP]
 
 # Application definition
 

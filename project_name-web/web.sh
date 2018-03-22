@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 # wait for postgres being ready to respond
+echo "Run mode is set to:" $RUN_MODE
 echo "Verifying if postgres is up ..."
 python wait_for_postgres.py
 echo "Django migrate db ..."
@@ -22,13 +23,30 @@ tail -n 0 -f /opt/{{ project_name }}/logs/web/*.log &
 echo "Create django admin user if one doesn't exist ..."
 echo "from django.contrib.auth.models import User;User.objects.create_superuser('admin', 'wojtek.semik@gmail.com', 'admin') if not User.objects.filter(username='admin').exists() else print('admin already created')" | python manage.py shell
 
-echo "Start gunicorn ..."
-/usr/local/bin/gunicorn {{ project_name }}.wsgi:application \
---name {{ project_name }}_django \
---bind 0.0.0.0:8000 \
---workers 2 \
---log-level=info \
---error-logfile=/opt/{{ project_name }}/logs/web/gunicorn-error.log \
---log-file=/opt/{{ project_name }}/logs/web/gunicorn.log \
---access-logfile=/opt/{{ project_name }}/logs/web/gunicorn-access.log \
-"$@"
+echo "Start gunicorn in " $RUN_MODE " mode ..."
+if [ $RUN_MODE == "DEVELOPMENT" ]
+    then
+        /usr/local/bin/gunicorn {{ project_name }}.wsgi:application \
+        --name {{ project_name }}_django \
+        --bind 0.0.0.0:8000 \
+        --workers 2 \
+        --log-level=debug \
+        --reload \
+        --error-logfile=/opt/{{ project_name }}/logs/web/gunicorn-error.log \
+        --log-file=/opt/{{ project_name }}/logs/web/gunicorn.log \
+        --access-logfile=/opt/{{ project_name }}/logs/web/gunicorn-access.log \
+        "$@"
+fi
+
+if [ $RUN_MODE == "PRODUCTION" ] 
+    then
+        /usr/local/bin/gunicorn {{ project_name }}.wsgi:application \
+        --name {{ project_name }}_django \
+        --bind 0.0.0.0:8000 \
+        --workers 2 \
+        --log-level=info \
+        --error-logfile=/opt/{{ project_name }}/logs/web/gunicorn-error.log \
+        --log-file=/opt/{{ project_name }}/logs/web/gunicorn.log \
+        --access-logfile=/opt/{{ project_name }}/logs/web/gunicorn-access.log \
+        "$@"
+fi

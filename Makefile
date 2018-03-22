@@ -2,10 +2,22 @@
 all:
 	@make build-base
 	@make run
+	@make upload-docs
+	@make upload-static
+	@make wait-for-postgres
+	@make wait-for-elk
+	@make test
+	@make sbe
 
 all-prod:
 	@make build-base
 	@make run-prod
+	@make upload-docs
+	@make upload-static
+	@make wait-for-postgres
+	@make wait-for-elk
+	@make test
+	@make sbe
 
 cicd-local:
 	@make cicd-set-local-docker-machine
@@ -40,8 +52,6 @@ build-data:
 	@docker-compose build data
 build-web:
 	@docker-compose build web
-build-docs:
-	@docker-compose build docs
 build-docs:
 	@docker-compose build docs
 build-base:
@@ -181,7 +191,7 @@ rmi-db:
 rmi-web:
 	-@docker rmi -f $(IMGS-WEB)
 rmi-docs:
-    -@docker rmi -f $(IMGS-DOCS)
+	-@docker rmi -f $(IMGS-DOCS)
 rmi-https:
 	-@docker rmi -f $(IMGS-HTTPS)
 rmi-base:
@@ -314,10 +324,10 @@ cicd-validate:
 
 upload-docs:
 	@docker cp ./docs {{ project_name }}-docs:/opt/{{ project_name }}/
-+   @docker start -a {{ project_name }}-docs
+	@docker start -a {{ project_name }}-docs
 	@mkdir -p ./docs/build
-	@docker cp {{ project_name }}-docs:/opt/{{ project_name }}/docs/build/html ./docs/build/
-	@docker exec -t {{ project_name }}-https mkdir -p /opt/{{ project_name }}/{{ project_name }}-docs/build
+	@docker cp {{ project_name }}-docs:/opt/{{ project_name }}/{{ project_name }}-docs/build/html ./docs/build/
+	@docker exec -t {{ project_name }}-https mkdir -p /opt/{{ project_name }}/docs/build
 	@docker cp ./docs/build/html {{ project_name }}-https:/opt/{{ project_name }}/docs/build/
 
 upload-static:

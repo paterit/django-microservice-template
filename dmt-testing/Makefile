@@ -68,7 +68,7 @@ create-project-git:
 	django-admin startproject \
         --template=https://github.com/paterit/django-microservice-template/archive/master.zip \
         --extension=py,rst,yml,sh,md,conf,feature \
-        --name=Makefile,Dockerfile-base,Dockerfile-web,Dockerfile-db,Dockerfile-data,Dockerfile-https,Dockerfile-testing,Dockerfile-logs-data,Dockerfile,master.cfg,db.env,cicd.docker.env,post-commit \
+        --name=Makefile,Dockerfile-base,Dockerfile-web,Dockerfile-db,Dockerfile-data,Dockerfile-https,Dockerfile-testing,Dockerfile-logs-data,Dockerfile,Dockerfile-docs,master.cfg,db.env,cicd.docker.env,post-commit \
         $(PROJECT_NAME)
 
 create-project:
@@ -76,7 +76,7 @@ create-project:
 	django-admin startproject \
         --template=./dmt-template \
         --extension=py,rst,yml,sh,md,conf,feature \
-        --name=Makefile,Dockerfile-base,Dockerfile-web,Dockerfile-db,Dockerfile-data,Dockerfile-https,Dockerfile-testing,Dockerfile-logs-data,Dockerfile,master.cfg,db.env,cicd.docker.env,post-commit \
+        --name=Makefile,Dockerfile-base,Dockerfile-web,Dockerfile-db,Dockerfile-data,Dockerfile-https,Dockerfile-testing,Dockerfile-logs-data,Dockerfile,Dockerfile-docs,master.cfg,db.env,cicd.docker.env,post-commit \
         $(PROJECT_NAME)
 
 build-cicd:

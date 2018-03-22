@@ -2,7 +2,9 @@ version: '2'
 services:
   web:
     restart: always
-    command: bash web-production.sh
+    environment:
+        RUN_MODE: PRODUCTION
+    command: bash web.sh
 
   db:
     restart: always
