@@ -30,9 +30,9 @@ You need Linux machine (tested on Ubuntu 16.04) with [docker engine](https://doc
 
 Dependencies:
 
-    Docker >= 1.12.5 
-    Docker-compose >= 1.8
-    Django >= 1.10
+    Docker >= 17.12
+    Docker-compose >= 1.11
+    Django >= 2.0.3
     Git >= 2.10
 
 How to install docker see [here](https://docs.docker.com/engine/installation/).
@@ -41,7 +41,7 @@ Configuration for docker-compose and Django:
 
     virtualenv -p /usr/bin/python3 virtenv
     source ./virtenv/bin/activate
-    pip install Django==1.10 docker-compose==1.8 GitPython==2.1.3
+    pip install Django==2.0.3 docker-compose==1.11 GitPython==2.1.3
     
 To create source code for your service based on this template you need to run:
 

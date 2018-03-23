@@ -1,5 +1,6 @@
 FROM {{ project_name }}/base:1.0.1
 LABEL "application"="{{ project_name }}-web"
+RUN apk add python3-dev gcc musl-dev postgresql-dev postgresql-libs
 RUN mkdir -p $DIRPATH/{{ project_name }}-web
 WORKDIR $DIRPATH/{{ project_name }}-web
 COPY . .

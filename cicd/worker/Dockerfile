@@ -1,4 +1,4 @@
-FROM buildbot/buildbot-worker:v0.9.4
+FROM buildbot/buildbot-worker:v1.1.0
 
 LABEL "application"="{{ project_name }}-cicd-worker"
 

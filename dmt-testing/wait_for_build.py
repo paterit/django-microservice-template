@@ -28,14 +28,15 @@ while (True):
     result = r.json()["builds"][0]["results"]
     state = r.json()["builds"][0]["state_string"]
 
-    if (state == "building"):
+    if (state == "building" or state == "acquiring locks"):
         print("Current build status is: '%s' ..." % (state))
         time.sleep(10)
     else:
         try:
             print("Returned code (results) for this build is: '%d'" % (result))
         except TypeError:
-            print("result faild to map to number. Returned value is " + result)
+            print("Proble! Rusult returned from Buildbot is %s and the state is %s" % (str(result), state))
+            print(r.json()["builds"][0])
 
         if (result != 0):
             pprint.PrettyPrinter(indent=4).pprint(r.json()["builds"][0])

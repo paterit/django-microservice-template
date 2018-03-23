@@ -55,7 +55,6 @@ build-web:
 build-docs:
 	@docker-compose build docs
 build-base:
-	#@bash build_pip_requirements.sh
 	@docker build -t {{ project_name }}/base:$(VERSION) -f ./base/Dockerfile-base ./base
 	@docker build -t {{ project_name }}/logs-data:$(VERSION) -f ./base/Dockerfile-logs-data ./base
 build-https:

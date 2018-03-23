@@ -1,4 +1,11 @@
-FROM {{ project_name }}/base:1.0.1
+FROM python:3.6.4
+RUN apt-get update && \
+         apt-get install -y \
+         curl \
+         less \
+         vim
+
+ENV DIRPATH /opt/{{ project_name }}
 LABEL "application"="{{ project_name }}-testing"
 RUN mkdir -p $DIRPATH/{{ project_name }}-testing
 
@@ -8,5 +15,6 @@ RUN mv phantomjs-2.1.1-linux-x86_64/bin/phantomjs /usr/local/bin/
 
 WORKDIR $DIRPATH/{{ project_name }}-testing
 COPY . .
+
 RUN pip install -U pip \
   && pip install -r requirements.txt
