@@ -11,6 +11,7 @@ all:
 	make create-project
 	make build
 
+
 prepare-env:
 	make clean
 	make virtualenv
@@ -23,6 +24,14 @@ build:
 	make wait_for_test_build
 	#make clean
 	make success
+
+build-local:
+	make virtualenv
+	make copy-current-dir
+	make create-project
+	-cd $(PROJECT_NAME); \
+	make
+
 
 reload:
 	rm -rf ./dmt-template

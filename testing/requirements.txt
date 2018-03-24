@@ -1,4 +1,4 @@
 behave==1.2.5
-selenium==3.3.1
-ipdb==0.10.2
-requests==2.13.0
+selenium==3.11
+ipdb==0.11
+requests==2.18.4
