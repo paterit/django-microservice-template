@@ -48,7 +48,7 @@ To create source code for your service based on this template you need to run:
     django-admin startproject \
         --template=https://github.com/paterit/django-microservice-template/archive/master.zip \
         --extension=py,rst,yml,sh,md,conf,feature \
-        --name=Makefile,Dockerfile-docs,Dockerfile-base,Dockerfile-web,Dockerfile-db,Dockerfile-data,Dockerfile-https,Dockerfile-testing,Dockerfile-logs-data,Dockerfile,master.cfg,db.env,cicd.docker.env,post-commit \
+        --name=Makefile,Dockerfile-docs,Dockerfile-web,Dockerfile-db,Dockerfile-data,Dockerfile-https,Dockerfile-testing,Dockerfile,master.cfg,db.env,cicd.docker.env,post-commit \
         yourservice
 
 Due to docker-machine limits on naming machines don't use "_" (underscore) sign when naming your project.

@@ -8,7 +8,7 @@ COPY certs ./certs
 USER root
 
 RUN apt-get update
-RUN apt-get install -y apt-transport-https ca-certificates iputils-ping net-tools curl software-properties-common lsb-release
+RUN apt-get install -y apt-transport-https ca-certificates iputils-ping net-tools curl software-properties-common lsb-release vim
 #RUN apt-get install -y linux-image-extra-$(uname -r) linux-image-extra-virtual
 RUN curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -
 RUN add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"

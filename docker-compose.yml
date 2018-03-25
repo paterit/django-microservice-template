@@ -34,7 +34,7 @@ services:
       command: syslog://logs:5000
 
   web-logs:
-    image: "{{ project_name }}/logs-data:1.0.1"
+    image: alpine:3.7
     container_name: "{{ project_name }}-web-logs"
     labels:
       application: "{{ project_name }}-web-logs"
@@ -98,7 +98,7 @@ services:
     command: /bin/true
 
   https-logs:
-    image: "{{ project_name }}/logs-data:1.0.1"
+    image: alpine:3.7
     container_name: "{{ project_name }}-https-logs"
     labels:
       application: "{{ project_name }}-https-logs"

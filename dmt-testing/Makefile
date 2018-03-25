@@ -47,7 +47,7 @@ reload:
 	make success
 
 success:
-	@echo "\033[1;32mGreat! All works! I can go to your docker-machine address in your browser (most propably - http://192.168.99.100/docs/ ).\033[0m"
+	@echo "\033[1;32mGreat! All works! You can go to the docker-machine address in your browser (most propably - http://192.168.99.100/docs/ ).\033[0m"
 
 
 clean:
@@ -77,7 +77,7 @@ create-project-git:
 	django-admin startproject \
         --template=https://github.com/paterit/django-microservice-template/archive/master.zip \
         --extension=py,rst,yml,sh,md,conf,feature \
-        --name=Makefile,Dockerfile-base,Dockerfile-web,Dockerfile-db,Dockerfile-data,Dockerfile-https,Dockerfile-testing,Dockerfile-logs-data,Dockerfile,Dockerfile-docs,master.cfg,db.env,cicd.docker.env,post-commit \
+        --name=Makefile,Dockerfile-web,Dockerfile-db,Dockerfile-data,Dockerfile-https,Dockerfile-testing,Dockerfile,Dockerfile-docs,master.cfg,db.env,cicd.docker.env,post-commit \
         $(PROJECT_NAME)
 
 create-project:
@@ -85,7 +85,7 @@ create-project:
 	django-admin startproject \
         --template=./dmt-template \
         --extension=py,rst,yml,sh,md,conf,feature \
-        --name=Makefile,Dockerfile-base,Dockerfile-web,Dockerfile-db,Dockerfile-data,Dockerfile-https,Dockerfile-testing,Dockerfile-logs-data,Dockerfile,Dockerfile-docs,master.cfg,db.env,cicd.docker.env,post-commit \
+        --name=Makefile,Dockerfile-web,Dockerfile-db,Dockerfile-data,Dockerfile-https,Dockerfile-testing,Dockerfile,Dockerfile-docs,master.cfg,db.env,cicd.docker.env,post-commit \
         $(PROJECT_NAME)
 
 build-cicd:

@@ -1,6 +1,6 @@
 
 all:
-	@make build-base
+	@make chmod-x
 	@make run
 	@make upload-docs
 	@make upload-static
@@ -10,7 +10,7 @@ all:
 	@make sbe
 
 all-prod:
-	@make build-base
+	@make chmod-x
 	@make run-prod
 	@make upload-docs
 	@make upload-static
@@ -23,12 +23,15 @@ cicd-local:
 	@make cicd-set-local-docker-machine
 	bash cicd/pull_base_docker_images.sh
 	-bash cicd/copy_docker_images_to_machine.sh
-	@chmod +x ./logs/wait_for_elk.sh
-	@chmod +x ./cicd/master/wait_for_master.sh
-	@chmod +x ./cicd/hooks/post-commit
+	@make chmod-x
 	@make run-cicd
 	@make cicd-wait-for-master
 	@make cicd-initial-commit
+
+chmod-x:
+	@chmod +x ./logs/wait_for_elk.sh
+	@chmod +x ./cicd/master/wait_for_master.sh
+	@chmod +x ./cicd/hooks/post-commit
 
 cicd-initial-commit:
 	@git init
@@ -54,14 +57,11 @@ build-web:
 	@docker-compose build web
 build-docs:
 	@docker-compose build docs
-build-base:
-	@docker build -t {{ project_name }}/base:$(VERSION) -f ./base/Dockerfile-base ./base
-	@docker build -t {{ project_name }}/logs-data:$(VERSION) -f ./base/Dockerfile-logs-data ./base
 build-https:
 	@docker-compose build https
 build-testing:
 	@docker-compose build testing
-build: build-data build-db build-https build-base build-web build-docs build-testing
+build: build-data build-db build-https build-web build-docs build-testing
 
 
 #run docker images
@@ -99,8 +99,6 @@ IMGS-WEB=$(shell docker images -q -f "label=application={{ project_name }}-web")
 
 CONTS-HTTPS=$(shell docker ps -a -q -f "name={{ project_name }}-https")
 IMGS-HTTPS=$(shell docker images -q -f "label=application={{ project_name }}-https")
-
-IMGS-BASE=$(shell docker images -q -f "label=application={{ project_name }}-base")
 
 CONTS-TESTING=$(shell docker ps -a -q -f "name={{ project_name }}-testing")
 IMGS-TESTING=$(shell docker images -q -f "label=application={{ project_name }}-testing")
@@ -193,8 +191,6 @@ rmi-docs:
 	-@docker rmi -f $(IMGS-DOCS)
 rmi-https:
 	-@docker rmi -f $(IMGS-HTTPS)
-rmi-base:
-	-@docker rmi -f $(IMGS-BASE)
 rmi-testing:
 	-@docker rmi -f $(IMGS-TESTING)
 rmi-logs:
@@ -217,7 +213,6 @@ clean-web: stop-web rm-web rmi-web
 clean-https: stop-https rm-https rmi-https
 clean-testing: stop-testing rm-testing rmi-testing
 clean-apps: clean-db clean-web clean-https clean-testing
-clean-base: rmi-base
 clean-docs: rm-docs rmi-docs
 clean-data: stop-data rm-data rmi-data
 clean-logs: stop-logs rm-logs rmi-logs
@@ -231,7 +226,7 @@ clean-none-images:
 	-@docker rmi $(docker images --filter "dangling=true" -q --no-trunc)
 clean-apps: clean-web clean-testing clean-compose clean-orphaned-volumes
 clean-non-apps: clean-logspout clean-logs clean-db clean-https 
-clean-all: clean-apps clean-non-apps clean-data clean-docs clean-base
+clean-all: clean-apps clean-non-apps clean-data clean-docs
 
 reload-cicd-db:
 	@make stop-cicd

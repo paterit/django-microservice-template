@@ -1,6 +1,24 @@
-FROM {{ project_name }}/base:1.0.1
+# could be 3.6.4 but apk add python3-dev installs python 3.6.3 anyway so far
+FROM python:3.6.3-alpine3.7
+# update apk repo
+RUN echo "http://dl-4.alpinelinux.org/alpine/v3.7/main" >> /etc/apk/repositories && \
+    echo "http://dl-4.alpinelinux.org/alpine/v3.7/community" >> /etc/apk/repositories 
+RUN apk update && \
+         apk add \
+         curl \
+         less \
+         vim \
+         make \
+         bash 
+
+RUN apk add python3-dev \
+         gcc \
+         musl-dev \
+         postgresql-dev \
+         postgresql-libs
+
+ENV DIRPATH /opt/{{ project_name }}
 LABEL "application"="{{ project_name }}-web"
-RUN apk add python3-dev gcc musl-dev postgresql-dev postgresql-libs
 RUN mkdir -p $DIRPATH/{{ project_name }}-web
 WORKDIR $DIRPATH/{{ project_name }}-web
 COPY . .
