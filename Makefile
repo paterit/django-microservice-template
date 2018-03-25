@@ -227,6 +227,8 @@ clean-compose:
 	@docker-compose rm -f
 clean-orphaned-volumes:
 	@docker volume rm $(docker volume ls -qf dangling=true) || exit 0
+clean-none-images:
+	-@docker rmi $(docker images --filter "dangling=true" -q --no-trunc)
 clean-apps: clean-web clean-testing clean-compose clean-orphaned-volumes
 clean-non-apps: clean-logspout clean-logs clean-db clean-https 
 clean-all: clean-apps clean-non-apps clean-data clean-docs clean-base

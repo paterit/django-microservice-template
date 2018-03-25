@@ -123,6 +123,13 @@ services:
       - https-logs
     command: bash entry-point.sh
 
+  node:
+    container_name: "node-alpine37"
+    image: "node:9.9-alpine37"
+    build:
+      context: ./testing
+      dockerfile: Dockerfile-node
+
   testing:
     container_name: "{{ project_name }}-testing"
     image: "{{ project_name }}-testing:1.0.1"
@@ -131,4 +138,6 @@ services:
       dockerfile: Dockerfile-testing
     links:
       - logs
+    depends_on:
+      - node
     command: tail -f /dev/null

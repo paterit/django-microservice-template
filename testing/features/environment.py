@@ -4,7 +4,10 @@ BEHAVE_DEBUG_ON_ERROR = False
 
 
 def before_all(context):
-    context.browser = webdriver.PhantomJS()
+    options = webdriver.ChromeOptions()
+    options.add_argument('--headless')
+    options.add_argument('--no-sandbox')
+    context.browser = webdriver.Chrome(chrome_options=options)
 
 
 def after_all(context):

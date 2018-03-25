@@ -1,4 +1,8 @@
-FROM python:3.6.4-alpine3.7
+# could be 3.6.4 but apk add python3-dev installs python 3.6.3 anyway
+FROM python:3.6.3-alpine3.7
+# update apk repo
+RUN echo "http://dl-4.alpinelinux.org/alpine/v3.7/main" >> /etc/apk/repositories && \
+    echo "http://dl-4.alpinelinux.org/alpine/v3.7/community" >> /etc/apk/repositories 
 RUN apk update && \
          apk add \
          curl \
