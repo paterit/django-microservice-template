@@ -1,5 +1,7 @@
 #!/bin/sh
 
+# Calling buildbot master sendchange service with commits details
+
 echo "Sending changes to CICD via git post-commit hook ..."
 
 eval $(python cicd/hooks/git_buildbot.py)

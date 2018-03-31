@@ -1,4 +1,3 @@
-# could be 3.6.4 but apk add python3-dev installs python 3.6.3 anyway so far
 FROM python:3.6.3-alpine3.7
 # update apk repo
 RUN echo "http://dl-4.alpinelinux.org/alpine/v3.7/main" >> /etc/apk/repositories && \

@@ -1,3 +1,4 @@
+""" Creating env variables for post-commit git hook """
 from git import Repo
 import os
 

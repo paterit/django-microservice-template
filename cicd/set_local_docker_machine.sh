@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# It creates and prepare docker-machine to which buildbot worker will be deploying containers
+
 # if virtualbox fail creation and start asking you for password use this to resolve the problem
 # to find out the <vm-uuid> type ps ax | grep vbox
 # vboxmanage startvm 37573512-780e-4eed-ae2a-570e752ecde0 --type emergencystop

@@ -1,3 +1,4 @@
+""" Waiting for build with given numberin Buildbot to be done when Buildbot is runnign on the local machine """
 import requests
 import time
 import sys
@@ -8,10 +9,12 @@ ERR_BUILD_FAIL = 2
 SUCCESS = 0
 MAX_RETRY = 30
 
+# Buildbot enumerates builds starting with number 1
 build_number = sys.argv[1]
 
 r = requests.get("http://localhost:8010/api/v2/builds/%s" % (build_number))
 count = 0
+# wait loop for waiting build to get started
 while (r.status_code != 200):
     time.sleep(1)
     r = requests.get("http://localhost:8010/api/v2/builds/%s" % (build_number))
@@ -23,6 +26,7 @@ while (r.status_code != 200):
     else:
         print("OK. Build machine responded with %d." % (r.status_code))
 
+# wait loop for waiting build to be finished
 while (True):
     r = requests.get("http://localhost:8010/api/v2/builds/%s" % (build_number))
     result = r.json()["builds"][0]["results"]

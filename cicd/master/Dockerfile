@@ -2,9 +2,8 @@ FROM buildbot/buildbot-master:v1.1.0
 
 LABEL "application"="{{ project_name }}-cicd-master"
 
- RUN \
-#     echo @testing http://nl.alpinelinux.org/alpine/edge/testing >> /etc/apk/repositories && \
-#     echo @edge http://nl.alpinelinux.org/alpine/edge/community >> /etc/apk/repositories && \
+# install some tools
+RUN \
     apk add --no-cache \
         vim \
         bash

@@ -1,22 +1,26 @@
 PROJECT_NAME = "yourservice"
 
-all-git:
+
+## Build and test with source code cloned from github
+all-git: 
 	make prepare-env
 	make create-project-git
 	make build
 
+## Build and test with source code copied from ../current dir
 all:
 	make prepare-env
 	make copy-current-dir
 	make create-project
 	make build
 
-
+## Clean all and set up virtualenv and docker-machine
 prepare-env:
 	make clean
 	make virtualenv
 	make check-docker-machine
 
+## Build CI/CD and start full rebuild and test build as an action triggered by post commit git hook
 build:
 	make build-cicd
 	make wait_for_full_rebuild
@@ -25,31 +29,33 @@ build:
 	#make clean
 	make success
 
-build-local:
-	make virtualenv
-	make copy-current-dir
-	make create-project
-	-cd $(PROJECT_NAME); \
-	make
+
+# build-local:
+# 	make virtualenv
+# 	make copy-current-dir
+# 	make create-project
+# 	-cd $(PROJECT_NAME); \
+# 	make
 
 
+## Clean source dir and CI/CD database then copy fresh code from ../current dir and start full rebuild and test build as an action triggered by post commit git hook
 reload:
 	rm -rf ./dmt-template
 	rm -rf ./$(PROJECT_NAME)
 	make copy-current-dir
 	make create-project
 	make reload-cicd-db
-	#make reload-cicd
 	make cicd-initial-commit
 	make wait_for_full_rebuild
 	make test_commit
 	make wait_for_test_build
 	make success
 
+## Print message on success
 success:
 	@echo "\033[1;32mGreat! All works! You can go to the docker-machine address in your browser (most propably - http://192.168.99.100/docs/ ).\033[0m"
 
-
+## Clean code, docker machine and virtualenv
 clean:
 	-cd $(PROJECT_NAME); \
 	make clean-cicd
@@ -59,6 +65,7 @@ clean:
 	rm -rf ./virtenv
 	rm -rf ./$(PROJECT_NAME)
 
+## Set virtualenv
 virtualenv:
 	virtualenv -p /usr/bin/python3 virtenv
 	. virtenv/bin/activate; \
@@ -66,12 +73,15 @@ virtualenv:
 	pip install --upgrade pip; \
     pip install -r ../requirements.txt; \
 
+## Check if dokcer-machine for this PROJECT_NAME already exists
 check-docker-machine:
 	@docker-machine ls | grep $(PROJECT_NAME) && { echo "Docker machine with this name: $(PROJECT_NAME) exists!"; exit 1; } || exit 0;
 
+## Copy source code from ../current dir
 copy-current-dir:
 	rsync -avq ../ ./dmt-template --exclude dmt-testing
 
+## Call django-admin start project getting it from the github
 create-project-git:
 	. virtenv/bin/activate; \
 	django-admin startproject \
@@ -80,6 +90,7 @@ create-project-git:
         --name=Makefile,Dockerfile-web,Dockerfile-db,Dockerfile-data,Dockerfile-https,Dockerfile-testing,Dockerfile,Dockerfile-docs,master.cfg,db.env,cicd.docker.env,post-commit \
         $(PROJECT_NAME)
 
+## Call django-admin start project for code copied to local dmt-template dir
 create-project:
 	. virtenv/bin/activate; \
 	django-admin startproject \
@@ -88,30 +99,36 @@ create-project:
         --name=Makefile,Dockerfile-web,Dockerfile-db,Dockerfile-data,Dockerfile-https,Dockerfile-testing,Dockerfile,Dockerfile-docs,master.cfg,db.env,cicd.docker.env,post-commit \
         $(PROJECT_NAME)
 
+## Create docker containers with Buildbot
 build-cicd:
 	. virtenv/bin/activate; \
 	cd $(PROJECT_NAME); \
 	make cicd-local
 
+## Create git repo and initial commit to triger git hook for full rebuild in Buildbot
 cicd-initial-commit:
 	. virtenv/bin/activate; \
 	cd $(PROJECT_NAME); \
 	make cicd-initial-commit
 
+## Wait until the first full rebuild is done in Buildbot
 wait_for_full_rebuild:
 	. virtenv/bin/activate; \
 	python wait_for_build.py 1
 
+## Wait until the second build is done in Buildbot
 wait_for_test_build:
 	. virtenv/bin/activate; \
 	python wait_for_build.py 2
 
+## Set up docker-machine if not set and reloads Buildbot database
 reload-cicd-db:
 	. virtenv/bin/activate; \
 	cd $(PROJECT_NAME); \
 	make cicd-set-local-docker-machine; \
 	make reload-cicd-db
 
+## Set up docker-machine if not set and reloads Buildbot containers and database
 reload-cicd:
 	. virtenv/bin/activate; \
 	cd $(PROJECT_NAME); \
@@ -120,9 +137,38 @@ reload-cicd:
 	make run-cicd; \
 	make cicd-wait-for-master
 
+## Create git dummy commit, to trigger git hooks
 test_commit:
 	. virtenv/bin/activate; \
 	cd $(PROJECT_NAME); \
 	echo "Test commit." > test.txt; \
 	git add test.txt; \
 	git commit -q -m "Test commit."
+
+
+# Printing nice help when make help is called
+
+# COLORS
+GREEN  := $(shell tput -Txterm setaf 2)
+YELLOW := $(shell tput -Txterm setaf 3)
+WHITE  := $(shell tput -Txterm setaf 7)
+RESET  := $(shell tput -Txterm sgr0)
+
+
+TARGET_MAX_CHAR_NUM=20
+## Show help
+help:
+	@echo ''
+	@echo 'Usage:'
+	@echo '  ${YELLOW}make${RESET} ${GREEN}<target>${RESET}'
+	@echo ''
+	@echo 'Targets:'
+	@awk '/^[a-zA-Z\-\_0-9]+:/ { \
+		helpMessage = match(lastLine, /^## (.*)/); \
+		if (helpMessage) { \
+			helpCommand = substr($$1, 0, index($$1, ":")); \
+			helpMessage = substr(lastLine, RSTART + 3, RLENGTH); \
+			printf "  ${YELLOW}%-$(TARGET_MAX_CHAR_NUM)s${RESET} ${GREEN}%s${RESET}\n", helpCommand, helpMessage; \
+		} \
+	} \
+	{ lastLine = $$0 }' $(MAKEFILE_LIST)

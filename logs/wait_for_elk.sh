@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
-#URL="192.168.99.100:9200"
+## Waiting for ELK application to be up and running
+
 URL="localhost:5601"
 EXITCODE=1
 MAXRETR=30
