@@ -47,10 +47,6 @@ To build and run type::
 
 This will build your base images then with docker compose build and start all your containers.
 
-Later on if you need only to build base images run::
-
-    make build-base
-
 To let docker-compose to build and run what is needed run::
 
     make run
@@ -95,12 +91,6 @@ To reload https container run::
 
    make reload-https
 
-to recreate base container run::
-
-   docker-compose down
-   make clean-base
-   make build-base
-
 to reload changes in docs run::
 
    make rebuild-docs
@@ -113,7 +103,7 @@ Makefile basicly covers all docker and docker-compose commands. Some of them can
   make clean-apps
 
 which stops and removes all containers and images build by docker-compose.
-Additionally to clean up base images and containers run ::
+Additionally to clean up all images and containers run ::
 
   make clean-all
 
