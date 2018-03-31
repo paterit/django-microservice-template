@@ -129,6 +129,7 @@ services:
     build:
       context: ./testing
       dockerfile: Dockerfile-node
+    command: /bin/true
 
   testing:
     container_name: "{{ project_name }}-testing"

@@ -20,5 +20,5 @@ while [ $i -lt $MAXRETR ]; do
     fi
 done
 
-echo "... fail - exceed max number of retries: $MAXRETR"
+echo "... fail - exceed max number of retries: $MAXRETR. Have you remembered to run sudo sysctl -w vm.max_map_count=262144 ?"
 exit 1

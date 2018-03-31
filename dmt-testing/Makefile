@@ -29,13 +29,13 @@ build:
 	#make clean
 	make success
 
-
-# build-local:
-# 	make virtualenv
-# 	make copy-current-dir
-# 	make create-project
-# 	-cd $(PROJECT_NAME); \
-# 	make
+## Build local containers (not in docker-machine) based on fresh copy from current ../sources
+build-local:
+	make virtualenv
+	make copy-current-dir
+	make create-project
+	-cd $(PROJECT_NAME); \
+ 	make all
 
 
 ## Clean source dir and CI/CD database then copy fresh code from ../current dir and start full rebuild and test build as an action triggered by post commit git hook
@@ -57,6 +57,16 @@ success:
 
 ## Clean code, docker machine and virtualenv
 clean:
+	-cd $(PROJECT_NAME); \
+	make clean-cicd
+	-docker-machine stop $(PROJECT_NAME)-cicd
+	-docker-machine rm -y $(PROJECT_NAME)-cicd
+	rm -rf ./dmt-template
+	rm -rf ./virtenv
+	rm -rf ./$(PROJECT_NAME)
+
+## Clean code and virtualenv
+clean-local:
 	-cd $(PROJECT_NAME); \
 	make clean-cicd
 	-docker-machine stop $(PROJECT_NAME)-cicd

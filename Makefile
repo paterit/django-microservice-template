@@ -288,9 +288,9 @@ clean-orphaned-volumes:
 clean-none-images:
 	-@docker rmi $(docker images --filter "dangling=true" -q --no-trunc)
 ## Remove containers and docker images for WEB application and SBE testing
-clean-apps: clean-web clean-testing cleanclean-compose clean-orphaned-volumes
+clean-apps: clean-web clean-testing clean-docs clean-data clean-compose clean-orphaned-volumes
 ## Remove containers and docker images for ELK, DB and Nginx
-clean-non-apps: clean-logspout clean-logs clean-db clean-https
+clean-non-apps: clean-logspout clean-logs clean-logspout clean-db clean-https
 ## Remove all containers and docker images not including Buildbot 
 clean-all: clean-apps clean-non-apps clean-data clean-docs
 
@@ -419,7 +419,8 @@ upload-docs:
 ## Collect static in WEB container and copy them to Nginx to be served as statics
 upload-static:
 	mkdir -p static
-	@make reload_static
+	@make reload-static
+	#@docker exec -t {{ project_name }}-web python manage.py collectstatic --no-input
 	@docker cp {{ project_name }}-web:/opt/{{ project_name }}/static/ .
 	@docker cp ./static {{ project_name }}-https:/opt/{{ project_name }}/
 
