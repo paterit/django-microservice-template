@@ -29,11 +29,16 @@ build:
 	#make clean
 	make success
 
-## Build local containers (not in docker-machine) based on fresh copy from current ../sources
-build-local:
+
+## Create virtual env, copy source and create project in place
+prepare-local:
 	make virtualenv
 	make copy-current-dir
 	make create-project
+
+## Build local containers (not in docker-machine) based on fresh copy from current ../sources
+build-local:
+	@make prepare-local
 	-cd $(PROJECT_NAME); \
  	make all
 
