@@ -1,34 +1,34 @@
 ## Build all containers and run tests with dev settings 
 all:
-	@make chmod-x
-	@make run
-	@make upload-docs
-	@make upload-static
-	@make wait-for-postgres
-	@make wait-for-elk
-	@make test
-	@make sbe
+	make chmod-x
+	make run
+	make upload-docs
+	make upload-static
+	make wait-for-postgres
+	make wait-for-elk
+	make test
+	make sbe-smoke
 
 ## Build all containers and run tests with production settings
 all-prod:
-	@make chmod-x
-	@make run-prod
-	@make upload-docs
-	@make upload-static
-	@make wait-for-postgres
-	@make wait-for-elk
-	@make test
-	@make sbe
+	make chmod-x
+	make run-prod
+	make upload-docs
+	make upload-static
+	make wait-for-postgres
+	make wait-for-elk
+	make test
+	make sbe-smoke
 
 ## Set local docker-machine, creates Buildbot containers and run initial commit to fire git hook
 cicd-local:
-	@make cicd-set-local-docker-machine
+	make cicd-set-local-docker-machine
 	bash cicd/pull_base_docker_images.sh
 	-bash cicd/copy_docker_images_to_machine.sh
-	@make chmod-x
-	@make run-cicd
-	@make cicd-wait-for-master
-	@make cicd-initial-commit
+	make chmod-x
+	make run-cicd
+	make cicd-wait-for-master
+	make cicd-initial-commit
 
 # Set scripts as executable
 chmod-x:
@@ -163,6 +163,7 @@ stop-logspout:
 ## Stop Buildbot containers
 stop-cicd:
 	@docker-compose -f docker-compose.cicd.yml stop
+	@docker-machine stop {{ project_name }}-cicd
 ## Stop all applications' containers (without Buildbot)
 stop:
 	@docker-compose stop
@@ -296,17 +297,17 @@ clean-all: clean-apps clean-non-apps clean-data clean-docs
 
 ## Remove and recreate containers and docker images for Buildbot DB
 reload-cicd-db:
-	@make stop-cicd
-	@make rm-cicd-db
-	@make rmi-cicd-db
+	make stop-cicd
+	make rm-cicd-db
+	make rmi-cicd-db
 	@docker-compose -f docker-compose.cicd.yml up -d
-	@make cicd-wait-for-master
+	make cicd-wait-for-master
 
 ## Remove and recreate containers and docker iages for Nginx
 reload-https:
-	@make clean-https
-	@make build-https
-	@make run-https
+	make clean-https
+	make build-https
+	make run-https
 
 # open shell in container
 ## Open shell in container with WEB application
@@ -374,6 +375,8 @@ wait-for-cicd-master:
 ## Run SBE tests in {{ project_name }}-web container
 sbe:
 	@docker exec -t {{ project_name }}-testing behave
+sbe-smoke:
+	@docker exec -t {{ project_name }}-testing behave --tags=smoketest
 
 ## Regenerate docs
 rebuild-docs:
@@ -419,7 +422,7 @@ upload-docs:
 ## Collect static in WEB container and copy them to Nginx to be served as statics
 upload-static:
 	mkdir -p static
-	@make reload-static
+	make reload-static
 	#@docker exec -t {{ project_name }}-web python manage.py collectstatic --no-input
 	@docker cp {{ project_name }}-web:/opt/{{ project_name }}/static/ .
 	@docker cp ./static {{ project_name }}-https:/opt/{{ project_name }}/

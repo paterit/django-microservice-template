@@ -40,8 +40,13 @@ prepare-local:
 build-local:
 	@make prepare-local
 	-cd $(PROJECT_NAME); \
- 	make all
-
+	make all
+	
+## Run make all in the context of virtenv
+run-local:
+	. virtenv/bin/activate; \
+	-cd $(PROJECT_NAME); \
+	make all
 
 ## Clean source dir and CI/CD database then copy fresh code from ../current dir and start full rebuild and test build as an action triggered by post commit git hook
 reload:
@@ -74,8 +79,6 @@ clean:
 clean-local:
 	-cd $(PROJECT_NAME); \
 	make clean-cicd
-	-docker-machine stop $(PROJECT_NAME)-cicd
-	-docker-machine rm -y $(PROJECT_NAME)-cicd
 	rm -rf ./dmt-template
 	rm -rf ./virtenv
 	rm -rf ./$(PROJECT_NAME)

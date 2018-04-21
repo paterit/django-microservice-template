@@ -4,6 +4,7 @@ Feature: Login as a superuser to admin panel
   I want to authenticate to system
   using standard test1 admin account
 
+  @smoketest
   Scenario: Login as admin user
     Given User login and passwrod entered on admin panel login url
      Then User is able to login
