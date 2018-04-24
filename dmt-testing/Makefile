@@ -78,7 +78,8 @@ clean:
 ## Clean code and virtualenv
 clean-local:
 	-cd $(PROJECT_NAME); \
-	make clean-cicd
+	make clean-pyc; \
+	make clean-all
 	rm -rf ./dmt-template
 	rm -rf ./virtenv
 	rm -rf ./$(PROJECT_NAME)
@@ -162,6 +163,15 @@ test_commit:
 	echo "Test commit." > test.txt; \
 	git add test.txt; \
 	git commit -q -m "Test commit."
+
+## Test both local and docker-machine versions
+test:
+	make build-local
+	make clean-local
+	@echo "\033[1;32mGreat! Local build works!\033[0m"
+	make all
+	make clean
+	@echo "\033[1;32mGreat! Docker-machine version works!\033[0m"
 
 
 # Printing nice help when make help is called
