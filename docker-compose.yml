@@ -123,7 +123,7 @@ services:
       - https-logs
     command: bash entry-point.sh
 
-  # remove as soon as node 9.x based on alpine 3.7 is available. 3.7 is the only alpine that works with chromium-headles webdrivier
+  # remove as soon as node 9.x based on alpine 3.7 is available here https://hub.docker.com/_/node/. 3.7 is the only alpine that works with chromium-headles webdrivier
   node:
     container_name: "node-alpine37"
     image: "node:9.9-alpine37"
@@ -143,3 +143,18 @@ services:
     depends_on:
       - node
     command: tail -f /dev/null
+
+  docker-console:
+      image: portainer/portainer
+      container_name: {{ project_name }}-docker-console
+      labels:
+        application: "{{ project_name }}-docker-console"
+      ports:
+        - "9000:9000"
+      command: -H unix:///var/run/docker.sock
+      volumes:
+        - /var/run/docker.sock:/var/run/docker.sock
+        - portainer_data:/data
+
+volumes:
+  portainer_data:

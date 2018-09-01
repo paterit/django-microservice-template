@@ -79,8 +79,11 @@ build-testing:
 ## Build containers for ELK
 build-logs:
 	docker-compose build logs
+## Build containers for docker console
+build-docker-console:
+	docker-compose build docker-console
 ## Build all applications' containers (without Buildbot)
-build: build-data build-db build-https build-web build-docs build-testing
+build: build-data build-db build-https build-web build-docs build-testing build-docker-console
 
 
 #run docker images
@@ -99,6 +102,9 @@ run-testing:
 ## Run containers for ELK
 run-logs:
 	docker-compose up -d logs
+## Run containers for docker-console
+run-docker-console:
+	docker-compose up -d docker-console
 ## Run all applications' containers (without Buildbot)
 run:
 	docker-compose up -d
@@ -139,6 +145,9 @@ IMGS-LOGSPOUT=$(shell docker images -q -f "label=application={{ project_name }}-
 CONTS-DOCS=$(shell docker ps -a -q -f "name={{ project_name }}-docs")
 IMGS-DOCS=$(shell docker images -q -f "label=application={{ project_name }}-docs")
 
+CONTS-DOCKER-CONSOLE=$(shell docker ps -a -q -f "name={{ project_name }}-docker-console")
+IMGS-DOCKER-CONSOLE=$(shell docker images -q -f "label=application={{ project_name }}-docker-console")
+
 CONTS-CICD=$(shell docker ps -a -q -f "name={{ project_name }}-cicd")
 
 IMGS-CICD-MASTER=$(shell docker images -q -f "label=application={{ project_name }}-cicd-master")
@@ -165,6 +174,9 @@ stop-logs:
 	-docker stop $(CONTS-LOGS)
 stop-logspout:
 	-docker stop $(CONTS-LOGSPOUT)
+## Stop docker console containers
+stop-docker-console:
+	-docker stop $(CONTS-DOCKER-CONSOLE)
 ## Stop Buildbot containers
 stop-cicd:
 	docker stop $(CONTS-CICD)
@@ -190,6 +202,9 @@ start-testing:
 ## Start ELK containers
 start-logs:
 	docker start {{ project_name }}-logs
+## Start docker console containers
+start-docker-console:
+	docker start {{ project_name }}-docker-console
 ## Start all applications' containers (without Buildbot)
 start: 
 	docker-compose start
@@ -221,6 +236,9 @@ rm-logs:
 	-docker rm $(CONTS-LOGS)
 rm-logspout:
 	-docker rm $(CONTS-LOGSPOUT)
+## Remove containers for docker-console
+rm-docker-console:
+	-docker rm $(CONTS-DOCKER-CONSOLE)
 ## Remove containers for Buildbot
 rm-cicd:
 	-docker rm $(CONTS-CICD)
@@ -228,7 +246,7 @@ rm-cicd:
 rm-cicd-db:
 	-docker rm {{ project_name }}-cicd-db
 ## Remove all containers (with Buildbot)
-rm: rm-db rm-web rm-docs rm-https rm-logspout rm-logs rm-cicd
+rm: rm-db rm-web rm-docs rm-https rm-logspout rm-logs rm-docker-console rm-cicd
 
 
 #remove docker images
@@ -255,6 +273,9 @@ rmi-logs:
 	-docker rmi -f $(IMGS-LOGS)
 rmi-logspout:
 	-docker rmi -f $(IMGS-LOGSPOUT)
+## Remove docker images for docker console
+rmi-docker-console:
+	-docker rmi -f $(IMGS-DOCKER-CONSOLE)
 ## Remove  docker images for Buildbot apps and DB
 rmi-cicd:
 	-docker rmi -f $(IMGS-CICD-MASTER)
@@ -265,7 +286,7 @@ rmi-cicd-db:
 	-docker rmi -f $(IMGS-CICD-DB)
 
 ## Remove all docker images, icluding Buildbot
-rmi: rmi-db rmi-web rmi-https rmi-logspout rmi-logs rmi-cicd
+rmi: rmi-db rmi-web rmi-https rmi-logspout rmi-logs rmi-docker-console rmi-cicd
 
 ## Remove compiled *.pyc files from the {{ project_name }}-web
 clean-pyc: 
@@ -286,6 +307,8 @@ clean-data: stop-data rm-data rmi-data
 ## Remove containers and docker images for ELK
 clean-logs: stop-logs rm-logs rmi-logs
 clean-logspout: stop-logspout rm-logspout rmi-logspout
+## Remove containers and docker images fro docker console
+clean-docker-console: stop-docker-console rm-docker-console rmi-docker-console
 ## Remove containers and docker images for Buildbot
 clean-cicd: stop-cicd rm-cicd rmi-cicd
 clean-compose:
@@ -299,7 +322,7 @@ clean-none-images:
 ## Remove containers and docker images for WEB application and SBE testing
 clean-apps: clean-web clean-testing clean-docs clean-data clean-compose clean-orphaned-volumes
 ## Remove containers and docker images for ELK, DB and Nginx
-clean-non-apps: clean-logspout clean-logs clean-logspout clean-db clean-https
+clean-non-apps: clean-logspout clean-logs clean-logspout clean-db clean-https clean-docker-console
 ## Remove all containers and docker images not including Buildbot 
 clean-all: clean-apps clean-non-apps clean-data clean-docs
 
@@ -367,6 +390,9 @@ logs-cicd-worker:
 ## View logs for Buildbot DB
 logs-cicd-db:
 	docker  logs -f {{ project_name }}-cicd-db
+## View logs for docker console
+logs-docker-console:
+	docker logs -f {{ project_name }}-docker-console
 
 ## Wait untill postgresql is ready
 wait-for-postgres:
@@ -442,7 +468,7 @@ success-local:
 
 ## Print message on success for local with CI/CD machinery
 success-cicd:
-	@echo "\033[1;32mGreat! All works! You can go to the docker-machine address in your browser (most propably - http://192.168.99.100/docs/ ).\033[0m"
+	@echo "\033[1;32mGreat! All works! You can go to the CI/CD console in your browser http://localhost:8010 .\033[0m"
 
 # Printing nice help when make help is called
 

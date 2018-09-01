@@ -10,6 +10,7 @@ Currently available components to build your services:
 - Balckbox testing: SBE by [Behave](http://pythonhosted.org/behave/)
 - Logs aggreagator: [ELK](https://www.elastic.co/products) stack
 - CI/CD machinery: [Buildbot](http://buildbot.net/)
+- Docker console: [Portainer](https://portainer.io/)
 
 Planned to be added:
 - Performacne testing
@@ -18,7 +19,6 @@ Planned to be added:
 - Key-value store
 - Cache
 - Persistent queues 
-- Docker swarm
 - Alerting
 - Load balancing 
 - Service discovery
@@ -77,6 +77,7 @@ You should see among running containers some with names like :
     yourservice-testing - Behave, Selenium, PhantomJS
     yourservice-logs - ELK stack
     yourservice-logspout - Logspout - log forwarder from Docker to Logstash
+    yourservice-docker-console - Portainer - web docker console
 
 And a couple of data containers to better manage logs:
 

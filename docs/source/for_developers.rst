@@ -76,6 +76,7 @@ You should see containers with names like::
   {{ project_name }}-testing - Behave, Selenium, PhantomJS
   {{ project_name }}-logs - ELK stack
   {{ project_name }}-logspout - Logspout - log forwarder from Docker to Logstash
+  {{ project_name }}-docker-console - Portainer - web docker console
 
 
 To stop all containers::
@@ -139,6 +140,7 @@ To easily open shell for conteiners you can use::
     make shell-testing
     make shell-db
     make shell-logs
+    make shell-docker-console
 
 
 Local CI/CD machine
@@ -193,7 +195,7 @@ script to do that is stored in yor\_service project dir in the path:
 Now using IP generated for your docker-machine machine (in my case it is
 192.168.99.100) you can start using your services. 
 
-Here is the `Django admin panel <http://192.168.99.100/admin>`__.
+Here is the `Django admin panel <http://192.168.99.100/admin>`__ (user: admin, password: admin).
 
 To read how it can be further used go to `docs <https://192.168.99.100/docs>`__. 
 
