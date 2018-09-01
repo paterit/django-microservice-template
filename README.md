@@ -124,11 +124,20 @@ This "Full rebuild" builder should be already started (this is the last step in 
 From now on whenever you commit any change locally to your project there will be message send to CICD via post-commit hook in Git.
 
 Now using IP generated for your docker-machine machine (in my case it is 192.168.99.100 - you can verify it by reading the output from docker-machine ls ) you can start using your services.
-[Django admin panel](http://192.168.99.100/admin)
+[Django admin panel](http://192.168.99.100/admin) (user: admin, password: admin)
 To read how it can be further used go to [docs](http://192.168.99.100/docs).
 To see any other useful links go to [this page](http://192.168.99.100/docs/links_page.html) in docs.
 
 Whenever you do changes in your code, when you run any builders in Buildbot the fresh copy of your sources will be copied to Buildbot worker and tested.
+
+The above will create docker machine and a bunch of images and containers. It can be easily and safely cleaned up by running:
+
+    make clean-cicd
+
+However, it will not destroy your docker machine. You need to clean it manually by typing:
+
+    docker-machine rm yourservice-cicd
+
 
 
 * [Learn Markdown](https://bitbucket.org/tutorials/markdowndemo)
