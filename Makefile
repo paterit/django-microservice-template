@@ -167,7 +167,7 @@ stop-logspout:
 	-docker stop $(CONTS-LOGSPOUT)
 ## Stop Buildbot containers
 stop-cicd:
-	docker-compose -f docker-compose.cicd.yml stop
+	docker stop $(CONTS-CICD)
 	docker-machine stop {{ project_name }}-cicd
 ## Stop all applications' containers (without Buildbot)
 stop:
