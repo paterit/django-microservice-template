@@ -134,7 +134,7 @@ The above will create docker machine and a bunch of images and containers. It ca
 
     make clean-cicd
 
-However, it will not destroy your docker machine. You need to clean it manually by typing:
+It will stop your docker-machine but won't destroy it. You need to clean it manually by typing:
 
     docker-machine rm yourservice-cicd
 
