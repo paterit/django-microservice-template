@@ -8,6 +8,7 @@ all:
 	make wait-for-elk
 	make test
 	make sbe-smoke
+	make success-local
 
 ## Build all containers and run tests with production settings
 all-prod:
@@ -19,6 +20,7 @@ all-prod:
 	make wait-for-elk
 	make test
 	make sbe-smoke
+	make success-local
 
 ## Set local docker-machine, creates Buildbot containers and run initial commit to fire git hook
 cicd-local:
@@ -29,6 +31,7 @@ cicd-local:
 	make run-cicd
 	make cicd-wait-for-master
 	make cicd-initial-commit
+	make success-cicd
 
 # Set scripts as executable
 chmod-x:
@@ -432,6 +435,14 @@ upload-static:
 	docker cp {{ project_name }}-web:/opt/{{ project_name }}/static/ .
 	docker cp ./static {{ project_name }}-https:/opt/{{ project_name }}/
 
+
+## Print message on success for local install
+success-local:
+	@echo "\033[1;32mGreat! All works! You can go to the docs - http://127.0.0.1/docs/ ).\033[0m"
+
+## Print message on success for local with CI/CD machinery
+success-cicd:
+	@echo "\033[1;32mGreat! All works! You can go to the docker-machine address in your browser (most propably - http://192.168.99.100/docs/ ).\033[0m"
 
 # Printing nice help when make help is called
 
