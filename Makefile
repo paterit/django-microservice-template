@@ -82,8 +82,14 @@ build-logs:
 ## Build containers for docker console
 build-docker-console:
 	docker-compose build docker-console
+## Build containers for monitoring agent
+build-monitoring-agent:
+	docker-compose build monitoring-agent
+## Build containers for monitoring server
+build-monitoring-server:
+	docker-compose build monitoring-server
 ## Build all applications' containers (without Buildbot)
-build: build-data build-db build-https build-web build-docs build-testing build-docker-console
+build: build-data build-db build-https build-web build-docs build-testing build-docker-console build-monitoring
 
 
 #run docker images
@@ -105,6 +111,12 @@ run-logs:
 ## Run containers for docker-console
 run-docker-console:
 	docker-compose up -d docker-console
+## Run containers for monitoring agent
+run-monitoring-agent:
+	docker-compose up -d monitoring-agent
+## Run containers for monitoring server
+run-monitoring-server:
+	docker-compose up -d monitoring-server
 ## Run all applications' containers (without Buildbot)
 run:
 	docker-compose up -d
@@ -148,6 +160,12 @@ IMGS-DOCS=$(shell docker images -q -f "label=application={{ project_name }}-docs
 CONTS-DOCKER-CONSOLE=$(shell docker ps -a -q -f "name={{ project_name }}-docker-console")
 IMGS-DOCKER-CONSOLE=$(shell docker images -q -f "label=application={{ project_name }}-docker-console")
 
+CONTS-MONITORING-AGENT=$(shell docker ps -a -q -f "name={{ project_name }}-monitoring-agent")
+IMGS-MONITORING-AGENT=$(shell docker images -q -f "label=application={{ project_name }}-monitoring-agent")
+
+CONTS-MONITORING-SERVER=$(shell docker ps -a -q -f "name={{ project_name }}-monitoring-server")
+IMGS-MONITORING-SERVER=$(shell docker images -q -f "label=application={{ project_name }}-monitoring-server")
+
 CONTS-CICD=$(shell docker ps -a -q -f "name={{ project_name }}-cicd")
 
 IMGS-CICD-MASTER=$(shell docker images -q -f "label=application={{ project_name }}-cicd-master")
@@ -177,6 +195,12 @@ stop-logspout:
 ## Stop docker console containers
 stop-docker-console:
 	-docker stop $(CONTS-DOCKER-CONSOLE)
+## Stop monitoring server
+stop-monitoring-server:
+	-docker stop $(CONTS-MONITORING-SERVER)
+## Stop monitoring agent
+stop-monitoring-agent:
+	-docker stop $(CONTS-MONITORING-AGENT)
 ## Stop Buildbot containers
 stop-cicd:
 	docker stop $(CONTS-CICD)
@@ -202,9 +226,13 @@ start-testing:
 ## Start ELK containers
 start-logs:
 	docker start {{ project_name }}-logs
-## Start docker console containers
+## Start docker console container
 start-docker-console:
 	docker start {{ project_name }}-docker-console
+## Start monitoring containers
+start-monitoring:
+	docker start {{ project_name }}-monitoring-agent
+	docker start {{ project_name }}-monitoring-server
 ## Start all applications' containers (without Buildbot)
 start: 
 	docker-compose start
@@ -239,6 +267,12 @@ rm-logspout:
 ## Remove containers for docker-console
 rm-docker-console:
 	-docker rm $(CONTS-DOCKER-CONSOLE)
+## Remove containers for monitoring-agent
+rm-monitoring-agent:
+	-docker rm $(CONTS-MONITORING-AGENT)
+## Remove containers for monitoring-server
+rm-monitoring-server:
+	-docker rm $(CONTS-MONITORING-SERVER)
 ## Remove containers for Buildbot
 rm-cicd:
 	-docker rm $(CONTS-CICD)
@@ -246,7 +280,7 @@ rm-cicd:
 rm-cicd-db:
 	-docker rm {{ project_name }}-cicd-db
 ## Remove all containers (with Buildbot)
-rm: rm-db rm-web rm-docs rm-https rm-logspout rm-logs rm-docker-console rm-cicd
+rm: rm-db rm-web rm-docs rm-https rm-logspout rm-logs rm-docker-console rm-monitoring-agent rm-monitoring-server rm-cicd
 
 
 #remove docker images
@@ -276,6 +310,12 @@ rmi-logspout:
 ## Remove docker images for docker console
 rmi-docker-console:
 	-docker rmi -f $(IMGS-DOCKER-CONSOLE)
+## Remove docker images for monitoring-agent
+rmi-monitoring-agent:
+	-docker rmi -f $(IMGS-MONITORING-AGENT)
+## Remove docker images for monitoring-server
+rmi-monitoring-server:
+	-docker rmi -f $(IMGS-MONITORING-SERVER)
 ## Remove  docker images for Buildbot apps and DB
 rmi-cicd:
 	-docker rmi -f $(IMGS-CICD-MASTER)
@@ -286,7 +326,7 @@ rmi-cicd-db:
 	-docker rmi -f $(IMGS-CICD-DB)
 
 ## Remove all docker images, icluding Buildbot
-rmi: rmi-db rmi-web rmi-https rmi-logspout rmi-logs rmi-docker-console rmi-cicd
+rmi: rmi-db rmi-web rmi-https rmi-logspout rmi-logs rmi-docker-console rmi-monitoring-agent rmi-monitoring-server rmi-cicd
 
 ## Remove compiled *.pyc files from the {{ project_name }}-web
 clean-pyc: 
@@ -307,8 +347,12 @@ clean-data: stop-data rm-data rmi-data
 ## Remove containers and docker images for ELK
 clean-logs: stop-logs rm-logs rmi-logs
 clean-logspout: stop-logspout rm-logspout rmi-logspout
-## Remove containers and docker images fro docker console
+## Remove containers and docker images for docker console
 clean-docker-console: stop-docker-console rm-docker-console rmi-docker-console
+## Remove containers and docker images for monitoring agent
+clean-monitoring-agent: stop-monitoring-agent rm-monitoring-agent rmi-monitoring-agent
+## Remove containers and docker images for monitoring-server
+clean-monitoring-server: stop-monitoring-server rm-monitoring-server rmi-monitoring-server
 ## Remove containers and docker images for Buildbot
 clean-cicd: stop-cicd rm-cicd rmi-cicd
 clean-compose:
@@ -320,9 +364,9 @@ clean-orphaned-volumes:
 clean-none-images:
 	-docker rmi $(docker images --filter "dangling=true" -q --no-trunc)
 ## Remove containers and docker images for WEB application and SBE testing
-clean-apps: clean-web clean-testing clean-docs clean-data clean-compose clean-orphaned-volumes
+clean-apps: clean-web clean-testing clean-docs clean-data clean-orphaned-volumes #clean-compose - not work well in dmt-testing without virtenv context
 ## Remove containers and docker images for ELK, DB and Nginx
-clean-non-apps: clean-logspout clean-logs clean-logspout clean-db clean-https clean-docker-console
+clean-non-apps: clean-logspout clean-logs clean-logspout clean-db clean-https clean-docker-console clean-monitoring-agent clean-monitoring-server
 ## Remove all containers and docker images not including Buildbot 
 clean-all: clean-apps clean-non-apps clean-data clean-docs
 
@@ -393,6 +437,12 @@ logs-cicd-db:
 ## View logs for docker console
 logs-docker-console:
 	docker logs -f {{ project_name }}-docker-console
+## View logs for monitoring-agent
+logs-monitoring-agent:
+	docker logs -f {{ project_name }}-monitoring-agent
+## View logs for monitoring-server
+logs-monitoring-server:
+	docker logs -f {{ project_name }}-monitoring-server
 
 ## Wait untill postgresql is ready
 wait-for-postgres:

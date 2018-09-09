@@ -38,14 +38,13 @@ prepare-local:
 
 ## Build local containers (not in docker-machine) based on fresh copy from current ../sources
 build-local:
-	@make prepare-local
-	-cd $(PROJECT_NAME); \
-	make all
+	make prepare-local
+	make run-local
 	
-## Run make all in the context of virtenv
+## Run make all in the context of virtenv and PROJECT_NAME directory
 run-local:
 	. virtenv/bin/activate; \
-	-cd $(PROJECT_NAME); \
+	cd $(PROJECT_NAME); \
 	make all
 
 ## Clean source dir and CI/CD database then copy fresh code from ../current dir and start full rebuild and test build as an action triggered by post commit git hook
@@ -106,7 +105,7 @@ create-project-git:
 	django-admin startproject \
         --template=https://github.com/paterit/django-microservice-template/archive/master.zip \
         --extension=py,rst,yml,sh,md,conf,feature \
-        --name=Makefile,Dockerfile-web,Dockerfile-db,Dockerfile-data,Dockerfile-https,Dockerfile-testing,Dockerfile,Dockerfile-docs,master.cfg,db.env,cicd.docker.env,post-commit \
+        --name=Makefile,glances-graphite.json,Dockerfile-glances,Dockerfile-grafana,Dockerfile-web,Dockerfile-db,Dockerfile-data,Dockerfile-https,Dockerfile-testing,Dockerfile,Dockerfile-docs,master.cfg,db.env,cicd.docker.env,post-commit \
         $(PROJECT_NAME)
 
 ## Call django-admin start project for code copied to local dmt-template dir
@@ -115,7 +114,7 @@ create-project:
 	django-admin startproject \
         --template=./dmt-template \
         --extension=py,rst,yml,sh,md,conf,feature \
-        --name=Makefile,Dockerfile-web,Dockerfile-db,Dockerfile-data,Dockerfile-https,Dockerfile-testing,Dockerfile,Dockerfile-docs,master.cfg,db.env,cicd.docker.env,post-commit \
+        --name=Makefile,glances-graphite.json,Dockerfile-glances,Dockerfile-grafana,Dockerfile-web,Dockerfile-db,Dockerfile-data,Dockerfile-https,Dockerfile-testing,Dockerfile,Dockerfile-docs,master.cfg,db.env,cicd.docker.env,post-commit \
         $(PROJECT_NAME)
 
 ## Create docker containers with Buildbot

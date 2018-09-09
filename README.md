@@ -11,10 +11,10 @@ Currently available components to build your services:
 - Logs aggreagator: [ELK](https://www.elastic.co/products) stack
 - CI/CD machinery: [Buildbot](http://buildbot.net/)
 - Docker console: [Portainer](https://portainer.io/)
+- Monitoring: [Glances](https://nicolargo.github.io/glances/) + [Graphite](https://graphiteapp.org/) + [Grafana](https://grafana.com/)
 
 Planned to be added:
 - Performacne testing
-- Monitoring
 - NoSql DB
 - Key-value store
 - Cache
@@ -49,7 +49,7 @@ To create source code for your service based on this template you need to run:
     django-admin startproject \
         --template=https://github.com/paterit/django-microservice-template/archive/master.zip \
         --extension=py,rst,yml,sh,md,conf,feature \
-        --name=Makefile,glances-graphite.json,Dockerfile-glances,Dockerfile-docs,Dockerfile-web,Dockerfile-db,Dockerfile-data,Dockerfile-https,Dockerfile-testing,Dockerfile,master.cfg,db.env,cicd.docker.env,post-commit \
+        --name=Makefile,glances-graphite.json,Dockerfile-glances,Dockerfile-grafana,Dockerfile-docs,Dockerfile-web,Dockerfile-db,Dockerfile-data,Dockerfile-https,Dockerfile-testing,Dockerfile,master.cfg,db.env,cicd.docker.env,post-commit \
         yourservice
 
 Due to docker-machine limits on naming machines don't use "_" (underscore) sign when naming your project.
@@ -78,6 +78,8 @@ You should see among running containers some with names like :
     yourservice-logs - ELK stack
     yourservice-logspout - Logspout - log forwarder from Docker to Logstash
     yourservice-docker-console - Portainer - web docker console
+    yourservice-monitoring-agent - Glances - monitoring agent
+    yourservice-monitoring-server - Graphit+Grafana - monitoring server
 
 And a couple of data containers to better manage logs:
 

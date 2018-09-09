@@ -160,7 +160,7 @@ services:
       container_name: "{{ project_name }}-monitoring-agent"
       image: "{{ project_name }}-monitoring-agent:1.0.1"
       build:
-        context: ./monitoring
+        context: ./monitoring/glances
         dockerfile: Dockerfile-glances
       ports:
         - 61208-61209:61208-61209
@@ -176,10 +176,11 @@ services:
       pid: "host"
 
   monitoring-server:
-      image: kamon/grafana_graphite
       container_name: {{ project_name }}-monitoring-server
-      labels:
-        application: "{{ project_name }}-monitoring-server"
+      image: "{{ project_name }}-monitoring-server:1.0.1"
+      build:
+        context: ./monitoring/grafana
+        dockerfile: Dockerfile-grafana
       ports:
         - 81:81 #graphite web ui / rest api
         - 88:80 #graphana web ui

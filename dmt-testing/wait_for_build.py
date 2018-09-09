@@ -39,7 +39,7 @@ while (True):
         try:
             print("Returned code (results) for this build is: '%d'" % (result))
         except TypeError:
-            print("Proble! Rusult returned from Buildbot is %s and the state is %s" % (str(result), state))
+            print("Problem! Rusult returned from Buildbot is %s and the state is %s" % (str(result), state))
             print(r.json()["builds"][0])
 
         if (result != 0):
