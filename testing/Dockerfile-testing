@@ -27,7 +27,8 @@ RUN apk update && \
     chromium \
     chromium-chromedriver \
     less \
-    vim
+    vim \
+    curl
 
   # make some useful symlinks that are expected to exist
   RUN if [[ ! -e /usr/bin/python ]];        then ln -sf /usr/bin/python3 /usr/bin/python; fi \
