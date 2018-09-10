@@ -11,4 +11,6 @@ docker save nginx:1.13-alpine | pv | docker $(docker-machine config {{ project_n
 docker save sebp/elk:623 | pv | docker $(docker-machine config {{ project_name }}-cicd) load
 docker save gliderlabs/logspout:v3.1 | pv | docker $(docker-machine config {{ project_name }}-cicd) load
 docker save postgres:10.3-alpine | pv | docker $(docker-machine config {{ project_name }}-cicd) load
+docker save nicolargo/glances:v2.11.1 | pv | docker $(docker-machine config {{ project_name }}-cicd) load
+docker save kamon/grafana_graphite | pv | docker $(docker-machine config {{ project_name }}-cicd) load
 

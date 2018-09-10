@@ -36,3 +36,27 @@ def step_impl(context):
     r = context.response
     assert 200 == r.status_code
     assert 'admin' in str(r.content)
+
+
+@given(u'Grafana url')
+def step_impl(context):
+    context.response = requests.get('http://monitoring-server:80/login')
+
+
+@then(u'Grafana login page is properly loaded')
+def step_impl(context):
+    r = context.response
+    assert 200 == r.status_code
+    assert 'User' in str(r.content)
+
+
+@given(u'Portainer url')
+def step_impl(context):
+    context.response = requests.get('http://docker-console:9000/#/auth')
+
+
+@then(u'Portainer auth page is propely loaded')
+def step_impl(context):
+    r = context.response
+    assert 200 == r.status_code
+    assert 'portainer' in str(r.content)

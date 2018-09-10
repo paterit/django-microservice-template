@@ -18,3 +18,13 @@ Feature: Check if all subsystems are available
   Scenario: Check Django admin page availability
     Given Django app url
      Then Django admin page is properly loaded
+
+  @smoketest
+  Scenario: Check Grafana login page availability
+    Given Grafana url
+     Then Grafana login page is properly loaded 
+
+  @smoketest
+  Scenario: Check Portainer availability
+    Given Portainer url
+     Then Portainer auth page is propely loaded

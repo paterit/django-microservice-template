@@ -1,0 +1,3 @@
+FROM kamon/grafana_graphite
+LABEL "application"="{{ project_name }}-monitoring-server"
+ADD ./dashboards/* /src/dashboards/

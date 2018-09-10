@@ -156,5 +156,39 @@ services:
         - /var/run/docker.sock:/var/run/docker.sock
         - portainer_data:/data
 
+  monitoring-agent:
+      container_name: "{{ project_name }}-monitoring-agent"
+      image: "{{ project_name }}-monitoring-agent:1.0.1"
+      build:
+        context: ./monitoring/glances
+        dockerfile: Dockerfile-glances
+      ports:
+        - 61208-61209:61208-61209
+      restart: always
+      environment:
+         # OPTS for glances:v2.11.1
+        GLANCES_OPT: "--export-statsd -q -t 1" #for exporting to statd standalone quite mode needs to be set
+        # OPTS for glances 3
+        #GLANCES_OPT: "--export statsd -q -t 1" #for exporting to statd standalone quite mode needs to be set
+        #GLANCES_OPT: "-w" #for web console, no export to graphiteGLANCES_OPT: "--export-statsd -q -t 1" #for exporting to statd standalone quite mode needs to be set
+      volumes:
+        - /var/run/docker.sock:/var/run/docker.sock:ro
+      pid: "host"
+
+  monitoring-server:
+      container_name: {{ project_name }}-monitoring-server
+      image: "{{ project_name }}-monitoring-server:1.0.1"
+      build:
+        context: ./monitoring/grafana
+        dockerfile: Dockerfile-grafana
+      ports:
+        - 81:81 #graphite web ui / rest api
+        - 88:80 #graphana web ui
+        - 2003-2004:2003-2004 
+        - 2023-2024:2023-2024
+        - 8125:8125/udp #statsd udp receiver port
+        - 8126:8126
+      restart: always
+
 volumes:
   portainer_data:

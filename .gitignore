@@ -4,3 +4,7 @@ db.sqlite3
 .idea/
 ghostdriver.log
 TODO
+/static/
+/docs/build/
+/dmt-testing/yourservice
+/dmt-testing/dmt-template
