@@ -1,22 +1,22 @@
-FROM node:9.9-alpine37
-# swtich to official docker image as soon as node 9.x based on alpine 3.7 is available. 3.7 is the only alpine that works with chromium-headles webdrivier
-
-# update apk repo
-RUN echo "http://dl-4.alpinelinux.org/alpine/v3.7/main" >> /etc/apk/repositories && \
-    echo "http://dl-4.alpinelinux.org/alpine/v3.7/community" >> /etc/apk/repositories 
-
- RUN echo "http://dl-2.alpinelinux.org/alpine/edge/main" > /etc/apk/repositories  && \
-     echo "http://dl-2.alpinelinux.org/alpine/edge/community" >> /etc/apk/repositories  && \
-     echo "http://dl-2.alpinelinux.org/alpine/edge/testing" >> /etc/apk/repositories
+FROM node:10.2-alpine
 
 # Python support added based on:
-# https://github.com/jfloff/alpine-python/blob/master/recent-slim/Dockerfile
+#https://github.com/frol/docker-alpine-python3/blob/master/Dockerfile
 
 # These are always installed. Notes:
 #   * dumb-init: a proper init system for containers, to reap zombie children
 #   * bash: For entrypoint, and debugging
 #   * ca-certificates: for SSL verification during Pip and easy_install
 #   * python: the binaries themselves
+
+RUN apk update && \
+    apk add --no-cache python3 && \
+    python3 -m ensurepip && \
+    rm -r /usr/lib/python*/ensurepip && \
+    pip3 install --upgrade pip setuptools && \
+    if [ ! -e /usr/bin/pip ]; then ln -s pip3 /usr/bin/pip ; fi && \
+    if [[ ! -e /usr/bin/python ]]; then ln -sf /usr/bin/python3 /usr/bin/python; fi && \
+  rm -r /root/.cache
 
 RUN apk update && \
     apk add --no-cache \
@@ -36,10 +36,6 @@ RUN apk update && \
   && if [[ ! -e /usr/bin/idle ]];          then ln -sf /usr/bin/idle3 /usr/bin/idle; fi \
   && if [[ ! -e /usr/bin/pydoc ]];         then ln -sf /usr/bin/pydoc3 /usr/bin/pydoc; fi \
   && if [[ ! -e /usr/bin/easy_install ]];  then ln -sf $(ls /usr/bin/easy_install*) /usr/bin/easy_install; fi \
-  # Install and upgrade Pip
-  && easy_install pip \
-  && pip install --upgrade pip \
-  && if [[ ! -e /usr/bin/pip ]]; then ln -sf /usr/bin/pip3 /usr/bin/pip; fi \
   && echo
 
 ENV DIRPATH /opt/{{ project_name }}

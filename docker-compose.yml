@@ -34,7 +34,7 @@ services:
       command: syslog://logs:5000
 
   web-logs:
-    image: alpine:3.7
+    image: alpine:3.8
     container_name: "{{ project_name }}-web-logs"
     labels:
       application: "{{ project_name }}-web-logs"
@@ -98,7 +98,7 @@ services:
     command: /bin/true
 
   https-logs:
-    image: alpine:3.7
+    image: alpine:3.8
     container_name: "{{ project_name }}-https-logs"
     labels:
       application: "{{ project_name }}-https-logs"
@@ -123,15 +123,6 @@ services:
       - https-logs
     command: bash entry-point.sh
 
-  # remove as soon as node 9.x based on alpine 3.7 is available here https://hub.docker.com/_/node/. 3.7 is the only alpine that works with chromium-headles webdrivier
-  node:
-    container_name: "node-alpine37"
-    image: "node:9.9-alpine37"
-    build:
-      context: ./testing
-      dockerfile: Dockerfile-node
-    command: /bin/true
-
   testing:
     container_name: "{{ project_name }}-testing"
     image: "{{ project_name }}-testing:1.0.1"
@@ -140,8 +131,6 @@ services:
       dockerfile: Dockerfile-testing
     links:
       - logs
-    depends_on:
-      - node
     command: tail -f /dev/null
 
   docker-console:

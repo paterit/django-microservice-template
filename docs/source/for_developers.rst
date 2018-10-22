@@ -77,6 +77,8 @@ You should see containers with names like::
   {{ project_name }}-logs - ELK stack
   {{ project_name }}-logspout - Logspout - log forwarder from Docker to Logstash
   {{ project_name }}-docker-console - Portainer - web docker console
+  {{ project_name }}-monitoring-agent - Glances - monitoring agent
+  {{ project_name }}-monitoring-server - Graphit+Grafana - monitoring server
 
 
 To stop all containers::
@@ -114,8 +116,21 @@ If you the just run ::
 
 it will build and start all you need to have working {{ project_name }}.
 
+Docker shell
+------------
+
+To easily open shell for conteiners you can use::
+
+    make shell-web
+    make shell-https
+    make shell-testing
+    make shell-db
+    make shell-logs
+    make shell-docker-console
+
+
 Logs
-----
+*******************
 
 Logs from django and gunicorn are stored in volume container and written to /opt/{{ project_name }}/logs/web folder. You can access them by::
 
@@ -129,18 +144,10 @@ Both web application's logs and Nginx' logs are transported to log collector con
 Idea of delivering logs to logs collector is to have volume container for each application which logs should be transmitted to logs collector. Application is writing the logs to that container and in the same time the logs are delivered to stdout to transfer them to docker. From docker logs are shipped to Logstash with Logspout containter.
 
 
+Monitoring
+*******************
 
-Docker shell
-------------
-
-To easily open shell for conteiners you can use::
-
-    make shell-web
-    make shell-https
-    make shell-testing
-    make shell-db
-    make shell-logs
-    make shell-docker-console
+For each docker-engine there is an instance of `Glances <https://nicolargo.github.io/glances/>`_ running. It sends monitoring data to `Graphite <https://graphiteapp.org/>`_ server via statsd protocol. From Graphite data are available in `Grafana <https://grafana.com/>`_ `dashboards <<http:127.0.0.1:88>`_.
 
 
 Local CI/CD machine

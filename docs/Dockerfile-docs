@@ -1,7 +1,5 @@
-FROM python:3.6.3-alpine3.7
-# update apk repo
-RUN echo "http://dl-4.alpinelinux.org/alpine/v3.7/main" >> /etc/apk/repositories && \
-    echo "http://dl-4.alpinelinux.org/alpine/v3.7/community" >> /etc/apk/repositories 
+FROM python:3.6.6-alpine3.8
+
 RUN apk update && \
          apk add \
          curl \
@@ -13,8 +11,8 @@ RUN apk update && \
 
 ENV DIRPATH /opt/{{ project_name }}
 LABEL "application"="{{ project_name }}-docs"
-RUN mkdir -p $DIRPATH/{{ project_name }}-docs
-WORKDIR $DIRPATH/{{ project_name }}-docs
+RUN mkdir -p $DIRPATH/docs
+WORKDIR $DIRPATH/docs
 COPY . .
 RUN pip install -U pip \
   && pip install -r requirements.txt

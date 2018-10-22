@@ -465,6 +465,7 @@ sbe-smoke:
 ## Regenerate docs
 rebuild-docs:
 	docker start {{ project_name }}-docs
+	make upload-docs
 
 ## Run WEB application tests (not SBE tests)
 test:
@@ -499,7 +500,7 @@ upload-docs:
 	docker cp ./docs {{ project_name }}-docs:/opt/{{ project_name }}/
 	docker start -a {{ project_name }}-docs
 	@mkdir -p ./docs/build
-	docker cp {{ project_name }}-docs:/opt/{{ project_name }}/{{ project_name }}-docs/build/html ./docs/build/
+	docker cp {{ project_name }}-docs:/opt/{{ project_name }}/docs/build/html ./docs/build/
 	docker exec -t {{ project_name }}-https mkdir -p /opt/{{ project_name }}/docs/build
 	docker cp ./docs/build/html {{ project_name }}-https:/opt/{{ project_name }}/docs/build/
 
