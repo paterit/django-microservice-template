@@ -19,6 +19,12 @@ docker-machine ssh {{ project_name }}-cicd 'sudo chmod +x /var/lib/boot2docker/b
 docker-machine ssh {{ project_name }}-cicd sudo sysctl -w -q vm.max_map_count=262144
 docker-machine env {{ project_name }}-cicd | sed s/export\ // | sed s/\"//g > cicd/cicd.docker.env
 
-
 DOCKER_MACHINE_IP=$(docker-machine ip {{ project_name }}-cicd)
-sed -i s/DOCKER_MACHINE_IP\=localhost/DOCKER_MACHINE_IP\=$DOCKER_MACHINE_IP/ ./env
+sed -i "s|DOCKER_MACHINE_IP\=localhost|DOCKER_MACHINE_IP\=$DOCKER_MACHINE_IP|" ./env
+
+eval $(docker-machine env {{ project_name }}-cicd)
+sed -i "s|DOCKER_TLS_VERIFY\=|DOCKER_TLS_VERIFY\=$DOCKER_TLS_VERIFY|" ./Makefile
+sed -i "s|DOCKER_HOST\=|DOCKER_HOST\=$DOCKER_HOST|" ./Makefile
+sed -i "s|DOCKER_CERT_PATH\=|DOCKER_CERT_PATH\=$DOCKER_CERT_PATH|" ./Makefile
+sed -i "s|DOCKER_MACHINE_NAME\=|DOCKER_MACHINE_NAME\=$DOCKER_MACHINE_NAME|" ./Makefile
+eval $(docker-machine env -u)

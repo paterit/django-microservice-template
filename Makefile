@@ -512,6 +512,19 @@ upload-static:
 	docker cp {{ project_name }}-web:/opt/{{ project_name }}/static/ .
 	docker cp ./static {{ project_name }}-https:/opt/{{ project_name }}/
 
+## Set env variables for docker engine cicd machine to use with eval $(make set-docker-cicd)
+set-docker-cicd:
+	export DOCKER_TLS_VERIFY=
+	export DOCKER_HOST=
+	export DOCKER_CERT_PATH=
+	export DOCKER_MACHINE_NAME=
+
+## Unset env variables for docker engine
+unset-docker-cicd:
+	unset DOCKER_TLS_VERIFY
+	unset DOCKER_HOST
+	unset DOCKER_CERT_PATH
+	unset DOCKER_MACHINE_NAME
 
 ## Print message on success for local install
 success-local:
