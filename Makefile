@@ -520,7 +520,7 @@ set-docker-cicd:
 	export DOCKER_MACHINE_NAME=
 
 ## Unset env variables for docker engine
-unset-docker-cicd:
+unset-docker:
 	unset DOCKER_TLS_VERIFY
 	unset DOCKER_HOST
 	unset DOCKER_CERT_PATH

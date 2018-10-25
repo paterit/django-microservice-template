@@ -210,6 +210,22 @@ To see any other useful links go to `this page <https://127.0.0.1/docs/links_pag
 
 Whenever you do changes in your code, when you run any builders in Buildbot the fresh copy of your sources will be copied to Buildbot worker and tested.
 
+Docker-engine context for cicd docker-machine
+---------------------------------------------
+
+To be able to call docker commands in the context of the docker-engine located on your {{ project_name }}-cicd docker-machine you need to set up propely environment variable for DOCKER. You can do it easily with:
+
+::
+
+    eval $(make set-docker-cicd)
+
+be careful as for now all docker commands will be exectued on the docker engine located in your {{ project_name }}-cicd docker-machine.
+To unset those variables and be back in the context of the local docker-engine simply type:
+
+::
+
+    eval $(make unset-docker)
+
 Develop CI/CD machinery
 -----------------------
 
