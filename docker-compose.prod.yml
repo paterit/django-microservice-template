@@ -11,3 +11,9 @@ services:
 
   https:
     restart: always
+
+  monitoring-server:
+    restart: always
+
+  monitoring-agent:
+    restart: always
