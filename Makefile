@@ -465,7 +465,6 @@ sbe-smoke:
 ## Regenerate docs
 rebuild-docs:
 	docker start {{ project_name }}-docs
-	make upload-docs
 
 ## Run WEB application tests (not SBE tests)
 test:
@@ -474,6 +473,15 @@ test:
 	docker exec -t {{ project_name }}-web python manage.py test --failfast
 	@date +%T.%N
 	@echo "End of make test"
+
+## Test if docs are compailed and propagated
+test-docs:
+	#docker exec {{ project_name }}-testing sed -i "s|Welcome|UploadTestSucced|" /opt/{{ project_name }}/{{ project_name }}-testing/docs/source/index.rst
+	docker exec {{ project_name }}-testing sed -i "$$ a UploadTestSucced" /opt/{{ project_name }}/{{ project_name }}-testing/docs/source/index.rst
+	make upload-docs
+	curl -Ls localhost/docs | grep UploadTestSucced
+	docker exec {{ project_name }}-testing sed -i "s|UploadTestSucced||g" /opt/{{ project_name }}/{{ project_name }}-testing/docs/source/index.rst
+
 
 ## Collect static files in WEB container
 reload-static:

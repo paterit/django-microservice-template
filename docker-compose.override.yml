@@ -3,7 +3,6 @@ services:
   web:
     volumes:
       - ./{{ project_name }}-web/:/opt/{{ project_name }}/{{ project_name }}-web/
-      #- ./docs:/opt/{{ project_name }}/docs/
     environment:
         RUN_MODE: DEVELOPMENT
     command: bash web.sh
@@ -11,6 +10,8 @@ services:
   testing:
     volumes:
       - ./testing/:/opt/{{ project_name }}/{{ project_name }}-testing/
+      # to be able to automate test for veryfing if docs are reloaded after changing docs' source files
+      - ./docs/:/opt/{{ project_name }}/{{ project_name }}-testing/docs
 
   https:
     volumes_from:
