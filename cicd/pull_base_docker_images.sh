@@ -11,3 +11,4 @@ docker pull postgres:10.3-alpine
 docker pull nicolargo/glances:v2.11.1
 docker pull kamon/grafana_graphite
 docker pull paterit/locustio-alpine:0.9.0-python3.6.6-alpine3.8
+docker pull paterit/sphinx-alpine:1.5.3-python3.6.6-alpine3.8
