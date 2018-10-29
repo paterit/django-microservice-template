@@ -97,7 +97,7 @@ check-docker-machine:
 
 ## Copy source code from ../current dir
 copy-current-dir:
-	rsync -avq ../ ./dmt-template --exclude dmt-testing
+	rsync -avq ../ ./dmt-template --exclude dmt-testing --exclude .git
 
 ## Call django-admin start project getting it from the github
 create-project-git:
@@ -105,7 +105,7 @@ create-project-git:
 	django-admin startproject \
         --template=https://github.com/paterit/django-microservice-template/archive/master.zip \
         --extension=py,rst,yml,sh,md,conf,feature \
-        --name=Makefile,glances-graphite.json,Dockerfile-glances,Dockerfile-grafana,Dockerfile-web,Dockerfile-db,Dockerfile-data,Dockerfile-https,Dockerfile-testing,Dockerfile,Dockerfile-docs,master.cfg,db.env,cicd.docker.env,post-commit \
+        --name=Makefile,glances-graphite.json,Dockerfile-perf,Dockerfile-glances,Dockerfile-grafana,Dockerfile-web,Dockerfile-db,Dockerfile-data,Dockerfile-https,Dockerfile-testing,Dockerfile,Dockerfile-docs,master.cfg,db.env,cicd.docker.env,post-commit \
         $(PROJECT_NAME)
 
 ## Call django-admin start project for code copied to local dmt-template dir
@@ -114,7 +114,7 @@ create-project:
 	django-admin startproject \
         --template=./dmt-template \
         --extension=py,rst,yml,sh,md,conf,feature \
-        --name=Makefile,glances-graphite.json,Dockerfile-glances,Dockerfile-grafana,Dockerfile-web,Dockerfile-db,Dockerfile-data,Dockerfile-https,Dockerfile-testing,Dockerfile,Dockerfile-docs,master.cfg,db.env,cicd.docker.env,post-commit \
+        --name=Makefile,glances-graphite.json,Dockerfile-perf,Dockerfile-glances,Dockerfile-grafana,Dockerfile-web,Dockerfile-db,Dockerfile-data,Dockerfile-https,Dockerfile-testing,Dockerfile,Dockerfile-docs,master.cfg,db.env,cicd.docker.env,post-commit \
         $(PROJECT_NAME)
 
 ## Create docker containers with Buildbot
@@ -159,7 +159,7 @@ reload-cicd:
 test_commit:
 	. virtenv/bin/activate; \
 	cd $(PROJECT_NAME); \
-	echo "Test commit." > test.txt; \
+	echo "Test commit." >> test.txt; \
 	git add test.txt; \
 	git commit -q -m "Test commit."
 

@@ -27,7 +27,6 @@ RUN apk update && \
     chromium \
     chromium-chromedriver \
     less \
-    vim \
     curl
 
   # make some useful symlinks that are expected to exist
@@ -43,7 +42,9 @@ LABEL "application"="{{ project_name }}-testing"
 RUN mkdir -p $DIRPATH/{{ project_name }}-testing
 
 WORKDIR $DIRPATH/{{ project_name }}-testing
-COPY . .
+COPY requirements.txt .
 
 RUN pip install -U pip \
   && pip install -r requirements.txt
+
+COPY . .

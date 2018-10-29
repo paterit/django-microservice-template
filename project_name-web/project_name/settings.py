@@ -33,8 +33,11 @@ ALLOWED_HOSTS = [gethostname(), gethostbyname(gethostname()),
                  '{{ project_name }}-web',
                  '{{ project_name }}-https',
                  '{{ project_name }}-testing',
-                 'web', 'https', 'testing',
+                 '{{ project_name }}-perf'
+                 'web', 'https', 'testing', 'perf'
                  'localhost','127.0.0.1', DOCKER_MACHINE_IP]
+
+LOGIN_REDIRECT_URL = '/admin/'
 
 # Application definition
 

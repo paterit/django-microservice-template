@@ -6,5 +6,5 @@ ADD ./logstash.conf/10-syslog.conf /etc/logstash/conf.d/10-syslog.conf
 RUN echo "" > /etc/logstash/conf.d/02-beats-input.conf
 COPY wait_for_elk.sh .
 #TODO {project_name}
-# run on dockeer host:
+# run on docker host:
 # sudo sysctl -w vm.max_map_count=262144

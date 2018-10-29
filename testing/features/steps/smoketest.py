@@ -60,3 +60,14 @@ def step_impl(context):
     r = context.response
     assert 200 == r.status_code
     assert 'portainer' in str(r.content)
+
+@given(u'Locust url')
+def step_impl(context):
+    context.response = requests.get('http://perf:8089')
+
+
+@then(u'Locust start page is propely loaded')
+def step_impl(context):
+    r = context.response
+    assert 200 == r.status_code
+    assert 'Locust' in str(r.content)

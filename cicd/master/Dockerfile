@@ -3,9 +3,7 @@ FROM buildbot/buildbot-master:v1.1.0
 LABEL "application"="{{ project_name }}-cicd-master"
 
 # install some tools
-RUN \
-    apk add --no-cache \
-        vim \
+RUN apk add --no-cache \
         bash
 
 WORKDIR /var/lib/buildbot

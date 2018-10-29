@@ -1,23 +1,29 @@
 FROM python:3.6.6-alpine3.8
 
 RUN apk update && \
-         apk add \
+         apk add --no-cache \
          curl \
          less \
-         vim \
          make \
          bash 
 
-RUN apk add python3-dev \
+RUN apk add --no-cache \
+         python3-dev \
          gcc \
          musl-dev \
          postgresql-dev \
          postgresql-libs
 
+
 ENV DIRPATH /opt/{{ project_name }}
 LABEL "application"="{{ project_name }}-web"
 RUN mkdir -p $DIRPATH/{{ project_name }}-web
 WORKDIR $DIRPATH/{{ project_name }}-web
-COPY . .
+COPY requirements.txt .
+
 RUN pip install -U pip \
   && pip install -r requirements.txt
+
+
+COPY . .
+

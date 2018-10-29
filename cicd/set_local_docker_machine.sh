@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 # It creates and prepare docker-machine to which buildbot worker will be deploying containers
+# when run more than once should create docker-machine propelry if one does not exists, and keep running one in good shape
 
 # if virtualbox fail creation and start asking you for password use this to resolve the problem
 # to find out the <vm-uuid> type ps ax | grep vbox

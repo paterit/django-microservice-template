@@ -10,3 +10,4 @@ docker pull gliderlabs/logspout:v3.1
 docker pull postgres:10.3-alpine
 docker pull nicolargo/glances:v2.11.1
 docker pull kamon/grafana_graphite
+docker pull paterit/locustio-alpine:0.9.0-python3.6.6-alpine3.8

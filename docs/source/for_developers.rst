@@ -149,9 +149,15 @@ Idea of delivering logs to logs collector is to have volume container for each a
 
 
 Monitoring
-*******************
+**********
 
 For each docker-engine there is an instance of `Glances <https://nicolargo.github.io/glances/>`_ running. It sends monitoring data to `Graphite <https://graphiteapp.org/>`_ server via statsd protocol. From Graphite data are available in `Grafana <https://grafana.com/>`_ `dashboards <<http:127.0.0.1:88>`_.
+
+
+Performance testing
+*******************
+
+Performance testing is done with the `Locust <https://locust.io>`_ tool. To build your own tests change the file `locustfile.py` in `perf-testing` folder.
 
 
 Local CI/CD machine

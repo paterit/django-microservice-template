@@ -1,0 +1,15 @@
+FROM paterit/locustio-alpine:0.9.0-python3.6.6-alpine3.8
+
+RUN apk update && \
+        apk add --no-cache \
+        curl \
+        less \
+        make \
+        bash
+
+
+ENV DIRPATH /opt/{{ project_name }}
+LABEL "application"="{{ project_name }}-perf"
+RUN mkdir -p $DIRPATH/{{ project_name }}-perf
+WORKDIR $DIRPATH/{{ project_name }}-perf
+COPY . .

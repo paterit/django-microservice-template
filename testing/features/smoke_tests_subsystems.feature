@@ -28,3 +28,8 @@ Feature: Check if all subsystems are available
   Scenario: Check Portainer availability
     Given Portainer url
      Then Portainer auth page is propely loaded
+
+  @smoketest
+  Scenario: Check Locust availability
+    Given Locust url
+     Then Locust start page is propely loaded
