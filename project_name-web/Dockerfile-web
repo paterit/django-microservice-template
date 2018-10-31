@@ -1,29 +1,9 @@
-FROM python:3.6.6-alpine3.8
-
-RUN apk update && \
-         apk add --no-cache \
-         curl \
-         less \
-         make \
-         bash 
-
-RUN apk add --no-cache \
-         python3-dev \
-         gcc \
-         musl-dev \
-         postgresql-dev \
-         postgresql-libs
-
+FROM paterit/django-postgresql-alpine:2.1.2-python3.6.6-node3.8
 
 ENV DIRPATH /opt/{{ project_name }}
 LABEL "application"="{{ project_name }}-web"
 RUN mkdir -p $DIRPATH/{{ project_name }}-web
 WORKDIR $DIRPATH/{{ project_name }}-web
-COPY requirements.txt .
-
-RUN pip install -U pip \
-  && pip install -r requirements.txt
-
 
 COPY . .
 

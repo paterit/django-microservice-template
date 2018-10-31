@@ -13,3 +13,4 @@ docker pull kamon/grafana_graphite
 docker pull paterit/locustio-alpine:0.9.0-python3.6.6-alpine3.8
 docker pull paterit/sphinx-alpine:1.5.3-python3.6.6-alpine3.8
 docker pull paterit/node-behave-alpine:10.2-behave1.2.5-python3.6.5-alpine3.8
+docker pull paterit/django-postgresql-alpine:2.1.2-python3.6.6-node3.8
