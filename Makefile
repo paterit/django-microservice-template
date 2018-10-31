@@ -217,8 +217,8 @@ stop-perf:
 
 ## Stop Buildbot containers
 stop-cicd:
-	docker stop $(CONTS-CICD)
-	docker-machine stop {{ project_name }}-cicd
+	-docker stop $(CONTS-CICD)
+	#docker-machine stop {{ project_name }}-cicd
 ## Stop all applications' containers (without Buildbot)
 stop:
 	docker-compose stop
