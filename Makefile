@@ -95,6 +95,17 @@ build-perf:
 ## Build all applications' containers (without Buildbot)
 build: build-data build-db build-https build-web build-docs build-testing build-docker-console build-monitoring build-perf
 
+# Build base images and push new images to hub.docker.com
+build-base-images:
+	cd cicd && ./build_base_images.sh
+
+pull-build-base-images:
+	- cd .. && git clone git@github.com:paterit/locustio-alpine.git
+	- cd .. && git clone git@github.com:paterit/node-behave-alpine.git
+	- cd .. && git clone git@github.com:paterit/sphinx-alpine.git
+	- cd .. && git clone git@github.com:paterit/django-postgresql-alpine.git
+	- cd .. && git clone git@github.com:paterit/buildbot-worker-docker.git	
+	make build-base-images
 
 #run docker images
 ## Run DB containers
