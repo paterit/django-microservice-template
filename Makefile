@@ -537,7 +537,7 @@ dev-static:
 down:
 	docker-compose down
 
-## Upload Buildbot confi files and reload configuration
+## Upload Buildbot config files and reload configuration
 cicd-upload:
 	docker cp ./cicd/master/config {{ project_name }}-cicd-master:/var/lib/buildbot
 	-make cicd-reconfig

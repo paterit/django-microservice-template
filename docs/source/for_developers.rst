@@ -295,6 +295,20 @@ When you run ::
 
 then the standard Django mechanism for testing will be fired inside your docker images. 
 
+Base images
+***********
+
+There are couple of pre-built images used here to speed up the build process:
+
+- locustio-alpine - for the ``perf-testing``
+- sphinx-alpine - for the ``docs``
+- node-behave-alpine - for the ``testing``
+- django-postgresql-alpine2-python3.6.6-node3.8 - for the ``web``
+- buildbot-worker-docker - for the ``cicd-worker``
+
+The full repo names in hub.docer.com and current tags you can see in the ``cicd/build_base_images.sh`` script. 
+
+
 Production
 **********
 
