@@ -11,7 +11,7 @@ Installation
 
 Below is description how to use it in local development and production.
 
-Requirements for ElasticSerch to work.
+Requirements for ElasticSearch to work.
 ---------------------------------------
 
 In order to have ElasticSearch working you have to set on your host for {{ project_name }}-logs container::

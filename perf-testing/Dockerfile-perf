@@ -12,4 +12,8 @@ ENV DIRPATH /opt/{{ project_name }}
 LABEL "application"="{{ project_name }}-perf"
 RUN mkdir -p $DIRPATH/{{ project_name }}-perf
 WORKDIR $DIRPATH/{{ project_name }}-perf
+
+COPY requirements.txt .
+RUN pip install -r requirements.txt
+
 COPY . .
