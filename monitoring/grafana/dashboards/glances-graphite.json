@@ -493,6 +493,11 @@
               "refId": "F",
               "target": "alias(stats.gauges.glances.docker.{{ project_name }}-perf.memoryusage, 'perf')",
               "textEditor": false
+            },
+            {
+              "refId": "G",
+              "target": "alias(stats.gauges.glances.docker.{{ project_name }}-monitoring-server.memoryusage, 'monit')",
+              "textEditor": false
             }
           ],
           "thresholds": [],
@@ -585,6 +590,10 @@
             {
               "refId": "F",
               "target": "alias(stats.gauges.glances.docker.{{ project_name }}-perf.cputotal, 'perf')"
+            },
+            {
+              "refId": "G",
+              "target": "alias(stats.gauges.glances.docker.{{ project_name }}-monitoring-server.cputotal, 'monit')"
             }
           ],
           "thresholds": [],

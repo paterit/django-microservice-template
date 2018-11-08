@@ -37,7 +37,7 @@ prepare-local:
 	make create-project
 
 ## Build local containers (not in docker-machine) based on fresh copy from current ../sources
-build-local:
+all-local:
 	make prepare-local
 	make run-local
 	
@@ -165,7 +165,7 @@ test_commit:
 
 ## Test both local and docker-machine versions
 test:
-	make build-local
+	make all-local
 	make clean-local
 	@echo "\033[1;32mGreat! Local build works!\033[0m"
 	make all

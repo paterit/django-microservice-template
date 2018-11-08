@@ -396,6 +396,7 @@ clean-compose:
 ## Remove ophaned docker volumes
 clean-orphaned-volumes:
 	docker volume rm $(docker volume ls -qf dangling=true) || exit 0
+	docker images | awk '$1~/<none>/ {print $3}' | xargs -r docker rmi
 ## Remove images with <None> repository 
 clean-none-images:
 	-docker rmi $(docker images --filter "dangling=true" -q --no-trunc)

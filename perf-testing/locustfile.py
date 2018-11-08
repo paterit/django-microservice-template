@@ -38,15 +38,17 @@ class WebsiteUser(HttpLocust):
     min_wait = 3000
     max_wait = 5000
 
-    def __init__(self):
-        super(WebsiteUser, self).__init__()
-        self.statsd = StatsClient(host='monitoring-server',
-                                  port=8125,
-                                  prefix="perf",
-                                  maxudpsize=512)
-        locust.events.request_success += self.hook_request_success
 
-    def hook_request_success(self, request_type, name, response_time, response_length):
-        stat_name = request_type + name.replace('.', '-')
-        self.statsd.timing(stat_name, response_time)
+statsd = StatsClient(host='monitoring-server',
+                     port=8125,
+                     prefix="perf",
+                     maxudpsize=512)
 
+
+def hook_request_success(request_type, name, response_time, response_length, **kw):
+    stat_name = request_type + name.replace('.', '-')
+    statsd.timing(stat_name, response_time)
+    statsd.incr(stat_name, 1)
+
+
+events.request_success += hook_request_success
