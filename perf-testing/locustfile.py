@@ -1,16 +1,28 @@
 #!/usr/bin/env python
 from locust import HttpLocust, TaskSet, task, events
-import locust.events
 from statsd import StatsClient
 
 
+STATS_USER_COUNT = "users"
+
+
+# client to connect statsd server that collects metrics for Graphite
+statsd = StatsClient(host='monitoring-server',
+                     port=8125,
+                     prefix="perf",
+                     maxudpsize=512)
+
+
 class UserBehavior(TaskSet):
+    """ Defines user behaviour in traffic simulation """
     def on_start(self):
         """ on_start is called when a Locust start before any task is scheduled """
+        statsd.gauge(STATS_USER_COUNT, 1, delta=True)
         self.login()
 
     def on_stop(self):
         """ on_stop is called when the TaskSet is stopping """
+        statsd.gauge(STATS_USER_COUNT, -1, delta=True)
         self.logout()
 
     def login(self):
@@ -34,21 +46,39 @@ class UserBehavior(TaskSet):
 
 
 class WebsiteUser(HttpLocust):
+    """ Defines user that will be used in traffic simulation """
     task_set = UserBehavior
     min_wait = 3000
     max_wait = 5000
 
+    def setup(self):
+        statsd.gauge(STATS_USER_COUNT, 0)
 
-statsd = StatsClient(host='monitoring-server',
-                     port=8125,
-                     prefix="perf",
-                     maxudpsize=512)
+    def teardown(self):
+        print("Locust.teardown()")
 
 
+def get_stat_name(request_type, name):
+    return request_type + name.replace('.', '-')
+
+
+# hook that is fired each time the request ends up with success
 def hook_request_success(request_type, name, response_time, response_length, **kw):
-    stat_name = request_type + name.replace('.', '-')
+    stat_name = get_stat_name(request_type, name)
     statsd.timing(stat_name, response_time)
     statsd.incr(stat_name, 1)
 
 
+def hook_request_failure(request_type, name, response_time, exception_thrown, **kw):
+    stat_name = "failure." + get_stat_name(request_type, name)
+    statsd.timing(stat_name, response_time)
+
+
+def hook_locust_error(locust_instance, exception_thrown, traceback_object, **kw):
+    stat_name = "locust_errors"
+    statsd.incr(stat_name, 1)
+
+
 events.request_success += hook_request_success
+events.request_failure += hook_request_failure
+events.locust_error += hook_locust_error
