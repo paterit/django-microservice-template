@@ -7,4 +7,9 @@ Feature: Check if data from glances are visible in grafana
   Scenario: Check CPU data
     Given URL for Grafana API
     When API for dashboard for CPU is called
-    Then data for dashboard is not empty
+    Then data for CPU dashboard is not empty
+
+  Scenario: Chcek performance testing dashboard
+    Given URL for Grafana API
+    When API for dashboard for performance testing is called
+    Then data for performance testing is not empty
