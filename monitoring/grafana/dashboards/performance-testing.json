@@ -51,17 +51,17 @@
             },
             {
               "refId": "B",
-              "target": "stats.timers.perf.GET-.mean_90"
+              "target": "stats.timers.perf.GET-.mean_95"
             },
             {
               "refId": "C",
-              "target": "stats.timers.perf.GET-.upper_90"
+              "target": "stats.timers.perf.GET-.upper_95"
             }
           ],
           "thresholds": [],
           "timeFrom": null,
           "timeShift": null,
-          "title": "Main page",
+          "title": "Main page response time",
           "tooltip": {
             "shared": true,
             "sort": 0,
@@ -131,17 +131,17 @@
             },
             {
               "refId": "B",
-              "target": "stats.timers.perf.GET-admin-.mean_90"
+              "target": "stats.timers.perf.GET-admin-.mean_95"
             },
             {
               "refId": "C",
-              "target": "stats.timers.perf.GET-admin-.upper_90"
+              "target": "stats.timers.perf.GET-admin-.upper_95"
             }
           ],
           "thresholds": [],
           "timeFrom": null,
           "timeShift": null,
-          "title": "Admin page",
+          "title": "Admin page response time",
           "tooltip": {
             "shared": true,
             "sort": 0,
@@ -195,13 +195,15 @@
           "fill": 1,
           "id": 3,
           "legend": {
-            "avg": false,
-            "current": false,
-            "max": false,
+            "alignAsTable": true,
+            "avg": true,
+            "current": true,
+            "max": true,
             "min": false,
+            "rightSide": false,
             "show": true,
-            "total": false,
-            "values": false
+            "total": true,
+            "values": true
           },
           "lines": true,
           "linewidth": 1,
@@ -213,7 +215,7 @@
           "renderer": "flot",
           "seriesOverrides": [],
           "spaceLength": 10,
-          "span": 6,
+          "span": 4,
           "stack": false,
           "steppedLine": false,
           "targets": [
@@ -271,7 +273,7 @@
           "dashes": false,
           "datasource": null,
           "fill": 1,
-          "id": 6,
+          "id": 4,
           "legend": {
             "avg": false,
             "current": false,
@@ -291,7 +293,7 @@
           "renderer": "flot",
           "seriesOverrides": [],
           "spaceLength": 10,
-          "span": 6,
+          "span": 4,
           "stack": false,
           "steppedLine": false,
           "targets": [
@@ -335,6 +337,83 @@
               "show": true
             }
           ]
+        },
+        {
+          "aliasColors": {},
+          "bars": false,
+          "dashLength": 10,
+          "dashes": false,
+          "datasource": null,
+          "fill": 1,
+          "id": 7,
+          "legend": {
+            "alignAsTable": true,
+            "avg": true,
+            "current": true,
+            "max": true,
+            "min": false,
+            "show": true,
+            "total": true,
+            "values": true
+          },
+          "lines": true,
+          "linewidth": 1,
+          "links": [],
+          "nullPointMode": "null",
+          "percentage": false,
+          "pointradius": 5,
+          "points": false,
+          "renderer": "flot",
+          "seriesOverrides": [],
+          "spaceLength": 10,
+          "span": 4,
+          "stack": false,
+          "steppedLine": false,
+          "targets": [
+            {
+              "refId": "A",
+              "target": "alias(stats.timers.perf.failure.GET-.count_ps, 'main page')"
+            },
+            {
+              "refId": "B",
+              "target": "alias(stats.timers.perf.failure.GET-admin-.count_ps, 'admin page')"
+            }
+          ],
+          "thresholds": [],
+          "timeFrom": null,
+          "timeShift": null,
+          "title": "Failed requests per second",
+          "tooltip": {
+            "shared": true,
+            "sort": 0,
+            "value_type": "individual"
+          },
+          "type": "graph",
+          "xaxis": {
+            "buckets": null,
+            "mode": "time",
+            "name": null,
+            "show": true,
+            "values": []
+          },
+          "yaxes": [
+            {
+              "format": "short",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": true
+            },
+            {
+              "format": "short",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": true
+            }
+          ]
         }
       ],
       "repeat": null,
@@ -346,7 +425,7 @@
     },
     {
       "collapse": false,
-      "height": 250,
+      "height": 249,
       "panels": [
         {
           "aliasColors": {},
@@ -355,7 +434,7 @@
           "dashes": false,
           "datasource": null,
           "fill": 1,
-          "id": 4,
+          "id": 5,
           "legend": {
             "avg": false,
             "current": false,
@@ -445,7 +524,7 @@
           "dashes": false,
           "datasource": null,
           "fill": 1,
-          "id": 5,
+          "id": 6,
           "legend": {
             "avg": false,
             "current": false,
@@ -538,7 +617,7 @@
     "list": []
   },
   "time": {
-    "from": "now-5m",
+    "from": "now-1h",
     "to": "now"
   },
   "timepicker": {
@@ -567,6 +646,6 @@
     ]
   },
   "timezone": "",
-  "title": "Response time",
-  "version": 1
+  "title": "Performance testing",
+  "version": 3
 }

@@ -150,6 +150,14 @@ run-prod:
 	@date +%T.%N
 	@echo "End of make run-prod"
 
+## Rebuild and run web
+rerun-web:
+	make build-web run-perf
+
+## Rebuild and run performance testing
+rerun-perf:
+	make build-perf run-perf
+
 #containers and images ids
 CONTS-DB=$(shell docker ps -a -q -f "name={{ project_name }}-db")
 IMGS-DB=$(shell docker images -q -f "label=application={{ project_name }}-db")

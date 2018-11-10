@@ -151,7 +151,12 @@ Idea of delivering logs to logs collector is to have volume container for each a
 Monitoring
 **********
 
-For each docker-engine there is an instance of `Glances <https://nicolargo.github.io/glances/>`_ running. It sends monitoring data to `Graphite <https://graphiteapp.org/>`_ server via statsd protocol. From Graphite data are available in `Grafana <https://grafana.com/>`_ `dashboards <<http:127.0.0.1:88>`_.
+For each docker-engine there is an instance of `Glances <https://nicolargo.github.io/glances/>`_ running. It sends monitoring data to `Graphite <https://graphiteapp.org/>`_ server via statsd protocol. From Graphite data are available in `Grafana <https://grafana.com/>`_ `dashboards <http:127.0.0.1:88>`_.
+
+There are two dashboards:
+
+- Glances - graphite: shows main system metrics for docker-engine host and containers
+- Performance testing: useful to observe system behavior under performance testing
 
 
 Performance testing

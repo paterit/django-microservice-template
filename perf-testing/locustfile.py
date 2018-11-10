@@ -15,6 +15,7 @@ statsd = StatsClient(host='monitoring-server',
 
 class UserBehavior(TaskSet):
     """ Defines user behaviour in traffic simulation """
+
     def on_start(self):
         """ on_start is called when a Locust start before any task is scheduled """
         statsd.gauge(STATS_USER_COUNT, 1, delta=True)
@@ -51,12 +52,6 @@ class WebsiteUser(HttpLocust):
     min_wait = 3000
     max_wait = 5000
 
-    def setup(self):
-        statsd.gauge(STATS_USER_COUNT, 0)
-
-    def teardown(self):
-        print("Locust.teardown()")
-
 
 def get_stat_name(request_type, name):
     return request_type + name.replace('.', '-')
@@ -66,19 +61,30 @@ def get_stat_name(request_type, name):
 def hook_request_success(request_type, name, response_time, response_length, **kw):
     stat_name = get_stat_name(request_type, name)
     statsd.timing(stat_name, response_time)
-    statsd.incr(stat_name, 1)
 
 
-def hook_request_failure(request_type, name, response_time, exception_thrown, **kw):
+def hook_request_failure(request_type, name, response_time, **kw):
     stat_name = "failure." + get_stat_name(request_type, name)
     statsd.timing(stat_name, response_time)
 
 
-def hook_locust_error(locust_instance, exception_thrown, traceback_object, **kw):
-    stat_name = "locust_errors"
-    statsd.incr(stat_name, 1)
+def hook_locust_error(locust_instance, **kw):
+    stat_name = "locust_errors." + type(locust_instance).__name__
+    statsd.gauge(stat_name, 1, delta=True)
+
+
+def hook_locust_stop_hatching():
+    statsd.gauge(STATS_USER_COUNT, 0)
+    print("hook_locust_stop_hatching executed")
+
+
+def hook_locust_start_hatching():
+    statsd.gauge(STATS_USER_COUNT, 0)
+    print("hook_locust_start_hatching executed")
 
 
 events.request_success += hook_request_success
 events.request_failure += hook_request_failure
 events.locust_error += hook_locust_error
+events.locust_stop_hatching += hook_locust_stop_hatching
+events.locust_start_hatching += hook_locust_start_hatching
