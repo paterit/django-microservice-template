@@ -3,6 +3,16 @@
 Some use cases for developing dmt
 =================================
 
+Adding new sbe test
+*******************
+
+- add new example.feature file in ``testing/features`` folder
+
+- run ``make sbe`` and grab proposed code snipets into ``testing/features/steps/example.py``
+
+- rework the code and the test until ``make sbe`` produce only green output
+
+
 Adding new make commands as a new task in Buildbot builder
 **********************************************************
 

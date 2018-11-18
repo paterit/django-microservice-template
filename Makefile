@@ -511,7 +511,9 @@ wait-for-cicd-master:
 sbe:
 	docker exec -t {{ project_name }}-testing behave
 sbe-smoke:
-	docker exec -t {{ project_name }}-testing behave --tags=smoketest
+	docker exec -t {{ project_name }}-testing behave --tags=smoketest  --no-skipped
+sbe-perf:
+	docker exec -t {{ project_name }}-testing behave --tags=perftest --no-skipped
 
 ## Regenerate docs
 rebuild-docs:

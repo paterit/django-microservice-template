@@ -39,6 +39,7 @@ prepare-local:
 ## Build local containers (not in docker-machine) based on fresh copy from current ../sources
 all-local:
 	make prepare-local
+	make initial-commit
 	make run-local
 	
 ## Run make all in the context of virtenv and PROJECT_NAME directory
@@ -128,6 +129,14 @@ cicd-initial-commit:
 	. virtenv/bin/activate; \
 	cd $(PROJECT_NAME); \
 	make cicd-initial-commit
+
+## Initialize git repo and do initial commit to be able to track changes
+initial-commit:
+	git init
+	git config --local user.email "dmt-testing@paterit.com"
+	git config --local user.name "Awesome Django"
+	git add .
+	git commit -q -m "Initial commit."
 
 ## Wait until the first full rebuild is done in Buildbot
 wait_for_full_rebuild:

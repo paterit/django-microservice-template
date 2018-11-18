@@ -1,9 +1,23 @@
 #!/usr/bin/env python
-from locust import HttpLocust, TaskSet, task, events
+from locust import HttpLocust, TaskSet, task, events, web, runners
 from statsd import StatsClient
 
 
 STATS_USER_COUNT = "users"
+
+
+@web.app.route("/dmt-perf-start")
+def dmt_perf_start():
+    print("DMT: Request to start hatching.")
+    runners.locust_runner.start_hatching(10, 1)
+    return "OK"
+
+
+@web.app.route("/dmt-perf-stop")
+def dmt_perf_stop():
+    print("DMT: Request to stop.")
+    runners.locust_runner.stop()
+    return "OK"
 
 
 # client to connect statsd server that collects metrics for Graphite
@@ -75,12 +89,12 @@ def hook_locust_error(locust_instance, **kw):
 
 def hook_locust_stop_hatching():
     statsd.gauge(STATS_USER_COUNT, 0)
-    print("hook_locust_stop_hatching executed")
+    print("DMT: hook_locust_stop_hatching executed")
 
 
 def hook_locust_start_hatching():
     statsd.gauge(STATS_USER_COUNT, 0)
-    print("hook_locust_start_hatching executed")
+    print("DMT: hook_locust_start_hatching executed")
 
 
 events.request_success += hook_request_success
