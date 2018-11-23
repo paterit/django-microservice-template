@@ -586,7 +586,7 @@ set-docker-cicd:
 	export DOCKER_CERT_PATH=
 	export DOCKER_MACHINE_NAME=
 
-## Unset env variables for docker engine
+## Unset env variables for docker engine cicd machine to use with eval $(make unset-docker)
 unset-docker:
 	unset DOCKER_TLS_VERIFY
 	unset DOCKER_HOST

@@ -4,9 +4,10 @@ import requests
 import time
 
 
-@given(u'Run perf tests for {period} seconds')
-def step_impl(context, period):
-    context.PERF_START_URL = 'http://perf:8089/dmt-perf-start'
+@given(u'Run perf tests for {period} seconds with {clients_count} clients and with {clients_per_second} hatch rate')
+def step_impl(context, period, clients_count, clients_per_second):
+    context.PERF_START_URL = 'http://perf:8089/dmt-perf-start?locust_count=' + clients_count \
+                             + '&hatch_rate=' + clients_per_second
     context.PERF_STOP_URL = 'http://perf:8089/dmt-perf-stop'
     context.RESPONSE_TIMES_URL = 'http://monitoring-server:81/render?target=stats.timers.perf.GET-.mean_95&format=json&from=-' + str(period) + 'seconds'
 
@@ -26,7 +27,8 @@ def step_impl(context, maxtime):
     context.response_times = requests.get(context.RESPONSE_TIMES_URL)
     assert 200 == context.response_times.status_code
     jr = json.loads(context.response_times.text)
-    times = [row[0] for row in jr[0]['datapoints'] if row[0] is not None]
+    times = [round(row[0], 2) for row in jr[0]['datapoints'] if row[0] is not None]
     assert len(times) != 0, "Repsonse times array is empty!"
     average = sum(times) / len(times)
-    assert average < float(maxtime), "Average response time is " + str(average) + " ms"
+    assert average < float(maxtime), \
+        "Average response time is " + str(average) + " ms in series " + str(times)

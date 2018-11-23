@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 from locust import HttpLocust, TaskSet, task, events, web, runners
 from statsd import StatsClient
+from flask import request
 
 
 STATS_USER_COUNT = "users"
@@ -9,7 +10,9 @@ STATS_USER_COUNT = "users"
 @web.app.route("/dmt-perf-start")
 def dmt_perf_start():
     print("DMT: Request to start hatching.")
-    runners.locust_runner.start_hatching(10, 1)
+    locust_count = request.args.get("locust_count", 10, type=int)
+    hatch_rate = request.args.get("hatch_rate", 1, type=int)
+    runners.locust_runner.start_hatching(locust_count, hatch_rate)
     return "OK"
 
 

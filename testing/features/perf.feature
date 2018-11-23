@@ -5,12 +5,12 @@ Feature: Check the performance tests
   and verify that they fit into defined time frame
 
 
-  @perftest
+ @perftest
   Scenario Outline: Check pages response time
-    Given Run perf tests for <period> seconds
+    Given Run perf tests for <period> seconds with <clients_count> clients and with <clients_per_second> hatch rate
     When performance tests are finished
     Then the main pape response time should be below <maxtime> ms
 
     Examples: Main page
-        | period | maxtime |
-        | 60     | 20      |
+        | period | clients_count | clients_per_second | maxtime |
+        | 120    | 30            | 5                  | 20      |
