@@ -164,6 +164,14 @@ Performance testing
 
 Performance testing is done with the `Locust <https://locust.io>`_ tool. To build your own tests change the file `locustfile.py` in `perf-testing` folder.
 
+Current configuration allows you to define basic performance tests as SBE tests with Behave. Take a look at `testing/features/perf.feature` file to see how it works.
+
+To run performance tests you may run::
+
+  make sbe-perf
+
+Container with Locust will be reeboted (Locust's problem with hungry memory allocation) and SBE test will be run. If you go to Grafana ("Performance testing" dashboard) you can see basic statistics regarding your tests like: response time, requests per second, CPU and memory usage on containers.
+
 
 Local CI/CD machine
 *******************

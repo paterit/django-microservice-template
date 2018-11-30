@@ -7,10 +7,13 @@ Feature: Check the performance tests
 
  @perftest
   Scenario Outline: Check pages response time
-    Given Run perf tests for <period> seconds with <clients_count> clients and with <clients_per_second> hatch rate
+    Given Run perf tests by <period> seconds with <clients_count> clients and with <clients_per_second> hatch rate, with the test url: <test_url> for <logged_user> users
     When performance tests are finished
-    Then the main pape response time should be below <maxtime> ms
+    Then the response time should be below <maxtime> ms
 
-    Examples: Main page
-        | period | clients_count | clients_per_second | maxtime |
-        | 120    | 30            | 5                  | 20      |
+    Examples: Main public page and main admin page
+        | period | clients_count | clients_per_second | test_url | logged_user | maxtime |
+        | 600    | 500           | 10                 | /        | notlogged   | 500     |
+        | 60     | 10            | 5                  | /admin/  | notlogged   | 50      |
+        | 600    | 500           | 5                  | /        | logged      | 500     |
+        | 60     | 10            | 5                  | /admin/  | logged      | 50      |

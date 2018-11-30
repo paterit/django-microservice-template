@@ -1,10 +1,18 @@
 #!/usr/bin/env python
 from locust import HttpLocust, TaskSet, task, events, web, runners
+from locust.exception import StopLocust
 from statsd import StatsClient
 from flask import request
 
-
-STATS_USER_COUNT = "users"
+# name of the statistic for number of active testing clients that are sent over statsd to graphite
+STATS_USER_COUNT = "{{ project_name }}-users"
+# values used in *.feature files to indicate if client should login / logout during tests execution
+LOGGED_USER = "logged"
+NOT_LOGGED_USER = "notlogged"
+# name of the statistic for requests that are sent over statsd to graphite
+STAT_NAME = "{{ project_name }}-perf-test"
+FAILUER_STAT_NAME = "failure." + STAT_NAME
+LOCUST_ERROR_STAT_NAME = "locust_error." + STAT_NAME
 
 
 @web.app.route("/dmt-perf-start")
@@ -12,6 +20,9 @@ def dmt_perf_start():
     print("DMT: Request to start hatching.")
     locust_count = request.args.get("locust_count", 10, type=int)
     hatch_rate = request.args.get("hatch_rate", 1, type=int)
+    runners.locust_runner.dmt_test_url = request.args.get("test_url", None)
+    runners.locust_runner.dmt_logged_user = request.args.get("logged_user", NOT_LOGGED_USER)
+
     runners.locust_runner.start_hatching(locust_count, hatch_rate)
     return "OK"
 
@@ -30,18 +41,20 @@ statsd = StatsClient(host='monitoring-server',
                      maxudpsize=512)
 
 
-class UserBehavior(TaskSet):
+class UserTask(TaskSet):
     """ Defines user behaviour in traffic simulation """
 
     def on_start(self):
         """ on_start is called when a Locust start before any task is scheduled """
         statsd.gauge(STATS_USER_COUNT, 1, delta=True)
-        self.login()
+        if self.locust.logged_user == LOGGED_USER:
+            self.login()
 
     def on_stop(self):
         """ on_stop is called when the TaskSet is stopping """
         statsd.gauge(STATS_USER_COUNT, -1, delta=True)
-        self.logout()
+        if self.locust.logged_user == LOGGED_USER:
+            self.logout()
 
     def login(self):
         response = self.client.get('/admin/')
@@ -54,40 +67,38 @@ class UserBehavior(TaskSet):
     def logout(self):
         self.client.get("/admin/logout/")
 
-    @task(2)
+    @task()
     def index(self):
-        self.client.get("/")
-
-    @task(1)
-    def admin(self):
-        self.client.get("/admin/")
+        self.client.get(self.locust.test_url)
 
 
-class WebsiteUser(HttpLocust):
-    """ Defines user that will be used in traffic simulation """
-    task_set = UserBehavior
-    min_wait = 3000
-    max_wait = 5000
+class User(HttpLocust):
+    test_url = None
+    logged_user = None
+    task_set = UserTask
+    min_wait = 1000
+    max_wait = 2000
 
-
-def get_stat_name(request_type, name):
-    return request_type + name.replace('.', '-')
+    def run(self, runner):
+        if runner:
+            self.test_url = runner.dmt_test_url
+            self.logged_user = runner.dmt_logged_user
+        if self.test_url is None:
+            raise StopLocust("DMT: test_url for " + self.__class__.__name__ + " is None.")
+        super(User, self).run(runner)
 
 
 # hook that is fired each time the request ends up with success
 def hook_request_success(request_type, name, response_time, response_length, **kw):
-    stat_name = get_stat_name(request_type, name)
-    statsd.timing(stat_name, response_time)
+    statsd.timing(STAT_NAME, response_time)
 
 
 def hook_request_failure(request_type, name, response_time, **kw):
-    stat_name = "failure." + get_stat_name(request_type, name)
-    statsd.timing(stat_name, response_time)
+    statsd.timing("failure." + STAT_NAME, response_time)
 
 
 def hook_locust_error(locust_instance, **kw):
-    stat_name = "locust_errors." + type(locust_instance).__name__
-    statsd.gauge(stat_name, 1, delta=True)
+    statsd.gauge(LOCUST_ERROR_STAT_NAME, 1, delta=True)
 
 
 def hook_locust_stop_hatching():

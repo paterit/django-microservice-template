@@ -47,21 +47,21 @@
           "targets": [
             {
               "refId": "A",
-              "target": "stats.timers.perf.GET-.lower"
+              "target": "stats.timers.perf.{{ project_name }}-perf-test.lower"
             },
             {
               "refId": "B",
-              "target": "stats.timers.perf.GET-.mean_95"
+              "target": "stats.timers.perf.{{ project_name }}-perf-test.mean_95"
             },
             {
               "refId": "C",
-              "target": "stats.timers.perf.GET-.upper_95"
+              "target": "stats.timers.perf.{{ project_name }}-perf-test.upper_95"
             }
           ],
           "thresholds": [],
           "timeFrom": null,
           "timeShift": null,
-          "title": "Main page response time",
+          "title": "Response time",
           "tooltip": {
             "shared": true,
             "sort": 0,
@@ -101,98 +101,6 @@
           "dashes": false,
           "datasource": null,
           "fill": 1,
-          "id": 2,
-          "legend": {
-            "avg": false,
-            "current": false,
-            "max": false,
-            "min": false,
-            "show": true,
-            "total": false,
-            "values": false
-          },
-          "lines": true,
-          "linewidth": 1,
-          "links": [],
-          "nullPointMode": "null",
-          "percentage": false,
-          "pointradius": 5,
-          "points": false,
-          "renderer": "flot",
-          "seriesOverrides": [],
-          "spaceLength": 10,
-          "span": 6,
-          "stack": false,
-          "steppedLine": false,
-          "targets": [
-            {
-              "refId": "A",
-              "target": "stats.timers.perf.GET-admin-.lower"
-            },
-            {
-              "refId": "B",
-              "target": "stats.timers.perf.GET-admin-.mean_95"
-            },
-            {
-              "refId": "C",
-              "target": "stats.timers.perf.GET-admin-.upper_95"
-            }
-          ],
-          "thresholds": [],
-          "timeFrom": null,
-          "timeShift": null,
-          "title": "Admin page response time",
-          "tooltip": {
-            "shared": true,
-            "sort": 0,
-            "value_type": "individual"
-          },
-          "type": "graph",
-          "xaxis": {
-            "buckets": null,
-            "mode": "time",
-            "name": null,
-            "show": true,
-            "values": []
-          },
-          "yaxes": [
-            {
-              "format": "ms",
-              "label": null,
-              "logBase": 1,
-              "max": null,
-              "min": null,
-              "show": true
-            },
-            {
-              "format": "short",
-              "label": null,
-              "logBase": 1,
-              "max": null,
-              "min": null,
-              "show": true
-            }
-          ]
-        }
-      ],
-      "repeat": null,
-      "repeatIteration": null,
-      "repeatRowId": null,
-      "showTitle": false,
-      "title": "Dashboard Row",
-      "titleSize": "h6"
-    },
-    {
-      "collapse": false,
-      "height": 250,
-      "panels": [
-        {
-          "aliasColors": {},
-          "bars": false,
-          "dashLength": 10,
-          "dashes": false,
-          "datasource": null,
-          "fill": 1,
           "id": 3,
           "legend": {
             "alignAsTable": true,
@@ -215,19 +123,14 @@
           "renderer": "flot",
           "seriesOverrides": [],
           "spaceLength": 10,
-          "span": 4,
+          "span": 6,
           "stack": false,
           "steppedLine": false,
           "targets": [
             {
               "hide": false,
               "refId": "C",
-              "target": "alias(stats.timers.perf.GET-.count_ps, 'Main page')"
-            },
-            {
-              "hide": false,
-              "refId": "D",
-              "target": "alias(stats.timers.perf.GET-admin-.count_ps, 'Admin')"
+              "target": "stats.timers.perf.{{ project_name }}-perf-test.count_ps"
             }
           ],
           "thresholds": [],
@@ -265,7 +168,19 @@
               "show": true
             }
           ]
-        },
+        }
+      ],
+      "repeat": null,
+      "repeatIteration": null,
+      "repeatRowId": null,
+      "showTitle": false,
+      "title": "Dashboard Row",
+      "titleSize": "h6"
+    },
+    {
+      "collapse": false,
+      "height": 253,
+      "panels": [
         {
           "aliasColors": {},
           "bars": false,
@@ -293,13 +208,13 @@
           "renderer": "flot",
           "seriesOverrides": [],
           "spaceLength": 10,
-          "span": 4,
+          "span": 6,
           "stack": false,
           "steppedLine": false,
           "targets": [
             {
               "refId": "A",
-              "target": "stats.gauges.perf.users"
+              "target": "stats.gauges.perf.{{ project_name }}-users"
             }
           ],
           "thresholds": [],
@@ -345,7 +260,7 @@
           "dashes": false,
           "datasource": null,
           "fill": 1,
-          "id": 7,
+          "id": 5,
           "legend": {
             "alignAsTable": true,
             "avg": true,
@@ -366,17 +281,13 @@
           "renderer": "flot",
           "seriesOverrides": [],
           "spaceLength": 10,
-          "span": 4,
+          "span": 6,
           "stack": false,
           "steppedLine": false,
           "targets": [
             {
               "refId": "A",
-              "target": "alias(stats.timers.perf.failure.GET-.count_ps, 'main page')"
-            },
-            {
-              "refId": "B",
-              "target": "alias(stats.timers.perf.failure.GET-admin-.count_ps, 'admin page')"
+              "target": "stats.timers.perf.failure.{{ project_name }}-perf-test.count_ps"
             }
           ],
           "thresholds": [],
@@ -434,7 +345,7 @@
           "dashes": false,
           "datasource": null,
           "fill": 1,
-          "id": 5,
+          "id": 6,
           "legend": {
             "avg": false,
             "current": false,
@@ -461,23 +372,23 @@
             {
               "hide": false,
               "refId": "A",
-              "target": "alias(stats.gauges.glances.docker.yourservice-db.memoryusage, 'db')",
+              "target": "alias(stats.gauges.glances.docker.{{ project_name }}-db.memoryusage, 'db')",
               "textEditor": false
             },
             {
               "hide": false,
               "refId": "B",
-              "target": "alias(stats.gauges.glances.docker.yourservice-web.memoryusage, 'web')",
+              "target": "alias(stats.gauges.glances.docker.{{ project_name }}-web.memoryusage, 'web')",
               "textEditor": false
             },
             {
               "refId": "D",
-              "target": "alias(stats.gauges.glances.docker.yourservice-https.memoryusage, 'https')",
+              "target": "alias(stats.gauges.glances.docker.{{ project_name }}-https.memoryusage, 'https')",
               "textEditor": false
             },
             {
               "refId": "F",
-              "target": "alias(stats.gauges.glances.docker.yourservice-perf.memoryusage, 'perf')",
+              "target": "alias(stats.gauges.glances.docker.{{ project_name }}-perf.memoryusage, 'perf')",
               "textEditor": false
             }
           ],
@@ -524,7 +435,7 @@
           "dashes": false,
           "datasource": null,
           "fill": 1,
-          "id": 6,
+          "id": 7,
           "legend": {
             "avg": false,
             "current": false,
@@ -550,19 +461,19 @@
           "targets": [
             {
               "refId": "A",
-              "target": "alias(stats.gauges.glances.docker.yourservice-db.cputotal, 'db')"
+              "target": "alias(stats.gauges.glances.docker.{{ project_name }}-db.cputotal, 'db')"
             },
             {
               "refId": "B",
-              "target": "alias(stats.gauges.glances.docker.yourservice-web.cputotal, 'web')"
+              "target": "alias(stats.gauges.glances.docker.{{ project_name }}-web.cputotal, 'web')"
             },
             {
               "refId": "D",
-              "target": "alias(stats.gauges.glances.docker.yourservice-https.cputotal, 'https')"
+              "target": "alias(stats.gauges.glances.docker.{{ project_name }}-https.cputotal, 'https')"
             },
             {
               "refId": "F",
-              "target": "alias(stats.gauges.glances.docker.yourservice-perf.cputotal, 'perf')"
+              "target": "alias(stats.gauges.glances.docker.{{ project_name }}-perf.cputotal, 'perf')"
             }
           ],
           "thresholds": [],
@@ -617,7 +528,7 @@
     "list": []
   },
   "time": {
-    "from": "now-1h",
+    "from": "now-15m",
     "to": "now"
   },
   "timepicker": {
@@ -646,7 +557,6 @@
     ]
   },
   "timezone": "",
-  "uid": "dmtXOJASTmaGLgWHaOijgNB",
   "title": "Performance testing",
-  "version": 3
+  "version": 1778
 }

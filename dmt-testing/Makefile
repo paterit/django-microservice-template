@@ -115,7 +115,7 @@ create-project:
 	django-admin startproject \
         --template=./dmt-template \
         --extension=py,rst,yml,sh,md,conf,feature \
-        --name=Makefile,glances-graphite.json,Dockerfile-perf,Dockerfile-glances,Dockerfile-grafana,Dockerfile-web,Dockerfile-db,Dockerfile-data,Dockerfile-https,Dockerfile-testing,Dockerfile,Dockerfile-docs,master.cfg,db.env,cicd.docker.env,post-commit \
+        --name=Makefile,locustfile.py,performance-testing.json,perf.py,glances-graphite.json,Dockerfile-perf,Dockerfile-glances,Dockerfile-grafana,Dockerfile-web,Dockerfile-db,Dockerfile-data,Dockerfile-https,Dockerfile-testing,Dockerfile,Dockerfile-docs,master.cfg,db.env,cicd.docker.env,post-commit \
         $(PROJECT_NAME)
 
 ## Create docker containers with Buildbot

@@ -507,12 +507,15 @@ wait-for-elk:
 wait-for-cicd-master:
 	docker exec -t {{ project_name }}-cicd-master bash -c "./wait_for_master.sh"
 
-## Run SBE tests in {{ project_name }}-web container
+## Run SBE tests
 sbe:
 	docker exec -t {{ project_name }}-testing behave
+## Run SBE moke tests
 sbe-smoke:
 	docker exec -t {{ project_name }}-testing behave --tags=smoketest  --no-skipped
+## Run SBE performance tests
 sbe-perf:
+	docker-compose restart perf
 	docker exec -t {{ project_name }}-testing behave --tags=perftest --no-skipped
 
 ## Regenerate docs
