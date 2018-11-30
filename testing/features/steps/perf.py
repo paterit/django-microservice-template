@@ -4,7 +4,7 @@ import requests
 import time
 
 
-@given(u'Run perf tests by {period} seconds with {clients_count} clients and with {clients_per_second} hatch rate, with the test url: {test_url} for {logged_user} users')
+@given(u'running performance tests for {period} seconds with {clients_count} clients and with {clients_per_second} hatch rate, with the test url: {test_url} for {logged_user} users')
 def step_impl(context, period, clients_count, clients_per_second, test_url, logged_user):
     context.PERF_START_URL = 'http://perf:8089/dmt-perf-start?locust_count=' + clients_count \
                              + '&hatch_rate=' + clients_per_second \
