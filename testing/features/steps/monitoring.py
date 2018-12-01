@@ -28,6 +28,5 @@ def step_impl(context):
 @then(u'data for performance testing is not empty')
 def step_impl(context):
     r = context.response
-    assert 200 == r.status_code
+    assert 200 == r.status_code, "URL: " + context.PERFORMANCE_DASHBOARD_URL
     assert '"dmtXOJASTmaGLgWHaOijgNB"' in str(r.content)
-

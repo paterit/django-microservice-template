@@ -509,7 +509,7 @@ wait-for-cicd-master:
 
 ## Run SBE tests
 sbe:
-	docker exec -t {{ project_name }}-testing behave
+	docker exec -t {{ project_name }}-testing behave --tags=smoketest,standard --no-skipped
 ## Run SBE moke tests
 sbe-smoke:
 	docker exec -t {{ project_name }}-testing behave --tags=smoketest  --no-skipped

@@ -79,6 +79,7 @@ You should see containers with names like::
   {{ project_name }}-docker-console - Portainer - web docker console
   {{ project_name }}-monitoring-agent - Glances - monitoring agent
   {{ project_name }}-monitoring-server - Graphit+Grafana - monitoring server
+  {{ project_name }}-perf - Locust - performance testing
 
 
 To stop all containers::
@@ -89,7 +90,7 @@ And start them again::
 
     make start
 
-Changes in web are dynamically reloaded after each change in code.
+Changes in web and SBE tests are dynamically reloaded after each change in code.
 To reload https container run::
 
    make reload-https
@@ -97,6 +98,10 @@ To reload https container run::
 to reload changes in docs run::
 
    make rebuild-docs
+
+to reload changes in Locust run::
+
+   make rerun-perf
 
 Short-cuts
 **********
@@ -128,9 +133,10 @@ To easily open shell for conteiners you can use::
     make shell-web
     make shell-https
     make shell-testing
-    make shell-db
-    make shell-logs
-    make shell-docker-console
+
+    and so on
+
+to see all shell make commands you can run ``make help | grep shell-``
 
 
 Logs
@@ -162,9 +168,9 @@ There are two dashboards:
 Performance testing
 *******************
 
-Performance testing is done with the `Locust <https://locust.io>`_ tool. To build your own tests change the file `locustfile.py` in `perf-testing` folder.
+Performance testing is done with the ``Locust <https://locust.io>``_ tool. To build your own tests change the file ``locustfile.py`` in ``perf-testing`` folder.
 
-Current configuration allows you to define basic performance tests as SBE tests with Behave. Take a look at `testing/features/perf.feature` file to see how it works.
+Current configuration allows you to define basic performance tests as SBE tests with Behave. Take a look at ``testing/features/perf.feature`` file to see how it works.
 
 To run performance tests you may run::
 
@@ -278,6 +284,13 @@ To run SBE tests ::
 
     make sbe
 
+Tests are tagged with:
+
+- @smoketest - those should be test that run quickly and allows to verify if all main parts are alive and connected
+- @perf - performance tests, usually not that fast
+- @slow - any test that takes more then 10 secs to exectue
+- @standard - when run make sbe all tests with @standard and @smoketest are run
+
 How to write new SBE test with Behave
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
@@ -343,6 +356,4 @@ Source files of the docs are where code source lives in folder ``docs/source``. 
 
 .. toctree::
    :maxdepth: 2
-
-
 

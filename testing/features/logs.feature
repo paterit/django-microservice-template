@@ -4,6 +4,7 @@ Feature: Check if logs from containers are agregated in ELK
   I want to call ELK API
   and count query result for each container
 
+  @standard
   Scenario: Check web app logs
     Given web admin page for auth groups is loaded
     When elasticsearch API is called
