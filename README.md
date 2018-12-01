@@ -27,7 +27,7 @@ Planned to be added:
 
 ### Set up an environment ###
 
-You need Linux machine (tested on Ubuntu 16.04) with [docker engine](https://docs.docker.com/engine/), [virtualenv](https://virtualenv.pypa.io/en/stable/) with [Django](https://www.djangoproject.com/) and [docker-compose](https://docs.docker.com/compose/). If you want to set up CI-CD env locally then you need [docker-machine](https://docs.docker.com/machine/) and [Git](https://git-scm.com/) as well.
+You need Linux machine (tested on Ubuntu 16.04) with [docker engine](https://docs.docker.com/engine/), [make](http://www.gnu.org/software/make/), [virtualenv](https://virtualenv.pypa.io/en/stable/) with [Django](https://www.djangoproject.com/) and [docker-compose](https://docs.docker.com/compose/). If you want to set up CI-CD env locally then you need [docker-machine](https://docs.docker.com/machine/) and [Git](https://git-scm.com/) as well.
 
 Dependencies:
 

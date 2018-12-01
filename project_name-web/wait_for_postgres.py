@@ -7,7 +7,7 @@ from datetime import datetime
 SUCCESS = 0
 ERROR = 1
 INTERVAL = 0.1
-MAX_RETRY = 600
+MAX_RETRY = 1200
 
 port = int(os.environ["DB_PORT"])
 print("Waiting for postgres ...")
@@ -22,7 +22,7 @@ while count < MAX_RETRY:
         exit(0)
     except socket.error as ex:
         print(datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S.%f')[:-3])
-        print("... waiting fro postres ...")
+        print("... waiting for postgres ...")
         count += 1
         time.sleep(INTERVAL)
 
