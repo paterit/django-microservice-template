@@ -6,7 +6,7 @@
 
 docker save python:3.6.6-alpine3.8 | pv | docker $(docker-machine config {{ project_name }}-cicd) load
 docker save alpine:3.8 | pv | docker $(docker-machine config {{ project_name }}-cicd) load
-docker save nginx:1.13-alpine | pv | docker $(docker-machine config {{ project_name }}-cicd) load
+docker save nginx:1.15.7-alpine | pv | docker $(docker-machine config {{ project_name }}-cicd) load
 docker save sebp/elk:623 | pv | docker $(docker-machine config {{ project_name }}-cicd) load
 docker save gliderlabs/logspout:v3.1 | pv | docker $(docker-machine config {{ project_name }}-cicd) load
 docker save postgres:10.3-alpine | pv | docker $(docker-machine config {{ project_name }}-cicd) load

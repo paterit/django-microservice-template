@@ -175,15 +175,17 @@ test_commit:
 
 ## Test both local and docker-machine versions
 test:
+	make clean-local
 	make all-local
 	make clean-local
 	@echo "\033[1;32mGreat! Local build works!\033[0m"
+	make clean
 	make all
 	make clean
 	@echo "\033[1;32mGreat! Docker-machine version works!\033[0m"
-	make all-git
-	make clean
-	@echo "\033[1;32mGreat! Docker-machine version from git works!\033[0m"
+	# make all-git
+	# make clean
+	# @echo "\033[1;32mGreat! Docker-machine version from git works!\033[0m"
 
 
 # Printing nice help when make help is called
