@@ -96,7 +96,7 @@ replace_version(
     component + ":" + str(highest),
     SRC[component])
 
-ret = run(["time", "make", "test"])
+ret = run(["time", "make", "clean-local", "all-local"])
 print(ret.returncode)
 print(newer_versions)
-print("Update " + next(iter(newer_versions) + " to " + newer_versions[component][1]))
+print("Update " + str(next(iter(newer_versions)) + " to " + newer_versions[component][1]))
