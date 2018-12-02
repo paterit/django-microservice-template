@@ -4,16 +4,28 @@ Feature: Check the performance tests
   I want to run performance tests
   and verify that mean response times are below threshold
 
- @slow
- @perftest
+  @slow
+  @perftest
   Scenario Outline: Check pages response time
     Given running performance tests for <period> seconds with <clients_count> clients and with <clients_per_second> hatch rate, with the test url: <test_url> for <logged_user> users
     When performance tests are finished
     Then the response time should be below <maxtime> ms
 
-    Examples: Main public page and main admin page
+    Examples: Long tests with given test_url
         | period | clients_count | clients_per_second | test_url | logged_user | maxtime |
         | 600    | 500           | 10                 | /        | notlogged   | 500     |
         | 60     | 10            | 5                  | /admin/  | notlogged   | 50      |
         | 600    | 500           | 5                  | /        | logged      | 500     |
         | 60     | 10            | 5                  | /admin/  | logged      | 50      |
+
+
+  @standard
+  @perftest
+  Scenario Outline: Check pages response time in quicktest
+    Given running performance tests for <period> seconds with <clients_count> clients and with <clients_per_second> hatch rate, with the test url: <test_url> for <logged_user> users
+    When performance tests are finished
+    Then the response time should be below <maxtime> ms
+
+    Examples: Quick tests with given test_url
+        | period | clients_count | clients_per_second | test_url | logged_user | maxtime |
+        | 20     | 10            | 5                  | /        | notlogged   | 50      |
