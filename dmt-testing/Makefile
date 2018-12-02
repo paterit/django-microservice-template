@@ -83,6 +83,7 @@ clean-local:
 	rm -rf ./dmt-template
 	rm -rf ./virtenv
 	rm -rf ./$(PROJECT_NAME)
+	rm -rf ./.git
 
 ## Set virtualenv
 virtualenv:

@@ -204,39 +204,39 @@ IMGS-CICD-DB=$(shell docker images -q -f "label=application={{ project_name }}-c
 #stop docker containers
 ## Stop DB containers
 stop-db:
-	-docker stop $(CONTS-DB)
+	@echo $(CONTS-DB) | xargs -r docker stop
 stop-data:
-	-docker stop $(CONTS-DATA)
+	@echo $(CONTS-DATA) | xargs -r docker stop
 ## Stop WEB application's containers
 stop-web:
-	-docker stop --time=1 $(CONTS-WEB)
+	@echo $(CONTS-WEB) | xargs -r docker stop --time=1
 ## Stop Nginx container
 stop-https:
-	-docker stop $(CONTS-HTTPS)
+	@echo $(CONTS-HTTPS) | xargs -r docker stop
 ## Stop container for SBE testing
 stop-testing:
-	-docker stop $(CONTS-TESTING)
+	@echo $(CONTS-TESTING) | xargs -r docker stop
 ## Stop ELK conteiners
 stop-logs:
-	-docker stop $(CONTS-LOGS)
+	@echo $(CONTS-LOGS) | xargs -r docker stop
 stop-logspout:
-	-docker stop $(CONTS-LOGSPOUT)
+	@echo $(CONTS-LOGSPOUT) | xargs -r docker stop
 ## Stop docker console
 stop-docker-console:
-	-docker stop $(CONTS-DOCKER-CONSOLE)
+	@echo $(CONTS-DOCKER-CONSOLE) | xargs -r docker stop
 ## Stop monitoring server
 stop-monitoring-server:
-	-docker stop $(CONTS-MONITORING-SERVER)
+	@echo $(CONTS-MONITORING-SERVER) | xargs -r docker stop
 ## Stop monitoring agent
 stop-monitoring-agent:
-	-docker stop $(CONTS-MONITORING-AGENT)
+	@echo $(CONTS-MONITORING-AGENT) | xargs -r docker stop
 ## Stop performance testing
 stop-perf:
-	-docker stop $(CONTS-PERF)
+	@echo $(CONTS-PERF) | xargs -r docker stop
 
 ## Stop Buildbot containers
 stop-cicd:
-	-docker stop $(CONTS-CICD)
+	@echo $(CONTS-CICD) | xargs -r docker stop
 	#docker-machine stop {{ project_name }}-cicd
 ## Stop all applications' containers (without Buildbot)
 stop:
@@ -279,45 +279,45 @@ start-prod:
 #remove docker containers
 ## Remove containers with data for DB
 rm-data:
-	-docker rm $(CONTS-DATA)
+	@echo $(CONTS-DATA) | xargs -r docker rm
 ## Remove container with DB
 rm-db:
-	-docker rm $(CONTS-DB)
+	@echo $(CONTS-DB) | xargs -r docker rm
 ## Remove containers for WEB applications
 rm-web:
-	-docker rm $(CONTS-WEB)
+	@echo $(CONTS-WEB) | xargs -r docker rm
 ## Remove containers for docs generation
 rm-docs:
-	-docker rm $(CONTS-DOCS)
+	@echo $(CONTS-DOCS) | xargs -r docker rm
 ## Remove container for Nginx
 rm-https:
-	-docker rm $(CONTS-HTTPS)
+	@echo $(CONTS-HTTPS) | xargs -r docker rm
 ## Remove container for SBE testing
 rm-testing:
-	-docker rm $(CONTS-TESTING)
+	@echo $(CONTS-TESTING) | xargs -r docker rm
 ## Remove containers for ELK
 rm-logs:
-	-docker rm $(CONTS-LOGS)
+	@echo $(CONTS-LOGS) | xargs -r docker rm
 rm-logspout:
-	-docker rm $(CONTS-LOGSPOUT)
+	@echo $(CONTS-LOGSPOUT) | xargs -r docker rm
 ## Remove containers for docker-console
 rm-docker-console:
-	-docker rm $(CONTS-DOCKER-CONSOLE)
+	@echo $(CONTS-DOCKER-CONSOLE) | xargs -r docker rm
 ## Remove containers for monitoring-agent
 rm-monitoring-agent:
-	-docker rm $(CONTS-MONITORING-AGENT)
+	@echo $(CONTS-MONITORING-AGENT) | xargs -r docker rm
 ## Remove containers for monitoring-server
 rm-monitoring-server:
-	-docker rm $(CONTS-MONITORING-SERVER)
+	@echo $(CONTS-MONITORING-SERVER) | xargs -r docker rm
 ## Remove containers for performance testing
 rm-perf:
-	-docker rm $(CONTS-PERF)
+	@echo $(CONTS-PERF) | xargs -r docker rm
 ## Remove containers for Buildbot
 rm-cicd:
-	-docker rm $(CONTS-CICD)
+	@echo $(CONTS-CICD) | xargs -r docker rm
 ## Remove Buildbot database container
 rm-cicd-db:
-	-docker rm {{ project_name }}-cicd-db
+	@echo $(CONTS-CICD-DB) | xargs -r docker rm
 ## Remove all containers (with Buildbot)
 rm: rm-db rm-web rm-docs rm-https rm-logspout rm-logs rm-docker-console rm-monitoring-agent rm-monitoring-server rm-perf rm-cicd
 
@@ -325,47 +325,47 @@ rm: rm-db rm-web rm-docs rm-https rm-logspout rm-logs rm-docker-console rm-monit
 #remove docker images
 ## Remove docker images with data for DB
 rmi-data:
-	-docker rmi -f $(IMGS-DATA)
+	@echo $(IMGS-DATA) | xargs -r docker rmi -f
 ## Remove DB containers
 rmi-db:
-	-docker rmi -f $(IMGS-DB)
+	@echo $(IMGS-DB) | xargs -r docker rmi -f
 ## Remove WEB app docker images
 rmi-web:
-	-docker rmi -f $(IMGS-WEB)
+	@echo $(IMGS-WEB) | xargs -r docker rmi -f
 ## Remove docker images for docs generation
 rmi-docs:
-	-docker rmi -f $(IMGS-DOCS)
+	@echo $(IMGS-DOCS) | xargs -r docker rmi -f
 ## Remove docker images for Nginx
 rmi-https:
-	-docker rmi -f $(IMGS-HTTPS)
+	@echo $(IMGS-HTTPS) | xargs -r docker rmi -f
 ## Remove docker images for SBE testing
 rmi-testing:
-	-docker rmi -f $(IMGS-TESTING)
+	@echo $(IMGS-TESTING) | xargs -r docker rmi -f
 ## Remove docker images for ELK
 rmi-logs:
-	-docker rmi -f $(IMGS-LOGS)
+	@echo $(IMGS-LOGS) | xargs -r docker rmi -f
 rmi-logspout:
-	-docker rmi -f $(IMGS-LOGSPOUT)
+	@echo $(IMGS-LOGSPOUT) | xargs -r docker rmi -f
 ## Remove docker images for docker console
 rmi-docker-console:
-	-docker rmi -f $(IMGS-DOCKER-CONSOLE)
+	@echo $(IMGS-DOCKER-CONSOLE) | xargs -r docker rmi -f
 ## Remove docker images for monitoring-agent
 rmi-monitoring-agent:
-	-docker rmi -f $(IMGS-MONITORING-AGENT)
+	@echo $(IMGS-MONITORING-AGENT) | xargs -r docker rmi -f
 ## Remove docker images for monitoring-server
 rmi-monitoring-server:
-	-docker rmi -f $(IMGS-MONITORING-SERVER)
+	@echo $(IMGS-MONITORING-SERVER) | xargs -r docker rmi -f
 ## Remove docker images for performance testing
 rmi-perf:
-	-docker rmi -f $(IMGS-PERF)
+	@echo $(IMGS-PERF) | xargs -r docker rmi -f
 ## Remove  docker images for Buildbot apps and DB
 rmi-cicd:
-	-docker rmi -f $(IMGS-CICD-MASTER)
-	-docker rmi -f $(IMGS-CICD-WORKER)
-	-docker rmi -f $(IMGS-CICD-DB)
+	@echo $(IMGS-CICD-MASTER) | xargs -r docker rmi -f
+	@echo $(IMGS-CICD-WORKER) | xargs -r docker rmi -f
+	@echo $(IMGS-CICD-DB) | xargs -r docker rmi -f
 ## Remove docker images for Buildbot DB
 rmi-cicd-db:
-	-docker rmi -f $(IMGS-CICD-DB)
+	@echo $(IMGS-CICD-DB) | xargs -r docker rmi -f
 
 ## Remove all docker images, icluding Buildbot
 rmi: rmi-db rmi-web rmi-https rmi-logspout rmi-logs rmi-docker-console rmi-monitoring-agent rmi-monitoring-server rmi-perf rmi-cicd
@@ -403,17 +403,17 @@ clean-compose:
 	docker-compose rm -f
 ## Remove ophaned docker volumes
 clean-orphaned-volumes:
-	docker volume rm $(docker volume ls -qf dangling=true) || exit 0
-	docker images | awk '$1~/<none>/ {print $3}' | xargs -r docker rmi
+	@docker volume ls -qf dangling=true | xargs -r docker volume rm
 ## Remove images with <None> repository 
 clean-none-images:
-	-docker rmi $(docker images --filter "dangling=true" -q --no-trunc)
+	@docker images --filter "dangling=true" -q --no-trunc | xargs -r docker rmi
+	@docker images | awk '$$1~/<none>/ {print $$3}' | xargs -r docker rmi
 ## Remove containers and docker images for WEB application and SBE testing
-clean-apps: clean-web clean-testing clean-docs clean-data clean-orphaned-volumes #clean-compose - not work well in dmt-testing without virtenv context
+clean-apps: clean-web clean-testing clean-docs clean-data #clean-compose - not work well in dmt-testing without virtenv context
 ## Remove containers and docker images for ELK, DB and Nginx
 clean-non-apps: clean-logspout clean-logs clean-logspout clean-db clean-https clean-docker-console clean-monitoring-agent clean-monitoring-server clean-perf
 ## Remove all containers and docker images not including Buildbot 
-clean-all: clean-apps clean-non-apps clean-data clean-docs
+clean-all: clean-apps clean-non-apps clean-data clean-docs clean-orphaned-volumes clean-none-images
 
 ## Remove and recreate containers and docker images for Buildbot DB
 reload-cicd-db:
