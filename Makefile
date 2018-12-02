@@ -530,13 +530,19 @@ test:
 	@date +%T.%N
 	@echo "End of make test"
 
-## Test if docs are compailed and propagated
+## Test if docs are compailed and propagated (only in local machine mode)
 test-docs:
-	#docker exec {{ project_name }}-testing sed -i "s|Welcome|UploadTestSucced|" /opt/{{ project_name }}/{{ project_name }}-testing/docs/source/index.rst
-	docker exec {{ project_name }}-testing sed -i "$$ a UploadTestSucced" /opt/{{ project_name }}/{{ project_name }}-testing/docs/source/index.rst
+	sed -i "$$ a UploadTestSucced" ./docs/source/index.rst
 	make upload-docs
 	curl -Ls localhost/docs | grep UploadTestSucced
-	docker exec {{ project_name }}-testing sed -i "s|UploadTestSucced||g" /opt/{{ project_name }}/{{ project_name }}-testing/docs/source/index.rst
+	sed -i "s|UploadTestSucced||g" ./docs/source/index.rst
+
+## Test if docs are compailed and propagated (only in cicd machine mode)
+test-docs-cicd:
+	sed -i "$$ a UploadTestSucced" ./docs/source/index.rst
+	make upload-docs
+	curl -Ls http://$(DOCKER_MACHINE_IP)/docs | grep UploadTestSucced && { exit 0; } || echo "Docs not updated!"; exit 1;
+	sed -i "s|UploadTestSucced||g" ./docs/source/index.rst
 
 
 ## Collect static files in WEB container
@@ -588,6 +594,7 @@ set-docker-cicd:
 	export DOCKER_HOST=
 	export DOCKER_CERT_PATH=
 	export DOCKER_MACHINE_NAME=
+	export DOCKER_MACHINE_IP=
 
 ## Unset env variables for docker engine cicd machine to use with eval $(make unset-docker)
 unset-docker:
@@ -595,6 +602,7 @@ unset-docker:
 	unset DOCKER_HOST
 	unset DOCKER_CERT_PATH
 	unset DOCKER_MACHINE_NAME
+	unset DOCKER_MACHINE_IP
 
 ## Print message on success for local install
 success-local:
