@@ -1,8 +1,6 @@
 virtenv
 __pycache__
 db.sqlite3
-.idea/
-ghostdriver.log
 TODO
 /static/
 /docs/build/

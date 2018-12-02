@@ -1,0 +1,5 @@
+virtenv
+__pycache__
+db.sqlite3
+/static/
+/docs/build/

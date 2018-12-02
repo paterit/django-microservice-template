@@ -15,6 +15,7 @@ FAILUER_STAT_NAME = "failure." + STAT_NAME
 LOCUST_ERROR_STAT_NAME = "locust_error." + STAT_NAME
 
 
+# create a way to start hatching by API (mimic the @app.route('/swarm', methods=["POST"]) form web.py in Locust repo)
 @web.app.route("/dmt-perf-start")
 def dmt_perf_start():
     print("DMT: Request to start hatching.")
@@ -24,9 +25,12 @@ def dmt_perf_start():
     runners.locust_runner.dmt_logged_user = request.args.get("logged_user", NOT_LOGGED_USER)
 
     runners.locust_runner.start_hatching(locust_count, hatch_rate)
+    print("DMT: Hatching request started for url: " + runners.locust_runner.dmt_test_url)
+
     return "OK"
 
 
+# create a way to start hatching by API (mimic the @app.route('/stop')) form web.py in Locust repo)
 @web.app.route("/dmt-perf-stop")
 def dmt_perf_stop():
     print("DMT: Request to stop.")
