@@ -11,11 +11,11 @@ from rex import rex
 
 # based on https://github.com/al4/docker-registry-list/blob/master/docker-registry-list.py
 @cachier(stale_after=datetime.timedelta(days=3))
-def fetch_versions(image_name):
+def fetch_versions(image_name, repo_name):
     print("NOT CACHED")
     payload = {
         'service': 'registry.docker.io',
-        'scope': 'repository:library/{image}:pull'.format(image=image_name)
+        'scope': 'repository:{repo}/{image}:pull'.format(repo=repo_name, image=image_name)
     }
 
     r = requests.get('https://auth.docker.io' + '/token', params=payload)
@@ -26,7 +26,9 @@ def fetch_versions(image_name):
     j = r.json()
     token = j['token']
     h = {'Authorization': "Bearer {}".format(token)}
-    r = requests.get('{}/v2/library/{}/tags/list'.format("https://index.docker.io", image_name),
+    # r = requests.get('{}/v2/library/{}/tags/list'.format("https://index.docker.io", image_name),
+    #                  headers=h)
+    r = requests.get('{}/v2/{}/{}/tags/list'.format("https://index.docker.io", repo_name, image_name),
                      headers=h)
     return r.json()
 
@@ -50,10 +52,13 @@ def replace_version(old, new, files):
     return counter
 
 
-COMPONENTS = ('postgres', 'nginx')
+COMPONENTS = ('postgres', 'nginx', 'elk', 'logspout')
+REPOS = {"postgres": "library", "nginx": "library", "elk": "sebp", "logspout": "gliderlabs"}
 CURRENT_VERSIONS = {
     "postgres": "10.3-alpine",
-    "nginx": "1.13-alpine"
+    "nginx": "1.13-alpine",
+    "elk": "623",
+    "logspout": "v3.1"
 }
 SRC = {
     "postgres": (
@@ -65,11 +70,21 @@ SRC = {
     "nginx": (
         "https/Dockerfile-https",
         "cicd/copy_docker_images_to_machine.sh",
+        "cicd/pull_base_docker_images.sh"),
+    "elk": (
+        "logs/Dockerfile",
+        "cicd/copy_docker_images_to_machine.sh",
+        "cicd/pull_base_docker_images.sh"),
+    "logspout": (
+        "docker-compose.yml",
+        "cicd/copy_docker_images_to_machine.sh",
         "cicd/pull_base_docker_images.sh")
 }
 FILTERS = {
     "postgres": '/.*alpine$/',
-    "nginx": '/.*alpine$/'
+    "nginx": '/.*alpine$/',
+    "elk": '/^\d{3}$/',
+    "logspout": '/^v.*/'
 }
 
 if len(sys.argv) < 2:
@@ -84,19 +99,26 @@ if component not in (COMPONENTS):
 
 newer_versions = {}
 
-tags = fetch_versions(component)["tags"]
+tags = fetch_versions(component, REPOS[component])["tags"]
 curr = parse(CURRENT_VERSIONS[component])
 highest = max([parse(tag) for tag in tags if tag == rex(FILTERS[component])])
 
 if highest > curr:
     newer_versions[component] = (str(curr), str(highest))
 
+
+# print(newer_versions)
+# print("Update " + str(next(iter(newer_versions)) + " to " + newer_versions[component][1]))
+# sys.exit(0)
+
+
 replace_version(
     component + ":" + str(curr),
     component + ":" + str(highest),
     SRC[component])
 
-ret = run(["time", "make", "clean-local", "all-local"])
+# ret = run(["time", "make", "clean-local", "all-local", "clean-local"])
+ret = run(["time", "make", "test"])
 print(ret.returncode)
 print(newer_versions)
 print("Update " + str(next(iter(newer_versions)) + " to " + newer_versions[component][1]))
