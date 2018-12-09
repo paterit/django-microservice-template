@@ -173,6 +173,18 @@ test_commit:
 	git add test.txt; \
 	git commit -q -m "Test commit."
 
+## Run perormance tests
+test-perf:
+	. virtenv/bin/activate; \
+	cd $(PROJECT_NAME); \
+	make sbe-perf
+
+## Run django tests and sbe standard tests
+test-sbe:
+	. virtenv/bin/activate; \
+	cd $(PROJECT_NAME); \
+	make test sbe
+
 ## Test both local and docker-machine versions
 test:
 	make clean-local
@@ -187,6 +199,9 @@ test:
 	# make clean
 	# @echo "\033[1;32mGreat! Docker-machine version from git works!\033[0m"
 
+
+hello:
+	@echo "Hello!"
 
 # Printing nice help when make help is called
 

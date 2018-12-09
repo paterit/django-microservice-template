@@ -8,6 +8,7 @@ ERR_NO_BUILDBOT = 1
 ERR_BUILD_FAIL = 2
 SUCCESS = 0
 MAX_RETRY = 30
+INTERVAL = 10  # seconds
 
 # Buildbot enumerates builds starting with number 1
 build_number = sys.argv[1]
@@ -34,7 +35,7 @@ while (True):
 
     if (state == "building" or state == "acquiring locks"):
         print("Current build status is: '%s' ..." % (state))
-        time.sleep(10)
+        time.sleep(INTERVAL)
     else:
         try:
             print("Returned code (results) for this build is: '%d'" % (result))
