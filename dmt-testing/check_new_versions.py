@@ -61,7 +61,7 @@ COMPONENTS = {
             "docker-compose.yml",
             "cicd/copy_docker_images_to_machine.sh",
             "cicd/pull_base_docker_images.sh"),
-        "filter": "/^v\d.\d.\d$/",
+        "filter": "/^v\d+\.\d+\.\d+$/",
         "prefix": "v"
     },
     "buildbot-master": {
@@ -69,9 +69,19 @@ COMPONENTS = {
         "type": "docker-image",
         "repo": "buildbot",
         "src": ("cicd/master/Dockerfile",),
-        "filter": "/^v\d.\d.\d$/",
+        "filter": "/^v\d+\.\d+\.\d+$/",
         "prefix": "v",
         "exclude-versions": ("v1.6.0",)
+    },
+    "portainer": {
+        "current_version": "1.19.2",
+        "type": "docker-image",
+        "repo": "portainer",
+        "src": (
+            "docker-compose.yml",
+            "cicd/copy_docker_images_to_machine.sh",
+            "cicd/pull_base_docker_images.sh"),
+        "filter": "/^\d+\.\d+\.\d+$/"
     }
 }
 
@@ -143,40 +153,41 @@ if __name__ == "__main__":
                            )
                        ])
         curr = parse(COMP["current_version"])
+        stop_if_testing(highest)
         if highest > curr:
             curr_str = COMP.get("prefix", "") + str(curr)
             highest_str = COMP.get("prefix", "") + str(highest)
             newer_versions[component] = (curr_str, highest_str)
 
-        commit_message = "Update " + component + " to " + highest_str + " from " + curr_str
-        stop_if_testing(commit_message)
+            commit_message = "Update " + component + " to " + highest_str + " from " + curr_str
 
-        replace_version(
-            component + ":" + curr_str,
-            component + ":" + highest_str,
-            COMP["src"])
+            replace_version(
+                component + ":" + curr_str,
+                component + ":" + highest_str,
+                COMP["src"])
 
-        # ret = run(["make", "clean-local", "all-local"])
-        ret = run(["make", "hello"])
-        # ret = run(["make", "clean-local", "all-local", "test-perf", "clean-local", "clean", "all", "clean"])
-        if ret.returncode is not TESTS_SUCCESS:
-            kill(EXIT_ERROR, "Make went wrong!", ret)
+            # ret = run(["make", "hello"])
+            ret = run(["make", "clean-local", "all-local", "test-perf", "clean-local", "clean", "all", "clean"])
+            if ret.returncode is not TESTS_SUCCESS:
+                kill(EXIT_ERROR, "Make went wrong!", ret)
 
-        # get from git list of changed files
-        ret_git = git["diff", "--name-only"].run(retcode=None)
-        changed_files = ret_git[1].splitlines()
-        # check if all filers from SRC are in changed_files
-        if not set(COMP["src"]).issubset(set(changed_files)):
-            kill(EXIT_ERROR, "Not all SRC files are in git changed files.")
+            # get from git list of changed files
+            ret_git = git["diff", "--name-only"].run(retcode=None)
+            changed_files = ret_git[1].splitlines()
+            # check if all filers from SRC are in changed_files
+            if not set(COMP["src"]).issubset(set(changed_files)):
+                kill(EXIT_ERROR, "Not all SRC files are in git changed files.")
 
-        for file in COMP["src"]:
-            ret_git = git["add", BASE_DIR + file].run(retcode=None)
+            for file in COMP["src"]:
+                ret_git = git["add", BASE_DIR + file].run(retcode=None)
+                if ret_git[0] is not GIT_COMMAND_SUCCESS:
+                    kill(EXIT_ERROR, "Probelm with git add!", ret_git)
+
+            print("Files are ready for commit.")
+            ret_git = git["commit", "-m", "'" + commit_message + "'"].run(retcode=None)
             if ret_git[0] is not GIT_COMMAND_SUCCESS:
-                kill(EXIT_ERROR, "Probelm with git add!", ret_git)
+                kill(EXIT_ERROR, "Probelm with git commit!")
 
-        print("Files are ready for commit.")
-        ret_git = git["commit", "-m", "'" + commit_message + "'"].run(retcode=None)
-        if ret_git[0] is not GIT_COMMAND_SUCCESS:
-            kill(EXIT_ERROR, "Probelm with git commit!")
-
-        print(commit_message)
+            print(commit_message)
+        else:
+            print("Skipped update for " + component + ". No newer version")
