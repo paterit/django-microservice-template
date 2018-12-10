@@ -8,6 +8,7 @@ from cachier import cachier  # pip install pymongo to avoid warning
 import datetime
 from rex import rex
 import pprint
+import yaml
 
 
 TESTS_SUCCESS = 0
@@ -15,75 +16,12 @@ GIT_COMMAND_SUCCESS = 0
 RUN_PERF_TESTS = True
 EXIT_ERROR = 1
 EXIT_SUCCESS = 0
-BASE_DIR = os.getcwd() + "/../"
+BASE_DIR = os.getcwd() + "/../../"
 DRY_RUN = True
 
 pp = pprint.PrettyPrinter(indent=4)
 
-COMPONENTS = {
-    "postgres": {
-        "current_version": "10.3-alpine",
-        "type": "docker-image",
-        "repo": "library",
-        "src": (
-            "cicd/db/Dockerfile",
-            "db/Dockerfile-db",
-            "db/Dockerfile-data",
-            "cicd/copy_docker_images_to_machine.sh",
-            "cicd/pull_base_docker_images.sh"),
-        "filter": "/.*alpine$/"
-    },
-    "nginx": {
-        "current_version": "1.13-alpine",
-        "type": "docker-image",
-        "repo": "library",
-        "src": (
-            "https/Dockerfile-https",
-            "cicd/copy_docker_images_to_machine.sh",
-            "cicd/pull_base_docker_images.sh"),
-        "filter": "/.*alpine$/"
-    },
-    "elk": {
-        "current_version": "623",
-        "type": "docker-image",
-        "repo": "sebp",
-        "src": (
-            "logs/Dockerfile",
-            "cicd/copy_docker_images_to_machine.sh",
-            "cicd/pull_base_docker_images.sh"),
-        "filter": "/^\d{3}$/"
-    },
-    "logspout": {
-        "current_version": "v3.1",
-        "type": "docker-image",
-        "repo": "gliderlabs",
-        "src": (
-            "docker-compose.yml",
-            "cicd/copy_docker_images_to_machine.sh",
-            "cicd/pull_base_docker_images.sh"),
-        "filter": "/^v\d+\.\d+\.\d+$/",
-        "prefix": "v"
-    },
-    "buildbot-master": {
-        "current_version": "v1.1.0",
-        "type": "docker-image",
-        "repo": "buildbot",
-        "src": ("cicd/master/Dockerfile",),
-        "filter": "/^v\d+\.\d+\.\d+$/",
-        "prefix": "v",
-        "exclude-versions": ("v1.6.0",)
-    },
-    "portainer": {
-        "current_version": "1.19.2",
-        "type": "docker-image",
-        "repo": "portainer",
-        "src": (
-            "docker-compose.yml",
-            "cicd/copy_docker_images_to_machine.sh",
-            "cicd/pull_base_docker_images.sh"),
-        "filter": "/^\d+\.\d+\.\d+$/"
-    }
-}
+COMPONENTS = yaml.load(open("components.yaml"))
 
 
 def kill(exit_code, message, val_to_pprint=None):
@@ -134,16 +72,17 @@ def stop_if_testing(val_to_pprint=None):
 
 
 if len(sys.argv) < 2:
-    kill(EXIT_ERROR, "No argument. At least one component is needed.")
+    component_list = COMPONENTS.keys()
+else:
+    component_list = sys.argv[1:]
 
 
 if __name__ == "__main__":
 
     # for components that are docker images
-    for component in sys.argv[1:]:
+    for component in component_list:
         assert component in (COMPONENTS.keys()), "Not supported component"
 
-        newer_versions = {}
         COMP = COMPONENTS[component]
 
         tags = fetch_versions(component, COMP["repo"])["tags"]
@@ -153,21 +92,22 @@ if __name__ == "__main__":
                            )
                        ])
         curr = parse(COMP["current_version"])
-        stop_if_testing(highest)
+        curr_str = COMP.get("prefix", "") + str(curr)
+        highest_str = COMP.get("prefix", "") + str(highest)
+
+        commit_message = "Update " + component + " to " + highest_str + " from " + curr_str
+        if DRY_RUN:
+            print(commit_message)
+            continue
+
         if highest > curr:
-            curr_str = COMP.get("prefix", "") + str(curr)
-            highest_str = COMP.get("prefix", "") + str(highest)
-            newer_versions[component] = (curr_str, highest_str)
-
-            commit_message = "Update " + component + " to " + highest_str + " from " + curr_str
-
             replace_version(
                 component + ":" + curr_str,
                 component + ":" + highest_str,
                 COMP["src"])
 
             # ret = run(["make", "hello"])
-            ret = run(["make", "clean-local", "all-local", "test-perf", "clean-local", "clean", "all", "clean"])
+            ret = run(["make", "test"])
             if ret.returncode is not TESTS_SUCCESS:
                 kill(EXIT_ERROR, "Make went wrong!", ret)
 
