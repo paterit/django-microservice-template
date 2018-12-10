@@ -13,10 +13,11 @@ Feature: Check the performance tests
 
     Examples: Long tests with given test_url
         | period | clients_count | clients_per_second | test_url | logged_user | maxtime |
-        | 600    | 500           | 10                 | /        | notlogged   | 500     |
-        | 60     | 10            | 5                  | /admin/  | notlogged   | 50      |
-        | 600    | 500           | 5                  | /        | logged      | 500     |
-        | 60     | 10            | 5                  | /admin/  | logged      | 50      |
+        | 300    | 500           | 10                 | /        | notlogged   | 500     |
+        | 60     | 10            | 5                  | /admin/  | notlogged   | 100     |
+        | 300    | 500           | 5                  | /        | logged      | 500     |
+        | 30     | 1             | 1                  | /        | notlogged   | 2000    |
+        | 60     | 10            | 5                  | /admin/  | logged      | 100      |
 
 
   @standard
