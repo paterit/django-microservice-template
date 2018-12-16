@@ -1,6 +1,6 @@
 buildbot-master:
   current_version: v1.1.0
-  exclude-versions: !!python/tuple [v1.6.0]
+  exclude-versions: [v1.6.0]
   filter: /^v\d+\.\d+\.\d+$/
   prefix: v
   repo: buildbot
@@ -11,6 +11,13 @@ elk:
   filter: /^\d{3}$/
   repo: sebp
   src: [logs/Dockerfile, cicd/copy_docker_images_to_machine.sh, cicd/pull_base_docker_images.sh]
+  type: docker-image
+glances:
+  current_version: v2.11.1
+  filter: /^v\d+\.\d+\.\d+$/
+  repo: nicolargo
+  src: [monitoring/glances/Dockerfile-glances, cicd/copy_docker_images_to_machine.sh,
+    cicd/pull_base_docker_images.sh]
   type: docker-image
 logspout:
   current_version: v3.1

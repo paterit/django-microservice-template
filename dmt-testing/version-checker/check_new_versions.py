@@ -9,6 +9,7 @@ import datetime
 from rex import rex
 import pprint
 import yaml
+import copy
 
 
 TESTS_SUCCESS = 0
@@ -17,7 +18,7 @@ RUN_PERF_TESTS = True
 EXIT_ERROR = 1
 EXIT_SUCCESS = 0
 BASE_DIR = os.getcwd() + "/../../"
-DRY_RUN = True
+DRY_RUN = False
 
 pp = pprint.PrettyPrinter(indent=4)
 
@@ -60,7 +61,7 @@ def replace_version(old, new, files):
         if ret[0] != 0:
             kill(EXIT_ERROR, "Error in version replacment: sed error", ret)
         if ret[1] == '':
-            kill(EXIT_ERROR, "Error in version replacment: no replacement done", ret)
+            kill(EXIT_ERROR, "Error in version replacment: no replacement done for: " + old, ret)
         ret = sed['-i', 's|' + old + '|' + new + '|', BASE_DIR + file].run(retcode=None)
         counter += 1
     return counter
@@ -69,6 +70,19 @@ def replace_version(old, new, files):
 def stop_if_testing(val_to_pprint=None):
     if DRY_RUN:
         kill(EXIT_SUCCESS, "Stop here. Testing!", val_to_pprint)
+
+
+def add_file_to_commit(file):
+    ret_git = git["add", BASE_DIR + file].run(retcode=None)
+    if ret_git[0] is not GIT_COMMAND_SUCCESS:
+        kill(EXIT_ERROR, "Probelm with git add!", ret_git)
+
+
+def save_yaml(component, new_version):
+    dict_to_save = copy.deepcopy(COMPONENTS)
+    dict_to_save[component]['current_version'] = new_version
+    yaml.dump(dict_to_save, open("components.yaml", "w"))
+    add_file_to_commit('dmt-testing/version-checker/components.yaml')
 
 
 if len(sys.argv) < 2:
@@ -96,18 +110,18 @@ if __name__ == "__main__":
         highest_str = COMP.get("prefix", "") + str(highest)
 
         commit_message = "Update " + component + " to " + highest_str + " from " + curr_str
-        if DRY_RUN:
-            print(commit_message)
-            continue
 
         if highest > curr:
+            if DRY_RUN:
+                print(commit_message)
+                continue
             replace_version(
                 component + ":" + curr_str,
                 component + ":" + highest_str,
                 COMP["src"])
 
-            # ret = run(["make", "hello"])
-            ret = run(["make", "test"])
+            ret = run(["make", "hello"], cwd='../')
+            #ret = run(["make", "test"], cwd='../')
             if ret.returncode is not TESTS_SUCCESS:
                 kill(EXIT_ERROR, "Make went wrong!", ret)
 
@@ -119,15 +133,14 @@ if __name__ == "__main__":
                 kill(EXIT_ERROR, "Not all SRC files are in git changed files.")
 
             for file in COMP["src"]:
-                ret_git = git["add", BASE_DIR + file].run(retcode=None)
-                if ret_git[0] is not GIT_COMMAND_SUCCESS:
-                    kill(EXIT_ERROR, "Probelm with git add!", ret_git)
+                add_file_to_commit(file)
+
+            save_yaml(component, highest_str)
 
             print("Files are ready for commit.")
             ret_git = git["commit", "-m", "'" + commit_message + "'"].run(retcode=None)
             if ret_git[0] is not GIT_COMMAND_SUCCESS:
                 kill(EXIT_ERROR, "Probelm with git commit!")
-
             print(commit_message)
         else:
-            print("Skipped update for " + component + ". No newer version")
+            print("No newer version for " + component + " than " + curr_str + ". (found " + highest_str + " )")
