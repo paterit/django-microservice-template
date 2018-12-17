@@ -1,1 +1,1 @@
-statsd
+statsd==3.3.0
