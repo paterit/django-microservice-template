@@ -9,7 +9,6 @@ import datetime
 from rex import rex
 import pprint
 import yaml
-import copy
 
 
 TESTS_SUCCESS = 0
@@ -20,6 +19,7 @@ EXIT_SUCCESS = 0
 BASE_DIR = os.getcwd() + "/../../"
 DRY_RUN = True  # if True no git commit is made at the end of process
 FAST_TESTS = True  # if True no make test is run. make hello is called instead
+SEPARATOR = {"docker-image": ":", "pip": "=="}
 
 pp = pprint.PrettyPrinter(indent=4)
 
@@ -35,24 +35,30 @@ def kill(exit_code, message, val_to_pprint=None):
 
 # based on https://github.com/al4/docker-registry-list/blob/master/docker-registry-list.py
 @cachier(stale_after=datetime.timedelta(days=3))
-def fetch_versions(image_name, repo_name):
-    print(repo_name + ":" + image_name + " - NOT CACHED")
-    payload = {
-        'service': 'registry.docker.io',
-        'scope': 'repository:{repo}/{image}:pull'.format(repo=repo_name, image=image_name)
-    }
+def fetch_versions(component):
+    COMP = COMPONENTS[component]
+    if COMP["type"] == "docker-image":
+        repo_name = COMP["repo"]
+        print(repo_name + SEPARATOR[COMP["type"]] + component + " - NOT CACHED")
+        payload = {
+            'service': 'registry.docker.io',
+            'scope': 'repository:{repo}/{image}:pull'.format(repo=repo_name, image=component)
+        }
 
-    r = requests.get('https://auth.docker.io' + '/token', params=payload)
-    if not r.status_code == 200:
-        print("Error status {}".format(r.status_code))
-        raise Exception("Could not get auth token")
+        r = requests.get('https://auth.docker.io/token', params=payload)
+        if not r.status_code == 200:
+            print("Error status {}".format(r.status_code))
+            raise Exception("Could not get auth token")
 
-    j = r.json()
-    token = j['token']
-    h = {'Authorization': "Bearer {}".format(token)}
-    r = requests.get('{}/v2/{}/{}/tags/list'.format("https://index.docker.io", repo_name, image_name),
-                     headers=h)
-    return r.json()
+        j = r.json()
+        token = j['token']
+        h = {'Authorization': "Bearer {}".format(token)}
+        r = requests.get('https://index.docker.io/v2/{}/{}/tags/list'.format(repo_name, component),
+                         headers=h)
+        return r.json()["tags"]
+    elif COMP["type"] == "pip":
+        r = requests.get('https://pypi.org/pypi/{}/json'.format(component))
+        return list(r.json()["releases"].keys())
 
 
 def replace_version(old, new, files):
@@ -75,9 +81,8 @@ def add_file_to_commit(file):
 
 
 def save_yaml(component, new_version):
-    dict_to_save = copy.deepcopy(COMPONENTS)
-    dict_to_save[component]['current_version'] = new_version
-    yaml.dump(dict_to_save, open("components.yaml", "w"))
+    COMPONENTS[component]['current_version'] = new_version
+    yaml.dump(COMPONENTS, open("components.yaml", "w"))
     add_file_to_commit('dmt-testing/version-checker/components.yaml')
 
 
@@ -91,17 +96,25 @@ if __name__ == "__main__":
 
     # for components that are docker images
     for component in component_list:
-        assert component in (COMPONENTS.keys()), "Not supported component"
-
+        assert component in (COMPONENTS.keys()), "Not supported component: " + component
+        print("Starting with " + component + " ...")
         COMP = COMPONENTS[component]
 
-        tags = fetch_versions(component, COMP["repo"])["tags"]
+        tags = fetch_versions(component)
+
+        # for latest images, where no proper tags are provided just pring found tags and skip
+        if COMP["current_version"] == "latest":
+            print("For " + component + " is set 'latest' version. Skip.")
+            print("Current tags are: " + str(tags))
+            continue
+
         highest = max([parse(tag) for tag in tags
-                       if (tag == rex(COMP["filter"]) and
+                       if (tag == rex(COMP.get("filter", "/.*/")) and
                            tag not in COMP.get("exclude-versions", [])
                            )
                        ])
         curr = parse(COMP["current_version"])
+
         curr_str = COMP.get("prefix", "") + str(curr)
         highest_str = COMP.get("prefix", "") + str(highest)
 
@@ -109,8 +122,8 @@ if __name__ == "__main__":
 
         if highest > curr:
             replace_version(
-                component + ":" + curr_str,
-                component + ":" + highest_str,
+                component + SEPARATOR[COMP["type"]] + curr_str,
+                component + SEPARATOR[COMP["type"]] + highest_str,
                 COMP["src"])
 
             if FAST_TESTS:
