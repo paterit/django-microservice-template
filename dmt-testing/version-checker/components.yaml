@@ -15,7 +15,7 @@ buildbot-master:
   src: [cicd/master/Dockerfile]
   type: docker-image
 docker-compose:
-  current_version: 1.23
+  current_version: 1.23.0
   src: [requirements.txt]
   type: pip
 elk:
