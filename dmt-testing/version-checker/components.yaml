@@ -1,3 +1,11 @@
+Django:
+  current_version: 2.1.2
+  src: [requirements.txt]
+  type: pip
+GitPython:
+  current_version: 2.1.3
+  src: [requirements.txt]
+  type: pip
 buildbot-master:
   current_version: v1.1.0
   exclude-versions: [v1.6.0]
@@ -6,6 +14,10 @@ buildbot-master:
   repo: buildbot
   src: [cicd/master/Dockerfile]
   type: docker-image
+docker-compose:
+  current_version: 1.23
+  src: [requirements.txt]
+  type: pip
 elk:
   current_version: '651'
   filter: /^\d{3}$/
@@ -17,6 +29,13 @@ glances:
   filter: /^v\d+\.\d+\.\d+$/
   repo: nicolargo
   src: [monitoring/glances/Dockerfile-glances, cicd/copy_docker_images_to_machine.sh,
+    cicd/pull_base_docker_images.sh]
+  type: docker-image
+grafana_graphite:
+  current_version: latest
+  filter: /skip_this_as_it_is_latest/
+  repo: kamon
+  src: [monitoring/grafana/Dockerfile-grafana, cicd/copy_docker_images_to_machine.sh,
     cicd/pull_base_docker_images.sh]
   type: docker-image
 logspout:
@@ -45,3 +64,11 @@ postgres:
   src: [cicd/db/Dockerfile, db/Dockerfile-db, db/Dockerfile-data, cicd/copy_docker_images_to_machine.sh,
     cicd/pull_base_docker_images.sh]
   type: docker-image
+requests:
+  current_version: 2.20.0
+  src: [requirements.txt]
+  type: pip
+statsd:
+  current_version: 3.3.0
+  src: [perf-testing/requirements.txt]
+  type: pip
