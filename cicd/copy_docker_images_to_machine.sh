@@ -17,4 +17,5 @@ docker save paterit/sphinx-alpine:1.5.3-python3.6.6-alpine3.8 | pv | docker $(do
 docker save paterit/node-behave-alpine:10.2-behave1.2.5-python3.6.5-alpine3.8 | pv | docker $(docker-machine config {{ project_name }}-cicd) load
 docker save paterit/django-postgresql-alpine:2.1.2-python3.6.6-node3.8 | pv | docker $(docker-machine config {{ project_name }}-cicd) load
 docker save paterit/buildbot-worker-docker:1.1.0-docker18.06.1 | pv | docker $(docker-machine config {{ project_name }}-cicd) load
+docker save portainer/portainer:1.19.2 | pv | docker $(docker-machine config {{ project_name }}-cicd) load
 
