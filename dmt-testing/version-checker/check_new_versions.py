@@ -18,7 +18,8 @@ RUN_PERF_TESTS = True
 EXIT_ERROR = 1
 EXIT_SUCCESS = 0
 BASE_DIR = os.getcwd() + "/../../"
-DRY_RUN = False
+DRY_RUN = True  # if True no git commit is made at the end of process
+FAST_TESTS = True  # if True no make test is run. make hello is called instead
 
 pp = pprint.PrettyPrinter(indent=4)
 
@@ -67,11 +68,6 @@ def replace_version(old, new, files):
     return counter
 
 
-def stop_if_testing(val_to_pprint=None):
-    if DRY_RUN:
-        kill(EXIT_SUCCESS, "Stop here. Testing!", val_to_pprint)
-
-
 def add_file_to_commit(file):
     ret_git = git["add", BASE_DIR + file].run(retcode=None)
     if ret_git[0] is not GIT_COMMAND_SUCCESS:
@@ -112,16 +108,16 @@ if __name__ == "__main__":
         commit_message = "Update " + component + " to " + highest_str + " from " + curr_str
 
         if highest > curr:
-            if DRY_RUN:
-                print(commit_message)
-                continue
             replace_version(
                 component + ":" + curr_str,
                 component + ":" + highest_str,
                 COMP["src"])
 
-            ret = run(["make", "hello"], cwd='../')
-            #ret = run(["make", "test"], cwd='../')
+            if FAST_TESTS:
+                ret = run(["make", "hello"], cwd='../')
+            else:
+                ret = run(["make", "test"], cwd='../')
+
             if ret.returncode is not TESTS_SUCCESS:
                 kill(EXIT_ERROR, "Make went wrong!", ret)
 
@@ -138,9 +134,11 @@ if __name__ == "__main__":
             save_yaml(component, highest_str)
 
             print("Files are ready for commit.")
-            ret_git = git["commit", "-m", "'" + commit_message + "'"].run(retcode=None)
-            if ret_git[0] is not GIT_COMMAND_SUCCESS:
-                kill(EXIT_ERROR, "Probelm with git commit!")
+            if not DRY_RUN:
+                ret_git = git["commit", "-m", "'" + commit_message + "'"].run(retcode=None)
+                if ret_git[0] is not GIT_COMMAND_SUCCESS:
+                    kill(EXIT_ERROR, "Probelm with git commit!")
+
             print(commit_message)
         else:
             print("No newer version for " + component + " than " + curr_str + ". (found " + highest_str + " )")
