@@ -102,7 +102,7 @@ if __name__ == "__main__":
 
         tags = fetch_versions(component)
 
-        # for latest images, where no proper tags are provided just pring found tags and skip
+        # for latest versions, where no newer versions exist, print found tags and skip
         if COMP["current_version"] == "latest":
             print("For " + component + " is set 'latest' version. Skip.")
             print("Current tags are: " + str(tags))
