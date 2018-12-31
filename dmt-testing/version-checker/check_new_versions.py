@@ -38,7 +38,7 @@ def kill(exit_code, message, val_to_pprint=None):
 def fetch_versions(component):
     COMP = COMPONENTS[component]
     if COMP["type"] == "docker-image":
-        repo_name = COMP["repo"]
+        repo_name = COMP["docker-repo"]
         print(repo_name + SEPARATOR[COMP["type"]] + component + " - NOT CACHED")
         payload = {
             'service': 'registry.docker.io',
@@ -124,7 +124,7 @@ if __name__ == "__main__":
             replace_version(
                 component + SEPARATOR[COMP["type"]] + curr_str,
                 component + SEPARATOR[COMP["type"]] + highest_str,
-                COMP["src"])
+                COMP["files"])
 
             if FAST_TESTS:
                 ret = run(["make", "hello"], cwd='../')
@@ -138,10 +138,10 @@ if __name__ == "__main__":
             ret_git = git["diff", "--name-only"].run(retcode=None)
             changed_files = ret_git[1].splitlines()
             # check if all filers from SRC are in changed_files
-            if not set(COMP["src"]).issubset(set(changed_files)):
+            if not set(COMP["files"]).issubset(set(changed_files)):
                 kill(EXIT_ERROR, "Not all SRC files are in git changed files.")
 
-            for file in COMP["src"]:
+            for file in COMP["files"]:
                 add_file_to_commit(file)
 
             save_yaml(component, highest_str)
