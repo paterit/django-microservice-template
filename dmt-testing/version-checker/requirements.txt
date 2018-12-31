@@ -4,3 +4,5 @@ plumbum==1.6.7
 cachier==1.2.4
 python-rex==0.4
 pymongo==3.7.2
+pytest==4.0.2
+

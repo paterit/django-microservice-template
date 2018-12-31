@@ -66,7 +66,7 @@ postgres:
   type: docker-image
 requests:
   current_version: 2.20.0
-  src: [requirements.txt]
+  src: [requirements.txt, dmt-testing/version-checker/requirements.txt]
   type: pip
 statsd:
   current_version: 3.3.0
