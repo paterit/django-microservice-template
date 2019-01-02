@@ -23,8 +23,6 @@ SEPARATOR = {"docker-image": ":", "pip": "=="}
 
 pp = pprint.PrettyPrinter(indent=4)
 
-COMPONENTS = yaml.load(open("components.yaml"))
-
 
 def kill(exit_code, message, val_to_pprint=None):
     print(message)
@@ -86,13 +84,18 @@ def save_yaml(component, new_version):
     add_file_to_commit('dmt-testing/version-checker/components.yaml')
 
 
-if len(sys.argv) < 2:
-    component_list = COMPONENTS.keys()
-else:
-    component_list = sys.argv[1:]
+def create_image_tag(major, minors=[]):
+    return major + "-" + "-".join(minors)
 
 
 if __name__ == "__main__":
+
+    COMPONENTS = yaml.load(open("components.yaml"))
+
+    if len(sys.argv) < 2:
+        component_list = COMPONENTS.keys()
+    else:
+        component_list = sys.argv[1:]
 
     # for components that are docker images
     for component in component_list:
