@@ -100,9 +100,9 @@ build-base-images:
 	cd cicd && ./build_base_images.sh
 
 pull-build-base-images:
-	- cd .. && git clone git@github.com:paterit/locustio-alpine.git
+	- cd .. && git clone git@github.com:paterit/locustio.git
 	- cd .. && git clone git@github.com:paterit/node-behave-alpine.git
-	- cd .. && git clone git@github.com:paterit/sphinx-alpine.git
+	- cd .. && git clone git@github.com:paterit/sphinx.git
 	- cd .. && git clone git@github.com:paterit/django-postgresql-alpine.git
 	- cd .. && git clone git@github.com:paterit/buildbot-worker-docker.git	
 	make build-base-images

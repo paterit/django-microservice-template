@@ -20,8 +20,8 @@ build_push () {
     cd $CURR_DIR
 }
 
-build_push '../../locustio-alpine' 'paterit/locustio-alpine' '0.9.0-python3.6.6-alpine3.8'
-build_push '../../sphinx-alpine' 'paterit/sphinx-alpine' '1.5.3-python3.6.6-alpine3.8'
+build_push '../../locustio' 'paterit/locustio' '0.9.0-python3.6.6-alpine3.8'
+build_push '../../sphinx' 'paterit/sphinx' '1.5.3-python3.6.6-alpine3.8'
 build_push '../../node-behave-alpine' 'paterit/node-behave-alpine' '10.2-behave1.2.5-python3.6.5-alpine3.8'
 build_push '../../django-postgresql-alpine' 'paterit/django-postgresql-alpine' '2.1.2-python3.6.6-node3.8'
 build_push '../../buildbot-worker-docker' 'paterit/buildbot-worker-docker' '1.1.0-docker18.06.1'
