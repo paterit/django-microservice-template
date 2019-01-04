@@ -72,3 +72,31 @@ statsd:
   current_version: 3.3.0
   files: [perf-testing/requirements.txt]
   type: pip
+django-postgresql:
+  current_version: 2.1.2-python3.6.6-node3.8
+  docker-repo: paterit
+  files: [cicd/copy_docker_images_to_machine.sh, cicd/pull_base_docker_images.sh,
+    project_name-web/Dockerfile-web]
+  filter: /.*/
+  type: docker-image
+locustio:
+  current_version: 0.9.0-python3.6.6-alpine3.8
+  docker-repo: paterit
+  files: [cicd/copy_docker_images_to_machine.sh, cicd/pull_base_docker_images.sh,
+    perf-testing/Dockerfile-perf]
+  filter: /.*/
+  type: docker-image
+node-behave:
+  current_version: 10.2-behave1.2.5-python3.6.5-alpine3.8
+  docker-repo: paterit
+  files: [cicd/copy_docker_images_to_machine.sh, cicd/pull_base_docker_images.sh,
+    testing/Dockerfile-testing]
+  filter: /.*/
+  type: docker-image
+sphinx:
+  current_version: 1.5.3-python3.6.6-alpine3.8
+  docker-repo: paterit
+  files: [cicd/copy_docker_images_to_machine.sh, cicd/pull_base_docker_images.sh,
+    docs/Dockerfile-docs]
+  filter: /.*/
+  type: docker-image
