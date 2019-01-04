@@ -328,8 +328,8 @@ There are couple of pre-built images used here to speed up the build process:
 
 - paterit/locustio - for the ``perf-testing``
 - paterit/sphinx - for the ``docs``
-- node-behave - for the ``testing``
-- django-postgresql-alpine2-python3.6.6-node3.8 - for the ``web``
+- paterit/node-behave - for the ``testing``
+- paterit/django-postgresql - for the ``web``
 - buildbot-worker-docker - for the ``cicd-worker``
 
 The full repo names in hub.docer.com and current tags you can see in the ``cicd/build_base_images.sh`` script. 

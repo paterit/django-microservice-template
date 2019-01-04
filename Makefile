@@ -103,7 +103,7 @@ pull-build-base-images:
 	- cd .. && git clone git@github.com:paterit/locustio.git
 	- cd .. && git clone git@github.com:paterit/node-behave.git
 	- cd .. && git clone git@github.com:paterit/sphinx.git
-	- cd .. && git clone git@github.com:paterit/django-postgresql-alpine.git
+	- cd .. && git clone git@github.com:paterit/django-postgresql.git
 	- cd .. && git clone git@github.com:paterit/buildbot-worker-docker.git	
 	make build-base-images
 
