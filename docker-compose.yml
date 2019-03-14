@@ -18,7 +18,7 @@ services:
         - "5000:5000"
 
   logs-logspout:
-      image: gliderlabs/logspout:v3.1
+      image: gliderlabs/logspout:v3.2.6
       container_name: {{ project_name }}-logspout
       labels:
         application: "{{ project_name }}-logspout"
@@ -146,7 +146,7 @@ services:
     command: locust -f locustfile.py --host=http://{{ project_name }}-web:8000
 
   docker-console:
-      image: portainer/portainer:1.19.2
+      image: portainer/portainer:1.20.2
       container_name: {{ project_name }}-docker-console
       labels:
         application: "{{ project_name }}-docker-console"

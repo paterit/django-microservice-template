@@ -1,4 +1,4 @@
-requests==2.20.0
+requests==2.21.0
 packaging==18.0
 plumbum==1.6.7
 cachier==1.2.4
