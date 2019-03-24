@@ -3,7 +3,7 @@
 # automate pushing new versions of base images
 CURR_DIR=`pwd`
 # $1 - REPO_DIR
-# $2 - REPO_NAME
+# $2 - REPO_NAME/IMAGE_NAME
 # $3 - TAG
 build_push () {
     TEMP_BUILD_NAME='temp-build-name'
