@@ -209,6 +209,7 @@ stop-data:
 	@echo $(CONTS-DATA) | xargs -r docker stop
 ## Stop WEB application's containers
 stop-web:
+	@docker exec -it {{ project_name }}-web rm -rf {{ project_name }}-web/{{ project_name }}/__pycache__
 	@echo $(CONTS-WEB) | xargs -r docker stop --time=1
 ## Stop Nginx container
 stop-https:
