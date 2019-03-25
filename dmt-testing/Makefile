@@ -187,6 +187,7 @@ test-sbe:
 
 ## Test both local and docker-machine versions
 test:
+	make clean
 	make clean-local
 	make all-local
 	make clean-local
