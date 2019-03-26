@@ -12,7 +12,7 @@ docker save gliderlabs/logspout:v3.2.6 | pv | docker $(docker-machine config {{ 
 docker save postgres:11.2-alpine | pv | docker $(docker-machine config {{ project_name }}-cicd) load
 docker save nicolargo/glances:v2.11.1 | pv | docker $(docker-machine config {{ project_name }}-cicd) load
 docker save kamon/grafana_graphite | pv | docker $(docker-machine config {{ project_name }}-cicd) load
-docker save paterit/locustio:0.9.0-python3.6.6-alpine3.8 | pv | docker $(docker-machine config {{ project_name }}-cicd) load
+docker save paterit/locustio:0.11.0-3.7.2-alpine3.9 | pv | docker $(docker-machine config {{ project_name }}-cicd) load
 docker save paterit/sphinx:1.5.3-python3.6.6-alpine3.8 | pv | docker $(docker-machine config {{ project_name }}-cicd) load
 docker save paterit/node-behave:10.2-behave1.2.5-python3.6.5-alpine3.8 | pv | docker $(docker-machine config {{ project_name }}-cicd) load
 docker save paterit/django-postgresql:2.1.7-python3.7.2-alpine3.9 | pv | docker $(docker-machine config {{ project_name }}-cicd) load
