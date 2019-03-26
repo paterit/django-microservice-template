@@ -100,7 +100,7 @@ nginx:
   next-version: 1.15.9-alpine
 node-behave:
   component-type: docker-image
-  current-version: 10.2-behave1.2.5-python3.6.5-alpine3.8
+  current-version: 11.12-alpine-behave1.2.6-python3
   docker-repo: paterit
   files:
   - cicd/copy_docker_images_to_machine.sh

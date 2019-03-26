@@ -1,4 +1,4 @@
-FROM paterit/node-behave:10.2-behave1.2.5-python3.6.5-alpine3.8
+FROM paterit/node-behave:11.12-alpine-behave1.2.6-python3
 
 
 ENV DIRPATH /opt/{{ project_name }}

@@ -12,7 +12,7 @@ docker pull nicolargo/glances:v2.11.1
 docker pull kamon/grafana_graphite
 docker pull paterit/locustio:0.11.0-3.7.2-alpine3.9
 docker pull paterit/sphinx:1.5.3-python3.6.6-alpine3.8
-docker pull paterit/node-behave:10.2-behave1.2.5-python3.6.5-alpine3.8
+docker pull paterit/node-behave:11.12-alpine-behave1.2.6-python3
 docker pull paterit/django-postgresql:2.1.7-python3.7.2-alpine3.9
 docker pull paterit/buildbot-worker-docker:1.1.0-docker18.06.1
 docker pull portainer/portainer:1.20.2
