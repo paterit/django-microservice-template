@@ -1,4 +1,4 @@
-FROM paterit/buildbot-worker-docker:1.1.0-docker18.06.1
+FROM paterit/buildbot-worker-docker:2.1.0-docker18.06.3
 
 USER root
 
