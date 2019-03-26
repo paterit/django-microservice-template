@@ -22,6 +22,14 @@ buildbot-master:
   filter: /^v\d+\.\d+\.\d+$/
   next-version: v2.0.0
   prefix: v
+buildbot-worker-docker:
+  component-type: docker-image
+  current-version: 1.1.0-docker18.06.1
+  docker-repo: paterit
+  files:
+  - cicd/copy_docker_images_to_machine.sh
+  - cicd/pull_base_docker_images.sh
+  - cicd/worker/Dockerfile
 django-postgresql:
   component-type: docker-image
   current-version: 2.1.7-python3.7.2-alpine3.9
