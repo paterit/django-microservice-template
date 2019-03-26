@@ -40,7 +40,7 @@ docker-compose:
   next-version: 1.23.2
 elk:
   component-type: docker-image
-  current-version: '660'
+  current-version: '661'
   docker-repo: sebp
   files:
   - logs/Dockerfile
