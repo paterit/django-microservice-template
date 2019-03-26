@@ -1,4 +1,4 @@
-FROM paterit/django-postgresql:2.1.2-python3.6.6-node3.8
+FROM paterit/django-postgresql:2.1.7-python3.7.2-alpine3.9
 
 ENV DIRPATH /opt/{{ project_name }}
 LABEL "application"="{{ project_name }}-web"
