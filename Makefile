@@ -1,5 +1,6 @@
 ## Build all containers and run tests with dev settings 
 all:
+	sysctl vm.max_map_count
 	make chmod-x
 	make run
 	make upload-docs
