@@ -1,3 +1,11 @@
+python:
+  component-type: docker-image
+  current-version: 3.6.6-alpine3.8
+  docker-repo: library
+  files:
+  - cicd/copy_docker_images_to_machine.sh
+  - cicd/pull_base_docker_images.sh
+  filter: /^\d+\.\d+\.\d+-alpine\d+\.\d+$/
 Django:
   component-type: pypi
   current-version: 2.1.7
