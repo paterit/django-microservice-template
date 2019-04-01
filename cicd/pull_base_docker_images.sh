@@ -4,7 +4,7 @@
 
 docker pull python:3.6.6-alpine3.8
 docker pull alpine:3.8
-docker pull nginx:1.15.9-alpine
+docker pull nginx:1.15.10-alpine
 docker pull sebp/elk:670
 docker pull gliderlabs/logspout:v3.2.6
 docker pull postgres:11.2-alpine

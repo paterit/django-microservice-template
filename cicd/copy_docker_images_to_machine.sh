@@ -5,7 +5,7 @@
 # the whole process much faster
 VER_PYTHON=python:3.6.6-alpine3.8
 VER_ALPINE=alpine:3.8
-VER_NGINX=nginx:1.15.9-alpine
+VER_NGINX=nginx:1.15.10-alpine
 VER_ELK=sebp/elk:670
 VER_LOGSPOUT=gliderlabs/logspout:v3.2.6
 VER_POSTGRES=postgres:11.2-alpine
