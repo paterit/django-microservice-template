@@ -33,7 +33,7 @@ buildbot-worker-docker:
   next-version: 2.1.0-docker18.06.3
 django-postgresql:
   component-type: docker-image
-  current-version: 2.1.7-python3.7.2-alpine3.9
+  current-version: 2.1.8-python3.7.3-alpine3.9
   docker-repo: paterit
   files:
   - cicd/copy_docker_images_to_machine.sh
