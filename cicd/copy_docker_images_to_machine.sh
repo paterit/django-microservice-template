@@ -5,15 +5,15 @@
 # the whole process much faster
 VER_PYTHON=python:3.6.6-alpine3.8
 VER_ALPINE=alpine:3.8
-VER_NGINX=nginx:1.15.9-alpine
-VER_ELK=sebp/elk:661
+VER_NGINX=nginx:1.15.10-alpine
+VER_ELK=sebp/elk:670
 VER_LOGSPOUT=gliderlabs/logspout:v3.2.6
 VER_POSTGRES=postgres:11.2-alpine
 VER_GLANCES=nicolargo/glances:v2.11.1
-VER_LOCUST=paterit/locustio:0.11.0-3.7.2-alpine3.9
+VER_LOCUST=paterit/locustio:0.11.0-3.7.3-alpine3.9
 VER_SPHINX=paterit/sphinx:1.8.5-python3.7.2-alpine3.9
 VER_BEHAVE=paterit/node-behave:11.12-alpine-behave1.2.6-python3
-VER_DJANGO=paterit/django-postgresql:2.1.7-python3.7.2-alpine3.9
+VER_DJANGO=paterit/django-postgresql:2.1.8-python3.7.3-alpine3.9
 VER_BUILDBOT=paterit/buildbot-worker-docker:2.1.0-docker18.06.3
 VER_PORTAINER=portainer/portainer:1.20.2
 
