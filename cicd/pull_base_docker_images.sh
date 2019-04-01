@@ -2,7 +2,7 @@
 
 # pull all needed base images
 
-docker pull python:3.6.6-alpine3.8
+docker pull python:3.7.3-alpine3.9
 docker pull alpine:3.8
 docker pull nginx:1.15.10-alpine
 docker pull sebp/elk:670

@@ -3,7 +3,7 @@
 # Instead of pulling every time from internet all needed images
 # we copy them from local machine into docker-machine, what makes 
 # the whole process much faster
-VER_PYTHON=python:3.6.6-alpine3.8
+VER_PYTHON=python:3.7.3-alpine3.9
 VER_ALPINE=alpine:3.8
 VER_NGINX=nginx:1.15.10-alpine
 VER_ELK=sebp/elk:670
