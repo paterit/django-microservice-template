@@ -605,6 +605,21 @@ unset-docker:
 	unset DOCKER_MACHINE_NAME
 	unset DOCKER_MACHINE_IP
 
+## Clean all on docker-machine
+clean-docker-machine-images:
+	export DOCKER_TLS_VERIFY=; \
+	export DOCKER_HOST=; \
+	export DOCKER_CERT_PATH=; \
+	export DOCKER_MACHINE_NAME=; \
+	export DOCKER_MACHINE_IP=; \
+	make clean-all; \
+	unset DOCKER_TLS_VERIFY; \
+	unset DOCKER_HOST; \
+	unset DOCKER_CERT_PATH; \
+	unset DOCKER_MACHINE_NAME; \
+	unset DOCKER_MACHINE_IP
+
+
 ## Print message on success for local install
 success-local:
 	@echo "\033[1;32mGreat! All works! You can go to the docs - http://127.0.0.1/docs/ ).\033[0m"

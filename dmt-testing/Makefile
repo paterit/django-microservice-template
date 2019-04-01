@@ -65,8 +65,19 @@ reload:
 success:
 	@echo "\033[1;32mGreat! All works! You can go to the docker-machine address in your browser (most propably - http://192.168.99.100/docs/ ).\033[0m"
 
-## Clean code, docker machine and virtualenv
+## Clean code, virtualenv and all but base images in docker machine
 clean:
+	-docker-machine start $(PROJECT_NAME)
+	-cd $(PROJECT_NAME); \
+	make clean-cicd; \
+	make clean-docker-machine-images
+	rm -rf ./dmt-template
+	rm -rf ./virtenv
+	rm -rf ./$(PROJECT_NAME)
+
+
+## Clean code, docker machine and virtualen
+clean-docker-machine:
 	-cd $(PROJECT_NAME); \
 	make clean-cicd
 	-docker-machine stop $(PROJECT_NAME)-cicd
@@ -95,7 +106,7 @@ virtualenv:
 
 ## Check if dokcer-machine for this PROJECT_NAME already exists
 check-docker-machine:
-	@docker-machine ls | grep $(PROJECT_NAME) && { echo "Docker machine with this name: $(PROJECT_NAME) exists!"; exit 1; } || exit 0;
+	@docker-machine ls | grep $(PROJECT_NAME) && { echo "Using existing: $(PROJECT_NAME) docker-machine!"; exit 0; } || exit 0;
 
 ## Copy source code from ../current dir
 copy-current-dir:
@@ -187,7 +198,6 @@ test-sbe:
 
 ## Test both local and docker-machine versions
 test:
-	make clean
 	make clean-local
 	make all-local
 	make clean-local

@@ -45,5 +45,12 @@ sed -i "s|DOCKER_HOST\=$|DOCKER_HOST\=$DOCKER_HOST|" ./Makefile
 sed -i "s|DOCKER_CERT_PATH\=$|DOCKER_CERT_PATH\=$DOCKER_CERT_PATH|" ./Makefile
 sed -i "s|DOCKER_MACHINE_NAME\=$|DOCKER_MACHINE_NAME\=$DOCKER_MACHINE_NAME|" ./Makefile
 sed -i "s|DOCKER_MACHINE_IP\=$|DOCKER_MACHINE_IP\=$DOCKER_MACHINE_IP|" ./Makefile
+
+sed -i "s|DOCKER_TLS_VERIFY\=; \\\|DOCKER_TLS_VERIFY\=$DOCKER_TLS_VERIFY; \\\|" ./Makefile
+sed -i "s|DOCKER_HOST\=; \\\|DOCKER_HOST\=$DOCKER_HOST; \\\|" ./Makefile
+sed -i "s|DOCKER_CERT_PATH\=; \\\|DOCKER_CERT_PATH\=$DOCKER_CERT_PATH; \\\|" ./Makefile
+sed -i "s|DOCKER_MACHINE_NAME\=; \\\|DOCKER_MACHINE_NAME\=$DOCKER_MACHINE_NAME; \\\|" ./Makefile
+sed -i "s|DOCKER_MACHINE_IP\=; \\\|DOCKER_MACHINE_IP\=$DOCKER_MACHINE_IP; \\\|" ./Makefile
+
 # unset env variables for docker
 eval $(docker-machine env -u)
