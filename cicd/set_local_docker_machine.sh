@@ -31,26 +31,20 @@ docker-machine ssh {{ project_name }}-cicd 'sudo /bin/su -c "echo sysctl -w -q v
 docker-machine ssh {{ project_name }}-cicd 'sudo chmod +x /var/lib/boot2docker/bootlocal.sh'
 # run it to take imidiate efect on currently runining docker host
 docker-machine ssh {{ project_name }}-cicd sudo sysctl -w -q vm.max_map_count=262144
-# place env variables to be uesed by cicd worker
-docker-machine env {{ project_name }}-cicd | sed s/export\ // | sed s/\"//g > cicd/cicd.docker.env
+# place env variables to be used for docker-machine
+docker-machine env {{ project_name }}-cicd | sed s/export\ // | sed s/\"//g > docker-machine.docker.env
+# copy docker-machine for cicd worker
+cp $TARGET.docker.env cicd/cicd.docker.env
+
+# only for docker-machine replace DOCKER_CERT_PATH
+if [ $TARGET = "docker-machine" ]; then            
+    sed -i "s|DOCKER_CERT_PATH\=.*$|DOCKER_CERT_PATH=//buildbot/certs|" ./cicd/cicd.docker.env
+fi
 
 # get docker machine IP and set it in env file where env variable for docker and docker compose are kept
 DOCKER_MACHINE_IP=$(docker-machine ip {{ project_name }}-cicd)
 sed -i "s|DOCKER_MACHINE_IP\=localhost|DOCKER_MACHINE_IP\=$DOCKER_MACHINE_IP|" ./env
 
-# replace values for some make commands with actual values from docker-machine
-eval $(docker-machine env {{ project_name }}-cicd)
-sed -i "s|DOCKER_TLS_VERIFY\=$|DOCKER_TLS_VERIFY\=$DOCKER_TLS_VERIFY|" ./Makefile
-sed -i "s|DOCKER_HOST\=$|DOCKER_HOST\=$DOCKER_HOST|" ./Makefile
-sed -i "s|DOCKER_CERT_PATH\=$|DOCKER_CERT_PATH\=$DOCKER_CERT_PATH|" ./Makefile
-sed -i "s|DOCKER_MACHINE_NAME\=$|DOCKER_MACHINE_NAME\=$DOCKER_MACHINE_NAME|" ./Makefile
-sed -i "s|DOCKER_MACHINE_IP\=$|DOCKER_MACHINE_IP\=$DOCKER_MACHINE_IP|" ./Makefile
-
-sed -i "s|DOCKER_TLS_VERIFY\=; \\\|DOCKER_TLS_VERIFY\=$DOCKER_TLS_VERIFY; \\\|" ./Makefile
-sed -i "s|DOCKER_HOST\=; \\\|DOCKER_HOST\=$DOCKER_HOST; \\\|" ./Makefile
-sed -i "s|DOCKER_CERT_PATH\=; \\\|DOCKER_CERT_PATH\=$DOCKER_CERT_PATH; \\\|" ./Makefile
-sed -i "s|DOCKER_MACHINE_NAME\=; \\\|DOCKER_MACHINE_NAME\=$DOCKER_MACHINE_NAME; \\\|" ./Makefile
-sed -i "s|DOCKER_MACHINE_IP\=; \\\|DOCKER_MACHINE_IP\=$DOCKER_MACHINE_IP; \\\|" ./Makefile
 
 # unset env variables for docker
 eval $(docker-machine env -u)

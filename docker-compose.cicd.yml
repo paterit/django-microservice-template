@@ -47,8 +47,6 @@ services:
         WORKERNAME: {{ project_name }}-worker
         WORKERPASS: pass
         WORKER_ENVIRONMENT_BLACKLIST: DOCKER_BUILDBOT* BUILDBOT_ENV_* BUILDBOT_1* WORKER_ENVIRONMENT_BLACKLIST
-        DOCKER_TLS_VERIFY: "1"
-        DOCKER_CERT_PATH: "//buildbot/certs"
     volumes:
         - ./:/buildbot/src:ro
     links:

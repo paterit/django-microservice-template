@@ -1,5 +1,5 @@
 PROJECT_NAME = "yourservice"
-
+override TARGET=$(TARGET)
 
 ## Build and test with source code cloned from github
 all-git: 
@@ -22,6 +22,7 @@ prepare-env:
 
 ## Build CI/CD and start full rebuild and test build as an action triggered by post commit git hook
 build:
+	make set-local-docker-machine
 	make build-cicd
 	make wait_for_full_rebuild
 	make test_commit
@@ -65,11 +66,18 @@ reload:
 success:
 	@echo "\033[1;32mGreat! All works! You can go to the docker-machine address in your browser (most propably - http://192.168.99.100/docs/ ).\033[0m"
 
+clean-cicd2: TARGET=cicd
+clean-cicd2:
+	-cd $(PROJECT_NAME); \
+	make TARGET=$(TARGET) clean-cicd
+
+
+# TODO: separate not to start docker-machine when it doesn't and shouldn't exist
 ## Clean code, virtualenv and all but base images in docker machine
 clean:
-	-docker-machine start $(PROJECT_NAME)
+	-docker-machine start $(PROJECT_NAME)-cicd
+	make clean-cicd2
 	-cd $(PROJECT_NAME); \
-	make clean-cicd; \
 	make clean-docker-machine-images
 	rm -rf ./dmt-template
 	rm -rf ./virtenv
@@ -78,8 +86,7 @@ clean:
 
 ## Clean code, docker machine and virtualen
 clean-docker-machine:
-	-cd $(PROJECT_NAME); \
-	make clean-cicd
+	make clean-cicd2
 	-docker-machine stop $(PROJECT_NAME)-cicd
 	-docker-machine rm -y $(PROJECT_NAME)-cicd
 	rm -rf ./dmt-template
@@ -118,7 +125,7 @@ create-project-git:
 	django-admin startproject \
         --template=https://github.com/paterit/django-microservice-template/archive/master.zip \
         --extension=py,rst,yml,sh,md,conf,feature \
-        --name=Makefile,locustfile.py,performance-testing.json,perf.py,glances-graphite.json,Dockerfile-perf,Dockerfile-glances,Dockerfile-grafana,Dockerfile-web,Dockerfile-db,Dockerfile-data,Dockerfile-https,Dockerfile-testing,Dockerfile,Dockerfile-docs,master.cfg,db.env,cicd.docker.env,post-commit \
+        --name=Makefile,locustfile.py,performance-testing.json,perf.py,glances-graphite.json,Dockerfile-perf,Dockerfile-glances,Dockerfile-grafana,Dockerfile-web,Dockerfile-db,Dockerfile-data,Dockerfile-https,Dockerfile-testing,Dockerfile,Dockerfile-docs,master.cfg,db.env,docker-machine.docker.env,post-commit \
         $(PROJECT_NAME)
 
 ## Call django-admin start project for code copied to local dmt-template dir
@@ -127,14 +134,21 @@ create-project:
 	django-admin startproject \
         --template=./dmt-template \
         --extension=py,rst,yml,sh,md,conf,feature \
-        --name=Makefile,locustfile.py,performance-testing.json,perf.py,glances-graphite.json,Dockerfile-perf,Dockerfile-glances,Dockerfile-grafana,Dockerfile-web,Dockerfile-db,Dockerfile-data,Dockerfile-https,Dockerfile-testing,Dockerfile,Dockerfile-docs,master.cfg,db.env,cicd.docker.env,post-commit \
+        --name=Makefile,locustfile.py,performance-testing.json,perf.py,glances-graphite.json,Dockerfile-perf,Dockerfile-glances,Dockerfile-grafana,Dockerfile-web,Dockerfile-db,Dockerfile-data,Dockerfile-https,Dockerfile-testing,Dockerfile,Dockerfile-docs,master.cfg,db.env,docker-machine.docker.env,post-commit \
         $(PROJECT_NAME)
 
 ## Create docker containers with Buildbot
-build-cicd:
+set-local-docker-machine:
 	. virtenv/bin/activate; \
 	cd $(PROJECT_NAME); \
-	make cicd-local
+	make cicd-set-local-docker-machine
+
+build-cicd: TARGET=cicd
+build-cicd:
+	echo "DOCKER_HOST: " $(DOCKER_HOST) "TARGET: " $(TARGET)
+	. virtenv/bin/activate; \
+	cd $(PROJECT_NAME); \
+	make TARGET=$(TARGET) cicd-local
 
 ## Create git repo and initial commit to triger git hook for full rebuild in Buildbot
 cicd-initial-commit:
@@ -167,6 +181,7 @@ reload-cicd-db:
 	make cicd-set-local-docker-machine; \
 	make reload-cicd-db
 
+# TODO: split into two: one for cicd, second for docker-machine - different TARGETS
 ## Set up docker-machine if not set and reloads Buildbot containers and database
 reload-cicd:
 	. virtenv/bin/activate; \
@@ -196,19 +211,41 @@ test-sbe:
 	cd $(PROJECT_NAME); \
 	make test sbe
 
+
+test-local: TARGET=local
+test-local:
+	make TARGET=$(TARGET) clean-local
+	make TARGET=$(TARGET) all-local
+	make TARGET=$(TARGET) clean-local
+	@echo "\033[1;32mGreat! Local build works!\033[0m"
+
+test-docker-machine: TARGET=docker-machine
+test-docker-machine:
+	make TARGET=$(TARGET) clean
+	make TARGET=$(TARGET) all
+	make TARGET=$(TARGET) clean
+	@echo "\033[1;32mGreat! Docker-machine version works!\033[0m"
+
+
+test-remote: TARGET=test
+test-remote:
+	make TARGET=$(TARGET) clean
+	make TARGET=$(TARGET) all
+	make TARGET=$(TARGET) clean
+	@echo "\033[1;32mGreat! Remote docker version works!\033[0m"
+
+test-git: TARGET=docker-machine
+test-git:
+	make TARGET=$(TARGET) all-git
+	make TARGET=$(TARGET) clean
+	@echo "\033[1;32mGreat! Docker-machine version from git works!\033[0m"
+
 ## Test both local and docker-machine versions
 test:
-	make clean-local
-	make all-local
-	make clean-local
-	@echo "\033[1;32mGreat! Local build works!\033[0m"
-	make clean
-	make all
-	make clean
-	@echo "\033[1;32mGreat! Docker-machine version works!\033[0m"
-	# make all-git
-	# make clean
-	# @echo "\033[1;32mGreat! Docker-machine version from git works!\033[0m"
+	make --no-print-directory test-local
+	make --no-print-directory test-remote
+	make --no-print-directory test-docker-machine
+# 	make test-git
 
 
 hello:

@@ -1,6 +1,11 @@
 #!/usr/bin/env bash
 
-# pull all needed base images
+# pull all needed base images to dev local machine
+unset DOCKER_TLS_VERIFY
+unset DOCKER_HOST
+unset DOCKER_CERT_PATH
+unset DOCKER_MACHINE_NAME
+unset DOCKER_MACHINE_IP
 
 docker pull python:3.7.3-alpine3.9
 docker pull alpine:3.8

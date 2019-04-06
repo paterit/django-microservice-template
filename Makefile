@@ -1,6 +1,20 @@
+
+.EXPORT_ALL_VARIABLES:
+
+# read the right file with DOCKER_* variables set
+ifdef TARGET
+ include $(TARGET).docker.env
+else ifdef DOCKER_HOST
+ # don't set anything if DOCKER_* variables are set via environment
+else
+ # set what is in file or symlink docker.envmake
+ -include docker.env
+endif
+
 ## Build all containers and run tests with dev settings 
 all:
-	sysctl vm.max_map_count
+	echo "DOCKER_HOST: " $(DOCKER_HOST) "TARGET: " $(TARGET)
+	sysctl vm.max_map_count | grep 262144 # sudo sysctl -w vm.max_map_count=262144
 	make chmod-x
 	make run
 	make upload-docs
@@ -11,8 +25,11 @@ all:
 	make sbe-smoke
 	make success-local
 
+
 ## Build all containers and run tests with production settings
 all-prod:
+	echo "DOCKER_HOST: " $(DOCKER_HOST) "TARGET: " $(TARGET)
+	sysctl vm.max_map_count | grep 262144 # sudo sysctl -w vm.max_map_count=262144
 	make chmod-x
 	make run-prod
 	make upload-docs
@@ -24,10 +41,10 @@ all-prod:
 	make success-local
 
 ## Set local docker-machine, creates Buildbot containers and run initial commit to fire git hook
+# cicd-local: TARGET=cicd
 cicd-local:
-	make cicd-set-local-docker-machine
-	bash cicd/pull_base_docker_images.sh
-	-bash cicd/copy_docker_images_to_machine.sh
+	echo "DOCKER_HOST: " $(DOCKER_HOST) "TARGET: " $(TARGET)
+
 	make chmod-x
 	make run-cicd
 	make cicd-wait-for-master
@@ -54,6 +71,8 @@ cicd-initial-commit:
 ## Set up local docker-machine if one does not exists
 cicd-set-local-docker-machine:
 	bash cicd/set_local_docker_machine.sh
+	bash cicd/pull_base_docker_images.sh
+	bash cicd/copy_docker_images_to_machine.sh
 
 ## Wait until Buildbot master container is up and running
 cicd-wait-for-master:
@@ -96,18 +115,6 @@ build-perf:
 ## Build all applications' containers (without Buildbot)
 build: build-data build-db build-https build-web build-docs build-testing build-docker-console build-monitoring build-perf
 
-# Build base images and push new images to hub.docker.com
-build-base-images:
-	cd cicd && ./build_base_images.sh
-
-pull-build-base-images:
-	- cd .. && git clone git@github.com:paterit/locustio.git
-	- cd .. && git clone git@github.com:paterit/node-behave.git
-	- cd .. && git clone git@github.com:paterit/sphinx.git
-	- cd .. && git clone git@github.com:paterit/django-postgresql.git
-	- cd .. && git clone git@github.com:paterit/buildbot-worker-docker.git	
-	make build-base-images
-
 #run docker images
 ## Run DB containers
 run-db:
@@ -138,13 +145,16 @@ run-perf:
 	docker-compose up -d perf
 ## Run all applications' containers (without Buildbot)
 run:
+	echo "DOCKER_HOST: " $(DOCKER_HOST) "TARGET: " $(TARGET)
 	docker-compose up -d
 ## Run docker-machine and Buildbot containers
 run-cicd:
+	echo "DOCKER_HOST: " $(DOCKER_HOST) "TARGET: " $(TARGET)
 	-docker-machine start {{ project_name }}-cicd
 	docker-compose -f docker-compose.cicd.yml up -d
 ## Run all applications' containers with production dockr-compose file
 run-prod:
+	echo "DOCKER_HOST: " $(DOCKER_HOST) "TARGET: " $(TARGET)
 	@echo "Start of make run-prod"
 	@date +%T.%N
 	docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d
@@ -589,14 +599,6 @@ upload-static:
 	docker cp {{ project_name }}-web:/opt/{{ project_name }}/static/ .
 	docker cp ./static {{ project_name }}-https:/opt/{{ project_name }}/
 
-## Set env variables for docker engine cicd machine to use with eval $(make set-docker-cicd)
-set-docker-cicd:
-	export DOCKER_TLS_VERIFY=
-	export DOCKER_HOST=
-	export DOCKER_CERT_PATH=
-	export DOCKER_MACHINE_NAME=
-	export DOCKER_MACHINE_IP=
-
 ## Unset env variables for docker engine cicd machine to use with eval $(make unset-docker)
 unset-docker:
 	unset DOCKER_TLS_VERIFY
@@ -607,18 +609,8 @@ unset-docker:
 
 ## Clean all on docker-machine
 clean-docker-machine-images:
-	export DOCKER_TLS_VERIFY=; \
-	export DOCKER_HOST=; \
-	export DOCKER_CERT_PATH=; \
-	export DOCKER_MACHINE_NAME=; \
-	export DOCKER_MACHINE_IP=; \
-	make clean-all; \
-	unset DOCKER_TLS_VERIFY; \
-	unset DOCKER_HOST; \
-	unset DOCKER_CERT_PATH; \
-	unset DOCKER_MACHINE_NAME; \
-	unset DOCKER_MACHINE_IP
-
+	echo "DOCKER_HOST: " $(DOCKER_HOST) "TARGET: " $(TARGET)
+	make clean-all
 
 ## Print message on success for local install
 success-local:
