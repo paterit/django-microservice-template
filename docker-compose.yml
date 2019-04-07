@@ -11,6 +11,7 @@ services:
       labels:
         application: "{{ project_name }}-logs"
       environment:
+        # for this container Logspout will ignore any log entries 
         LOGSPOUT: ignore
       ports:
         - "5601:5601"
@@ -27,7 +28,8 @@ services:
       links:
         - logs
       environment:
-        DEBUG: "true"
+        DEBUG: "true" 
+        # for this container Logspout will ignore any log entries 
         LOGSPOUT: ignore
       volumes:
         - /var/run/docker.sock:/var/run/docker.sock
@@ -53,7 +55,7 @@ services:
     command: make html
 
   web:
-    env_file: env
+    env_file: ./{{ project_name }}-web/env
     container_name: "{{ project_name }}-web"
     image: "{{ project_name }}-web:1.0.1"
     build: 

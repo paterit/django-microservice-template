@@ -43,7 +43,7 @@ fi
 
 # get docker machine IP and set it in env file where env variable for docker and docker compose are kept
 DOCKER_MACHINE_IP=$(docker-machine ip {{ project_name }}-cicd)
-sed -i "s|DOCKER_MACHINE_IP\=localhost|DOCKER_MACHINE_IP\=$DOCKER_MACHINE_IP|" ./env
+sed -i "s|DOCKER_MACHINE_IP\=localhost|DOCKER_MACHINE_IP\=$DOCKER_MACHINE_IP|" ./{{ project_name }}-web/env
 
 
 # unset env variables for docker

@@ -243,9 +243,9 @@ test-git:
 ## Test both local and docker-machine versions
 test:
 	make --no-print-directory test-local
-	make --no-print-directory test-remote
+# 	make --no-print-directory test-remote
 	make --no-print-directory test-docker-machine
-# 	make test-git
+# 	make --no-print-directory test-git
 
 
 hello:
