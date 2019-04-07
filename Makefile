@@ -8,7 +8,7 @@ else ifdef DOCKER_HOST
  # don't set anything if DOCKER_* variables are set via environment
 else
  # set what is in file or symlink docker.envmake
- -include docker.env
+ -include local.docker.env
 endif
 
 ## Build all containers and run tests with dev settings 
