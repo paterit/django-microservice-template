@@ -4,38 +4,46 @@
 # we copy them from local machine into docker-machine, what makes 
 # the whole process much faster
 
+# $1 - image_name
+load_if_differ () {
+  local image=$1
+  # dirty hack to avoid replacing by django templating
+  local cbo="{{"
+  local cbc="}}"
+  local digest_docker_machine="$(docker $(docker-machine config {{ project_name }}-cicd) image inspect --format="'"$cbo".Id"$cbc"'" $image)"
+  local digest_local=$(docker image inspect --format="'"$cbo".Id"$cbc"'" $image)
+  if ! [[ $digest_local = $digest_docker_machine ]]; then
+    echo "$image"
+    echo "LOCAL         : $digest_local"
+    echo "DOCKER-MACHINE: $digest_docker_machine"
+    docker $(docker-machine config {{ project_name }}-cicd) rmi $image
+    docker save $image | pv | docker $(docker-machine config {{ project_name }}-cicd) load
+  fi
+}
+
+
 unset DOCKER_TLS_VERIFY
 unset DOCKER_HOST
 unset DOCKER_CERT_PATH
 unset DOCKER_MACHINE_NAME
 unset DOCKER_MACHINE_IP
 
-VER_PYTHON=python:3.7.3-alpine3.9
-VER_ALPINE=alpine:3.8
-VER_NGINX=nginx:1.15.10-alpine
-VER_ELK=sebp/elk:670
-VER_LOGSPOUT=gliderlabs/logspout:v3.2.6
-VER_POSTGRES=postgres:11.2-alpine
-VER_GLANCES=nicolargo/glances:v2.11.1
-VER_LOCUST=paterit/locustio:0.11.0-3.7.3-alpine3.9
-VER_SPHINX=paterit/sphinx:2.0.0-python3.7.3-alpine3.9
-VER_BEHAVE=paterit/node-behave:11.13-alpine-behave1.2.6-python3
-VER_DJANGO=paterit/django-postgresql:2.1.8-python3.7.3-alpine3.9
-VER_BUILDBOT=paterit/buildbot-worker-docker:2.1.0-docker18.06.3
-VER_PORTAINER=portainer/portainer:1.20.2
+declare -a ver=("python:3.7.3-alpine3.9"
+                "alpine:3.8"
+                "nginx:1.15.10-alpine"
+                "sebp/elk:670"
+                "gliderlabs/logspout:v3.2.6"
+                "postgres:11.2-alpine"
+                "nicolargo/glances:v2.11.1"
+                "paterit/locustio:0.11.0-3.7.3-alpine3.9"
+                "paterit/sphinx:2.0.0-python3.7.3-alpine3.9"
+                "paterit/node-behave:11.13-alpine-behave1.2.6-python3"
+                "paterit/django-postgresql:2.1.8-python3.7.3-alpine3.9"
+                "paterit/buildbot-worker-docker:2.1.0-docker18.06.3"
+                "portainer/portainer:1.20.2"
+)
 
-[ ! -z $(docker $(docker-machine config {{ project_name }}-cicd) images -q $VER_PYTHON) ] || docker save $VER_PYTHON | pv | docker $(docker-machine config {{ project_name }}-cicd) load
-[ ! -z $(docker $(docker-machine config {{ project_name }}-cicd) images -q $VER_ALPINE) ] || docker save $VER_ALPINE | pv | docker $(docker-machine config {{ project_name }}-cicd) load
-[ ! -z $(docker $(docker-machine config {{ project_name }}-cicd) images -q $VER_NGINX) ] || docker save $VER_NGINX | pv | docker $(docker-machine config {{ project_name }}-cicd) load
-[ ! -z $(docker $(docker-machine config {{ project_name }}-cicd) images -q $VER_ELK) ] || docker save $VER_ELK | pv | docker $(docker-machine config {{ project_name }}-cicd) load
-[ ! -z $(docker $(docker-machine config {{ project_name }}-cicd) images -q $VER_LOGSPOUT) ] || docker save $VER_LOGSPOUT | pv | docker $(docker-machine config {{ project_name }}-cicd) load
-[ ! -z $(docker $(docker-machine config {{ project_name }}-cicd) images -q $VER_POSTGRES) ] || docker save $VER_POSTGRES | pv | docker $(docker-machine config {{ project_name }}-cicd) load
-[ ! -z $(docker $(docker-machine config {{ project_name }}-cicd) images -q $VER_GLANCES) ] || docker save $VER_GLANCES | pv | docker $(docker-machine config {{ project_name }}-cicd) load
-[ ! -z $(docker $(docker-machine config {{ project_name }}-cicd) images -q kamon/grafana_graphite) ] || docker save kamon/grafana_graphite | pv | docker $(docker-machine config {{ project_name }}-cicd) load
-[ ! -z $(docker $(docker-machine config {{ project_name }}-cicd) images -q $VER_LOCUST) ] || docker save $VER_LOCUST | pv | docker $(docker-machine config {{ project_name }}-cicd) load
-[ ! -z $(docker $(docker-machine config {{ project_name }}-cicd) images -q $VER_SPHINX) ] || docker save $VER_SPHINX | pv | docker $(docker-machine config {{ project_name }}-cicd) load
-[ ! -z $(docker $(docker-machine config {{ project_name }}-cicd) images -q $VER_BEHAVE) ] || docker save $VER_BEHAVE | pv | docker $(docker-machine config {{ project_name }}-cicd) load
-[ ! -z $(docker $(docker-machine config {{ project_name }}-cicd) images -q $VER_DJANGO) ] || docker save $VER_DJANGO | pv | docker $(docker-machine config {{ project_name }}-cicd) load
-[ ! -z $(docker $(docker-machine config {{ project_name }}-cicd) images -q $VER_BUILDBOT) ] || docker save $VER_BUILDBOT | pv | docker $(docker-machine config {{ project_name }}-cicd) load
-[ ! -z $(docker $(docker-machine config {{ project_name }}-cicd) images -q $VER_PORTAINER) ] || docker save $VER_PORTAINER | pv | docker $(docker-machine config {{ project_name }}-cicd) load
-
+for i in "${ver[@]}"
+do
+   load_if_differ $i
+done
