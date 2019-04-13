@@ -1,5 +1,4 @@
 PROJECT_NAME = "yourservice"
-override TARGET=$(TARGET)
 
 ## Build and test with source code cloned from github
 all-git: 
@@ -37,7 +36,7 @@ prepare-local:
 	make copy-current-dir
 	make create-project
 
-## Build local containers (not in docker-machine) based on fresh copy from current ../sources
+## Mimic behavior describe in README.md as local development environment based on fresh copy from current ../sources
 all-local:
 	make prepare-local
 	make initial-commit
@@ -47,7 +46,7 @@ all-local:
 run-local:
 	. virtenv/bin/activate; \
 	cd $(PROJECT_NAME); \
-	make all
+	make dev
 
 ## Clean source dir and CI/CD database then copy fresh code from ../current dir and start full rebuild and test build as an action triggered by post commit git hook
 reload:
@@ -211,12 +210,11 @@ test-sbe:
 	cd $(PROJECT_NAME); \
 	make test sbe
 
-
-test-local: TARGET=local
-test-local:
-	make TARGET=$(TARGET) clean-local
-	make TARGET=$(TARGET) all-local
-	make TARGET=$(TARGET) clean-local
+## Mimic behavior describe in README.md as local development environment
+test-dev:
+	make clean-local
+	make all-local
+	make clean-local
 	@echo "\033[1;32mGreat! Local build works!\033[0m"
 
 test-docker-machine: TARGET=docker-machine
@@ -242,7 +240,7 @@ test-git:
 
 ## Test both local and docker-machine versions
 test:
-	make --no-print-directory test-local
+	make --no-print-directory test-dev
 # 	make --no-print-directory test-remote
 	make --no-print-directory test-docker-machine
 # 	make --no-print-directory test-git

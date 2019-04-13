@@ -1,18 +1,8 @@
 
 .EXPORT_ALL_VARIABLES:
 
-# read the right file with DOCKER_* variables set
-ifdef TARGET
- include $(TARGET).docker.env
-else ifdef DOCKER_HOST
- # don't set anything if DOCKER_* variables are set via environment
-else
- # set what is in file or symlink docker.envmake
- -include local.docker.env
-endif
-
 ## Build all containers and run tests with dev settings 
-all:
+dev:
 	echo "DOCKER_HOST: " $(DOCKER_HOST) "TARGET: " $(TARGET)
 	sysctl vm.max_map_count | grep 262144 # sudo sysctl -w vm.max_map_count=262144
 	make chmod-x
@@ -41,7 +31,6 @@ all-prod:
 	make success-local
 
 ## Set local docker-machine, creates Buildbot containers and run initial commit to fire git hook
-# cicd-local: TARGET=cicd
 cicd-local:
 	echo "DOCKER_HOST: " $(DOCKER_HOST) "TARGET: " $(TARGET)
 
