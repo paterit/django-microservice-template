@@ -101,7 +101,7 @@ To create a virtual machine with local CI/CD machinery you need to [install](htt
 Below commands will set up docker-machine and docker containers with buildbot which will allow you to run and test your code within docker-machine. Start with:
 
     cd yourservice
-    make cicd-local
+    make dev-docker-machine
 
 To check if it runs propelly verify if new containers are running by typing:
 
@@ -133,11 +133,19 @@ To see any other useful links go to [this page](http://192.168.99.100/docs/links
 
 Whenever you do changes in your code, when you run any builders in Buildbot the fresh copy of your sources will be copied to Buildbot worker and tested.
 
-The above will create docker machine and a bunch of images and containers. It can be easily and safely cleaned up by running:
+To clean CICD containers from run:
 
     make clean-cicd
 
-It will stop your docker-machine but won't destroy it. You need to clean it manually by typing:
+A bunch of images and containers exists in docker-machine. It can be easily and safely cleaned up by running (it will neither stop or remove docker-machine itself):
+
+    make clean-docker-machine
+
+To stop or remove docker machine type either:
+
+    docker-machine stop yourservice-cicd
+
+or:
 
     docker-machine rm yourservice-cicd
 

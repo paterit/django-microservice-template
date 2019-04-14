@@ -34,12 +34,9 @@ docker-machine ssh {{ project_name }}-cicd sudo sysctl -w -q vm.max_map_count=26
 # place env variables to be used for docker-machine
 docker-machine env {{ project_name }}-cicd | sed s/export\ // | sed s/\"//g > docker-machine.docker.env
 # copy docker-machine for cicd worker
-cp $TARGET.docker.env cicd/cicd.docker.env
+cp docker-machine.docker.env cicd/cicd.docker.env
 
-# only for docker-machine replace DOCKER_CERT_PATH
-if [ $TARGET = "docker-machine" ]; then            
-    sed -i "s|DOCKER_CERT_PATH\=.*$|DOCKER_CERT_PATH=//buildbot/certs|" ./cicd/cicd.docker.env
-fi
+sed -i "s|DOCKER_CERT_PATH\=.*$|DOCKER_CERT_PATH=//buildbot/certs|" ./cicd/cicd.docker.env
 
 # get docker machine IP and set it in env file where env variable for docker and docker compose are kept
 DOCKER_MACHINE_IP=$(docker-machine ip {{ project_name }}-cicd)

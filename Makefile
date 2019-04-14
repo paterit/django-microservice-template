@@ -30,10 +30,15 @@ all-prod:
 	make sbe-smoke
 	make success-local
 
-## Set local docker-machine, creates Buildbot containers and run initial commit to fire git hook
+
+## Set local docker-machine, creates Buildbot containers
+dev-docker-machine:
+	make cicd-set-local-docker-machine
+	make cicd-local 
+
+
 cicd-local:
 	echo "DOCKER_HOST: " $(DOCKER_HOST) "TARGET: " $(TARGET)
-
 	make chmod-x
 	make run-cicd
 	make cicd-wait-for-master
@@ -237,7 +242,7 @@ stop-perf:
 ## Stop Buildbot containers
 stop-cicd:
 	@echo $(CONTS-CICD) | xargs -r docker stop
-	#docker-machine stop {{ project_name }}-cicd
+
 ## Stop all applications' containers (without Buildbot)
 stop:
 	docker-compose stop
@@ -596,9 +601,12 @@ unset-docker:
 	unset DOCKER_MACHINE_NAME
 	unset DOCKER_MACHINE_IP
 
-## Clean all on docker-machine
+
+## Clean all built images on docker-machine
 clean-docker-machine-images:
-	echo "DOCKER_HOST: " $(DOCKER_HOST) "TARGET: " $(TARGET)
+	set -a; \
+	. ./docker-machine.docker.env; \
+	set +a; \
 	make clean-all
 
 ## Print message on success for local install
