@@ -3,21 +3,6 @@ PROJECT_NAME = "yourservice"
 default:
 	make test-dev
 
-# ## Clean all and set up virtualenv and docker-machine
-# prepare-env:
-# 	make virtualenv
-# 	make check-docker-machine
-
-# ## Build CI/CD and start full rebuild and test build as an action triggered by post commit git hook
-# build-docker-machine:
-# 	. virtenv/bin/activate; \
-# 	make -C $(PROJECT_NAME) dev-docker-machine
-# 	make wait_for_full_rebuild
-# 	make test_commit
-# 	make wait_for_test_build
-# 	make success
-
-
 ## Clean code and virtualenv
 clean-local:
 	-make -C $(PROJECT_NAME) clean-pyc
@@ -118,10 +103,15 @@ all-remote:
 	make success-remote
 
 ## Build and test with source code cloned from github
-all-git: 
-	make prepare-env
+all-git-docker-machine:
+	make virtualenv-pip
 	make create-project-git
-	make build
+	. virtenv/bin/activate; \
+	make -C $(PROJECT_NAME) dev-docker-machine
+	make wait_for_full_rebuild
+	make test_commit
+	make wait_for_test_build
+	make success-docker-machine
 
 ## Print message on success
 success-remote:
@@ -221,10 +211,10 @@ test-remote:
 	make --no-print-directory clean-remote
 	@echo "\033[1;32mGreat! Remote docker version works!\033[0m"
 
-test-git: TARGET=docker-machine
 test-git:
-	make TARGET=$(TARGET) all-git
-	make TARGET=$(TARGET) clean
+	make --no-print-directory clean-docker-machine
+	make --no-print-directory all-git-docker-machine
+	make --no-print-directory clean-docker-machine
 	@echo "\033[1;32mGreat! Docker-machine version from git works!\033[0m"
 
 ## Test both local and docker-machine versions
@@ -232,7 +222,7 @@ test:
 	make test-dev
 	make test-docker-machine
 	make test-remote
-# 	make --no-print-directory test-git
+	make test-git
 
 
 hello:
