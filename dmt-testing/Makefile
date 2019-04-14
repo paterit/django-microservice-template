@@ -1,132 +1,55 @@
 PROJECT_NAME = "yourservice"
-override TARGET=$(TARGET)
 
-## Build and test with source code cloned from github
-all-git: 
-	make prepare-env
-	make create-project-git
-	make build
+default:
+	make test-dev
 
-## Build and test with source code copied from ../current dir
-all:
-	make prepare-env
-	make copy-current-dir
-	make create-project
-	make build
+# ## Clean all and set up virtualenv and docker-machine
+# prepare-env:
+# 	make virtualenv
+# 	make check-docker-machine
 
-## Clean all and set up virtualenv and docker-machine
-prepare-env:
-	make clean
-	make virtualenv
-	make check-docker-machine
+# ## Build CI/CD and start full rebuild and test build as an action triggered by post commit git hook
+# build-docker-machine:
+# 	. virtenv/bin/activate; \
+# 	make -C $(PROJECT_NAME) dev-docker-machine
+# 	make wait_for_full_rebuild
+# 	make test_commit
+# 	make wait_for_test_build
+# 	make success
 
-## Build CI/CD and start full rebuild and test build as an action triggered by post commit git hook
-build:
-	make set-local-docker-machine
-	make build-cicd
-	make wait_for_full_rebuild
-	make test_commit
-	make wait_for_test_build
-	#make clean
-	make success
-
-
-## Create virtual env, copy source and create project in place
-prepare-local:
-	make virtualenv
-	make copy-current-dir
-	make create-project
-
-## Build local containers (not in docker-machine) based on fresh copy from current ../sources
-all-local:
-	make prepare-local
-	make initial-commit
-	make run-local
-	
-## Run make all in the context of virtenv and PROJECT_NAME directory
-run-local:
-	. virtenv/bin/activate; \
-	cd $(PROJECT_NAME); \
-	make all
-
-## Clean source dir and CI/CD database then copy fresh code from ../current dir and start full rebuild and test build as an action triggered by post commit git hook
-reload:
-	rm -rf ./dmt-template
-	rm -rf ./$(PROJECT_NAME)
-	make copy-current-dir
-	make create-project
-	make reload-cicd-db
-	make cicd-initial-commit
-	make wait_for_full_rebuild
-	make test_commit
-	make wait_for_test_build
-	make success
-
-## Print message on success
-success:
-	@echo "\033[1;32mGreat! All works! You can go to the docker-machine address in your browser (most propably - http://192.168.99.100/docs/ ).\033[0m"
-
-clean-cicd2: TARGET=cicd
-clean-cicd2:
-	-cd $(PROJECT_NAME); \
-	make TARGET=$(TARGET) clean-cicd
-
-
-# TODO: separate not to start docker-machine when it doesn't and shouldn't exist
-## Clean code, virtualenv and all but base images in docker machine
-clean:
-	-docker-machine start $(PROJECT_NAME)-cicd
-	make clean-cicd2
-	-cd $(PROJECT_NAME); \
-	make clean-docker-machine-images
-	rm -rf ./dmt-template
-	rm -rf ./virtenv
-	rm -rf ./$(PROJECT_NAME)
-
-
-## Clean code, docker machine and virtualen
-clean-docker-machine:
-	make clean-cicd2
-	-docker-machine stop $(PROJECT_NAME)-cicd
-	-docker-machine rm -y $(PROJECT_NAME)-cicd
-	rm -rf ./dmt-template
-	rm -rf ./virtenv
-	rm -rf ./$(PROJECT_NAME)
 
 ## Clean code and virtualenv
 clean-local:
-	-cd $(PROJECT_NAME); \
-	make clean-pyc; \
-	make clean-all
+	-make -C $(PROJECT_NAME) clean-pyc
+	-make -C $(PROJECT_NAME) clean-all
 	rm -rf ./dmt-template
 	rm -rf ./virtenv
 	rm -rf ./$(PROJECT_NAME)
 	rm -rf ./.git
 
-## Set virtualenv
-virtualenv:
+## Mimic behavior describe in README.md as local development environment based on fresh copy from current ../sources
+all-local:
+	make prepare-local
+	make initial-commit
+	make run-local
+
+## Create virtual env, copy source and create project in place
+prepare-local:
+	make virtualenv-pip
+	make copy-current-dir
+	make create-project
+
+## Set virtualenv and install pip dependencies
+virtualenv-pip:
 	virtualenv -p /usr/bin/python3 virtenv
 	. virtenv/bin/activate; \
 	python --version; \
 	pip install --upgrade pip; \
-    pip install -r ../requirements.txt; \
-
-## Check if dokcer-machine for this PROJECT_NAME already exists
-check-docker-machine:
-	@docker-machine ls | grep $(PROJECT_NAME) && { echo "Using existing: $(PROJECT_NAME) docker-machine!"; exit 0; } || exit 0;
+    pip install -r ../requirements.txt
 
 ## Copy source code from ../current dir
 copy-current-dir:
 	rsync -avq ../ ./dmt-template --exclude dmt-testing --exclude .git
-
-## Call django-admin start project getting it from the github
-create-project-git:
-	. virtenv/bin/activate; \
-	django-admin startproject \
-        --template=https://github.com/paterit/django-microservice-template/archive/master.zip \
-        --extension=py,rst,yml,sh,md,conf,feature \
-        --name=Makefile,locustfile.py,performance-testing.json,perf.py,glances-graphite.json,Dockerfile-perf,Dockerfile-glances,Dockerfile-grafana,Dockerfile-web,Dockerfile-db,Dockerfile-data,Dockerfile-https,Dockerfile-testing,Dockerfile,Dockerfile-docs,master.cfg,db.env,docker-machine.docker.env,post-commit \
-        $(PROJECT_NAME)
 
 ## Call django-admin start project for code copied to local dmt-template dir
 create-project:
@@ -137,25 +60,6 @@ create-project:
         --name=Makefile,locustfile.py,performance-testing.json,perf.py,glances-graphite.json,Dockerfile-perf,Dockerfile-glances,Dockerfile-grafana,Dockerfile-web,Dockerfile-db,Dockerfile-data,Dockerfile-https,Dockerfile-testing,Dockerfile,Dockerfile-docs,master.cfg,db.env,docker-machine.docker.env,post-commit \
         $(PROJECT_NAME)
 
-## Create docker containers with Buildbot
-set-local-docker-machine:
-	. virtenv/bin/activate; \
-	cd $(PROJECT_NAME); \
-	make cicd-set-local-docker-machine
-
-build-cicd: TARGET=cicd
-build-cicd:
-	echo "DOCKER_HOST: " $(DOCKER_HOST) "TARGET: " $(TARGET)
-	. virtenv/bin/activate; \
-	cd $(PROJECT_NAME); \
-	make TARGET=$(TARGET) cicd-local
-
-## Create git repo and initial commit to triger git hook for full rebuild in Buildbot
-cicd-initial-commit:
-	. virtenv/bin/activate; \
-	cd $(PROJECT_NAME); \
-	make cicd-initial-commit
-
 ## Initialize git repo and do initial commit to be able to track changes
 initial-commit:
 	git init
@@ -163,6 +67,93 @@ initial-commit:
 	git config --local user.name "Awesome Django"
 	git add .
 	git commit -q -m "Initial commit."
+
+## Run make all in the context of virtenv and PROJECT_NAME directory
+run-local:
+	. virtenv/bin/activate; \
+	make -C $(PROJECT_NAME) dev
+
+
+## Clean code, docker machine and virtualen
+clean-docker-machine:
+	-docker-machine start $(PROJECT_NAME)-cicd
+	-make -C $(PROJECT_NAME) clean-docker-machine-images
+	-docker-machine stop $(PROJECT_NAME)-cicd
+	-make -C $(PROJECT_NAME) clean-cicd
+	rm -rf ./dmt-template
+	rm -rf ./virtenv
+	rm -rf ./$(PROJECT_NAME)
+
+## Build and test with source code copied from ../current dir on local docker-machine
+all-docker-machine:
+	make virtualenv-pip
+	make copy-current-dir
+	make create-project
+	. virtenv/bin/activate; \
+	make -C $(PROJECT_NAME) dev-docker-machine
+	make wait_for_full_rebuild
+	make test_commit
+	make wait_for_test_build
+	make success-docker-machine
+
+## Clean code, remote docker machine and virtualenv
+clean-remote:
+	-make -C $(PROJECT_NAME) clean-remote-docker-images
+	-make -C $(PROJECT_NAME) clean-cicd
+	rm -rf ./dmt-template
+	rm -rf ./virtenv
+	rm -rf ./$(PROJECT_NAME)
+
+
+## Build and test with source code copied from ../current dir on remote docker machine
+all-remote:
+	make virtualenv-pip
+	make copy-current-dir
+	make create-project
+	. virtenv/bin/activate; \
+	make -C $(PROJECT_NAME) remote
+	make wait_for_full_rebuild
+	make test_commit
+	make wait_for_test_build
+	make success-remote
+
+## Build and test with source code cloned from github
+all-git: 
+	make prepare-env
+	make create-project-git
+	make build
+
+## Print message on success
+success-remote:
+	@echo "\033[1;32mGreat! All works! You can go to the remote docker address in the browser (as defined in remote.docker.env).\033[0m"
+
+
+## Print message on success
+success-docker-machine:
+	@echo "\033[1;32mGreat! All works! You can go to the docker-machine address in the browser (most propably - http://192.168.99.100/docs/ ).\033[0m"
+
+
+# ## Check if dokcer-machine for this PROJECT_NAME already exists
+# check-docker-machine:
+# 	@docker-machine ls | grep $(PROJECT_NAME) && { echo "Using existing: $(PROJECT_NAME) docker-machine!"; exit 0; } || exit 0;
+
+
+
+## Call django-admin start project getting it from the github
+create-project-git:
+	. virtenv/bin/activate; \
+	django-admin startproject \
+        --template=https://github.com/paterit/django-microservice-template/archive/master.zip \
+        --extension=py,rst,yml,sh,md,conf,feature \
+        --name=Makefile,locustfile.py,performance-testing.json,perf.py,glances-graphite.json,Dockerfile-perf,Dockerfile-glances,Dockerfile-grafana,Dockerfile-web,Dockerfile-db,Dockerfile-data,Dockerfile-https,Dockerfile-testing,Dockerfile,Dockerfile-docs,master.cfg,db.env,docker-machine.docker.env,post-commit \
+        $(PROJECT_NAME)
+
+
+## Create git repo and initial commit to triger git hook for full rebuild in Buildbot
+cicd-initial-commit:
+	. virtenv/bin/activate; \
+	cd $(PROJECT_NAME); \
+	make cicd-initial-commit
 
 ## Wait until the first full rebuild is done in Buildbot
 wait_for_full_rebuild:
@@ -211,27 +202,23 @@ test-sbe:
 	cd $(PROJECT_NAME); \
 	make test sbe
 
-
-test-local: TARGET=local
-test-local:
-	make TARGET=$(TARGET) clean-local
-	make TARGET=$(TARGET) all-local
-	make TARGET=$(TARGET) clean-local
+## Mimic behavior describe in README.md as local development environment
+test-dev:
+	make --no-print-directory clean-local
+	make --no-print-directory all-local
+	make --no-print-directory clean-local
 	@echo "\033[1;32mGreat! Local build works!\033[0m"
 
-test-docker-machine: TARGET=docker-machine
 test-docker-machine:
-	make TARGET=$(TARGET) clean
-	make TARGET=$(TARGET) all
-	make TARGET=$(TARGET) clean
+	make --no-print-directory clean-docker-machine
+	make --no-print-directory all-docker-machine
+	make --no-print-directory clean-docker-machine
 	@echo "\033[1;32mGreat! Docker-machine version works!\033[0m"
 
-
-test-remote: TARGET=test
 test-remote:
-	make TARGET=$(TARGET) clean
-	make TARGET=$(TARGET) all
-	make TARGET=$(TARGET) clean
+	make --no-print-directory clean-remote
+	make --no-print-directory all-remote
+	make --no-print-directory clean-remote
 	@echo "\033[1;32mGreat! Remote docker version works!\033[0m"
 
 test-git: TARGET=docker-machine
@@ -242,9 +229,9 @@ test-git:
 
 ## Test both local and docker-machine versions
 test:
-	make --no-print-directory test-local
-# 	make --no-print-directory test-remote
-	make --no-print-directory test-docker-machine
+	make test-dev
+	make test-docker-machine
+	make test-remote
 # 	make --no-print-directory test-git
 
 

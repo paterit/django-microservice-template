@@ -1,18 +1,8 @@
 
 .EXPORT_ALL_VARIABLES:
 
-# read the right file with DOCKER_* variables set
-ifdef TARGET
- include $(TARGET).docker.env
-else ifdef DOCKER_HOST
- # don't set anything if DOCKER_* variables are set via environment
-else
- # set what is in file or symlink docker.envmake
- -include local.docker.env
-endif
-
 ## Build all containers and run tests with dev settings 
-all:
+dev:
 	echo "DOCKER_HOST: " $(DOCKER_HOST) "TARGET: " $(TARGET)
 	sysctl vm.max_map_count | grep 262144 # sudo sysctl -w vm.max_map_count=262144
 	make chmod-x
@@ -40,11 +30,19 @@ all-prod:
 	make sbe-smoke
 	make success-local
 
-## Set local docker-machine, creates Buildbot containers and run initial commit to fire git hook
-# cicd-local: TARGET=cicd
+## Build and run containters on the remote docker machine
+remote:
+	cp ./remote.docker.env ./cicd/cicd.docker.env
+	make cicd-local
+
+## Set local docker-machine, creates Buildbot containers
+dev-docker-machine:
+	make cicd-set-local-docker-machine
+	make cicd-local 
+
+
 cicd-local:
 	echo "DOCKER_HOST: " $(DOCKER_HOST) "TARGET: " $(TARGET)
-
 	make chmod-x
 	make run-cicd
 	make cicd-wait-for-master
@@ -248,7 +246,7 @@ stop-perf:
 ## Stop Buildbot containers
 stop-cicd:
 	@echo $(CONTS-CICD) | xargs -r docker stop
-	#docker-machine stop {{ project_name }}-cicd
+
 ## Stop all applications' containers (without Buildbot)
 stop:
 	docker-compose stop
@@ -607,9 +605,18 @@ unset-docker:
 	unset DOCKER_MACHINE_NAME
 	unset DOCKER_MACHINE_IP
 
-## Clean all on docker-machine
+## Clean all built images on remote docker
+clean-remote-docker-images:
+	set -a; \
+	. ./remote.docker.env; \
+	set +a; \
+	make clean-all
+
+## Clean all built images on docker-machine
 clean-docker-machine-images:
-	echo "DOCKER_HOST: " $(DOCKER_HOST) "TARGET: " $(TARGET)
+	set -a; \
+	. ./docker-machine.docker.env; \
+	set +a; \
 	make clean-all
 
 ## Print message on success for local install

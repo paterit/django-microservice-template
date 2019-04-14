@@ -14,7 +14,7 @@ Below is description how to use it in local development and production.
 Requirements for ElasticSearch to work.
 ---------------------------------------
 
-In order to have ElasticSearch working you have to set on your host for {{ project_name }}-logs container::
+In order to have ElasticSearch working you have to set on your OS host for {{ project_name }}-logs container::
 
   sudo sysctl -w vm.max_map_count=262144
 
@@ -179,15 +179,15 @@ To run performance tests you may run::
 Container with Locust will be reeboted (Locust's problem with hungry memory allocation) and SBE test will be run. If you go to Grafana ("Performance testing" dashboard) you can see basic statistics regarding your tests like: response time, requests per second, CPU and memory usage on containers.
 
 
-Local CI/CD machine
-*******************
+Local CI/CD with local docker-machine or remote docker host
+***********************************************************
 
 You can set up docker-machine and docker containers with buildbot which
 will allow you to run and test your code with in docker-machine. Start
 with::
 
     cd {{ project_name }}
-    make cicd-local
+    make dev-docker-machine
 
 To check if it runs propely verify if new containters are runing by
 typing::
@@ -208,21 +208,18 @@ You should see among others machines one with the name::
 
     {{ project_name }}-cicd
 
-Now you are able to use Buildbot through its `web
-interface <http://localhost:8010/>`__. There are prepared
-`builders <http://localhost:8010/#/builders>`__ that allows to build,
+Now you are able to use Buildbot through its `web interface <http://localhost:8010/>`__. There are prepared `builders <http://localhost:8010/#/builders>`__ that allows to build,
 run and test all containers in docker-machine. 
 
-For the first time you
-have to run at least once "Full rebuild" builder. While runing it for
+For the first time you have to run at least once "Full rebuild" builder. While runing it for
 the first time couple GBs of data will be downloaded so it make take a
 while. All base images for docker need to be downloaded to docker
 machine (just to name a few: Python, PostgreSQL, ELK, Nginx).
 
-If by any
-chance you already have those images localy on your machine you can use
+If by any chance you already have those images localy on your machine you can use
 slightly faster way to copy them to your docker-machine. Simple bash
 script to do that is stored in yor\_service project dir in the path:
+
 
 ::
 
@@ -239,16 +236,42 @@ To see any other useful links go to `this page <https://127.0.0.1/docs/links_pag
 
 Whenever you do changes in your code, when you run any builders in Buildbot the fresh copy of your sources will be copied to Buildbot worker and tested.
 
-Docker-engine context for cicd docker-machine
----------------------------------------------
+Remote docker host
+------------------
 
-To be able to call docker commands in the context of the docker-engine located on your {{ project_name }}-cicd docker-machine you need to set up propely environment variable for DOCKER. You can do it easily with:
+If instead of `make dev-docker-machine` you run::
+
+    make remote
+
+then your services will be built and run on remote docker host (as defined in remote.docker.env).
+
+In order to have ElasticSearch working you have to set on your remote docker OS host
 
 ::
 
-    eval $(make set-docker-cicd)
+  sudo sysctl -w vm.max_map_count=262144
+
+Docker-engine context for cicd docker-machine
+---------------------------------------------
+
+To be able to call docker commands in the context of the docker-engine located on your {{ project_name }}-cicd docker-machine you need to set up propely environment variable for DOCKER. You can do it by loading environment variables defined in `docker-machine.docker.env` file:
+
+::
+
+    set -a
+    . ./docker-machine.docker.env
+    set +a
 
 be careful as for now all docker commands will be exectued on the docker engine located in your {{ project_name }}-cicd docker-machine.
+
+Fore remote docker host you can use `remote.docker.env` file:
+
+::
+    set -a
+    . ./remote.docker.env
+    set +a
+    
+
 To unset those variables and be back in the context of the local docker-engine simply type:
 
 ::
@@ -321,26 +344,11 @@ When you run ::
 
 then the standard Django mechanism for testing will be fired inside your docker images. 
 
-Base images
-***********
-
-There are couple of pre-built images used here to speed up the build process:
-
-- paterit/locustio - for the ``perf-testing``
-- paterit/sphinx - for the ``docs``
-- paterit/node-behave - for the ``testing``
-- paterit/django-postgresql - for the ``web``
-- buildbot-worker-docker - for the ``cicd-worker``
-
-The full repo names in hub.docer.com and current tags you can see in the ``cicd/build_base_images.sh`` script. 
 
 
 Production
 **********
 
-to run in production mode use command::
-
-    make run-prod
 
 Documentation
 *************
