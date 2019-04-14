@@ -30,6 +30,10 @@ all-prod:
 	make sbe-smoke
 	make success-local
 
+## Build and run containters on the remote docker machine
+remote:
+	cp ./remote.docker.env ./cicd/cicd.docker.env
+	make cicd-local
 
 ## Set local docker-machine, creates Buildbot containers
 dev-docker-machine:
@@ -601,6 +605,12 @@ unset-docker:
 	unset DOCKER_MACHINE_NAME
 	unset DOCKER_MACHINE_IP
 
+## Clean all built images on remote docker
+clean-remote-docker-images:
+	set -a; \
+	. ./remote.docker.env; \
+	set +a; \
+	make clean-all
 
 ## Clean all built images on docker-machine
 clean-docker-machine-images:

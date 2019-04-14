@@ -96,9 +96,9 @@ All of it creates a bunch of images and containers. But don't worry. It can be e
 
     make clean-all
 
-### Building and running locally with CI/CD machinery
+### Building and running on local docker-machine with local CI/CD
 To create a virtual machine with local CI/CD machinery you need to [install](https://docs.docker.com/machine/install-machine/#install-machine-directly) docker-machine and pv command ( sudo apt-get install pv ).
-Below commands will set up docker-machine and docker containers with buildbot which will allow you to run and test your code within docker-machine. Start with:
+The following commands will set up local docker-machine and local docker containers with buildbot which will allow you to run and test your code within docker-machine. Start with:
 
     cd yourservice
     make dev-docker-machine
@@ -149,6 +149,45 @@ or:
 
     docker-machine rm yourservice-cicd
 
+### Building and running on remote docker host with local CI/CD
+The following commands will set up local containers with buildbot which will allow you to run and test your code within remote docker host. Environment variables to connect CICD to remote docker host should be defined in file `remote.docker.env`. In order to have ElasticSearch (part of ELK stack) working on your remote docker machine you have to run on its host OS:
+
+    sudo sysctl -w vm.max_map_count=262144
+
+Then continue on your local machine:
+
+    cd yourservice
+    make remote
+
+To check if it runs propelly verify if new containers are running by typing:
+
+    docker ps
+
+You should see among running containers some with names like :
+
+    yourservice-cicd-worker - Buildbot worker
+    yourservice-cicd-master - Buidbot master
+    yourservice-cicd-db - Buildbot database
+
+Now you are able to use Buildbot through its [web interface](http://localhost:8010/). There are prepared [builders](http://localhost:8010/#/builders) that allow to build, run and test all containers in docker-machine.
+For the first time, you have to run at least once "Full rebuild" builder. While running it for the first time couple GBs of data will be downloaded so it may take a while. All base images for docker need to be downloaded to docker machine (just to name a few: Python, PostgreSQL, ELK, Nginx).
+This "Full rebuild" builder should be already started (this is the last step in setting up local CICD env).
+From now on whenever you commit any change locally to your project there will be message send to CICD via post-commit hook in Git.
+
+Now with remote docker IP you can start using your services.
+[Django admin panel](REMOTE_IP/admin) (user: admin, password: admin)
+To read how it can be further used go to [docs](REMOTE_IP/docs).
+To see any other useful links go to [this page](REMOTE_IP/docs/links_page.html) in docs.
+
+Whenever you do changes in your code, when you run any builders in Buildbot the fresh copy of your sources will be copied to Buildbot worker and tested.
+
+To clean CICD containers from run:
+
+    make clean-cicd
+
+A bunch of images and containers exists on the remote docker host. It can be easily and safely cleaned up by running:
+
+    make clean-remote-docker-images
 
 
 * [Learn Markdown](https://bitbucket.org/tutorials/markdowndemo)

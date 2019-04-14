@@ -3,28 +3,6 @@ PROJECT_NAME = "yourservice"
 default:
 	make test-dev
 
-## Clean code, docker machine and virtualen
-clean-docker-machine:
-	-docker-machine start $(PROJECT_NAME)-cicd
-	-make -C $(PROJECT_NAME) clean-docker-machine-images
-	-docker-machine stop $(PROJECT_NAME)-cicd
-	-make -C $(PROJECT_NAME) clean-cicd
-	rm -rf ./dmt-template
-	rm -rf ./virtenv
-	rm -rf ./$(PROJECT_NAME)
-
-## Build and test with source code copied from ../current dir
-all-docker-machine:
-	make virtualenv-pip
-	make copy-current-dir
-	make create-project
-	. virtenv/bin/activate; \
-	make -C $(PROJECT_NAME) dev-docker-machine
-	make wait_for_full_rebuild
-	make test_commit
-	make wait_for_test_build
-	make success
-
 # ## Clean all and set up virtualenv and docker-machine
 # prepare-env:
 # 	make virtualenv
@@ -96,16 +74,63 @@ run-local:
 	make -C $(PROJECT_NAME) dev
 
 
+## Clean code, docker machine and virtualen
+clean-docker-machine:
+	-docker-machine start $(PROJECT_NAME)-cicd
+	-make -C $(PROJECT_NAME) clean-docker-machine-images
+	-docker-machine stop $(PROJECT_NAME)-cicd
+	-make -C $(PROJECT_NAME) clean-cicd
+	rm -rf ./dmt-template
+	rm -rf ./virtenv
+	rm -rf ./$(PROJECT_NAME)
+
+## Build and test with source code copied from ../current dir on local docker-machine
+all-docker-machine:
+	make virtualenv-pip
+	make copy-current-dir
+	make create-project
+	. virtenv/bin/activate; \
+	make -C $(PROJECT_NAME) dev-docker-machine
+	make wait_for_full_rebuild
+	make test_commit
+	make wait_for_test_build
+	make success-docker-machine
+
+## Clean code, remote docker machine and virtualenv
+clean-remote:
+	-make -C $(PROJECT_NAME) clean-remote-docker-images
+	-make -C $(PROJECT_NAME) clean-cicd
+	rm -rf ./dmt-template
+	rm -rf ./virtenv
+	rm -rf ./$(PROJECT_NAME)
+
+
+## Build and test with source code copied from ../current dir on remote docker machine
+all-remote:
+	make virtualenv-pip
+	make copy-current-dir
+	make create-project
+	. virtenv/bin/activate; \
+	make -C $(PROJECT_NAME) remote
+	make wait_for_full_rebuild
+	make test_commit
+	make wait_for_test_build
+	make success-remote
+
 ## Build and test with source code cloned from github
 all-git: 
 	make prepare-env
 	make create-project-git
 	make build
 
+## Print message on success
+success-remote:
+	@echo "\033[1;32mGreat! All works! You can go to the remote docker address in the browser (as defined in remote.docker.env).\033[0m"
+
 
 ## Print message on success
-success:
-	@echo "\033[1;32mGreat! All works! You can go to the docker-machine address in your browser (most propably - http://192.168.99.100/docs/ ).\033[0m"
+success-docker-machine:
+	@echo "\033[1;32mGreat! All works! You can go to the docker-machine address in the browser (most propably - http://192.168.99.100/docs/ ).\033[0m"
 
 
 # ## Check if dokcer-machine for this PROJECT_NAME already exists
@@ -190,12 +215,10 @@ test-docker-machine:
 	make --no-print-directory clean-docker-machine
 	@echo "\033[1;32mGreat! Docker-machine version works!\033[0m"
 
-
-test-remote: TARGET=test
 test-remote:
-	make TARGET=$(TARGET) clean
-	make TARGET=$(TARGET) all
-	make TARGET=$(TARGET) clean
+	make --no-print-directory clean-remote
+	make --no-print-directory all-remote
+	make --no-print-directory clean-remote
 	@echo "\033[1;32mGreat! Remote docker version works!\033[0m"
 
 test-git: TARGET=docker-machine
@@ -208,8 +231,7 @@ test-git:
 test:
 	make test-dev
 	make test-docker-machine
-
-# 	make --no-print-directory test-remote
+	make test-remote
 # 	make --no-print-directory test-git
 
 
