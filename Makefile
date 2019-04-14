@@ -546,7 +546,7 @@ test-docs:
 	curl -Ls localhost/docs | grep UploadTestSucced
 	sed -i "s|UploadTestSucced||g" ./docs/source/index.rst
 
-## Test if docs are compailed and propagated (only in cicd machine mode)
+## Test if docs are compailed and propagated (only in local docker-machine mode)
 test-docs-cicd:
 	sed -i "$$ a UploadTestSucced" ./docs/source/index.rst
 	make upload-docs

@@ -123,12 +123,6 @@ success-docker-machine:
 	@echo "\033[1;32mGreat! All works! You can go to the docker-machine address in the browser (most propably - http://192.168.99.100/docs/ ).\033[0m"
 
 
-# ## Check if dokcer-machine for this PROJECT_NAME already exists
-# check-docker-machine:
-# 	@docker-machine ls | grep $(PROJECT_NAME) && { echo "Using existing: $(PROJECT_NAME) docker-machine!"; exit 0; } || exit 0;
-
-
-
 ## Call django-admin start project getting it from the github
 create-project-git:
 	. virtenv/bin/activate; \
@@ -138,12 +132,6 @@ create-project-git:
         --name=Makefile,locustfile.py,performance-testing.json,perf.py,glances-graphite.json,Dockerfile-perf,Dockerfile-glances,Dockerfile-grafana,Dockerfile-web,Dockerfile-db,Dockerfile-data,Dockerfile-https,Dockerfile-testing,Dockerfile,Dockerfile-docs,master.cfg,db.env,docker-machine.docker.env,post-commit \
         $(PROJECT_NAME)
 
-
-## Create git repo and initial commit to triger git hook for full rebuild in Buildbot
-cicd-initial-commit:
-	. virtenv/bin/activate; \
-	cd $(PROJECT_NAME); \
-	make cicd-initial-commit
 
 ## Wait until the first full rebuild is done in Buildbot
 wait_for_full_rebuild:
@@ -172,7 +160,7 @@ reload-cicd:
 	make run-cicd; \
 	make cicd-wait-for-master
 
-## Create git dummy commit, to trigger git hooks
+# Create git dummy commit, to trigger git hooks
 test_commit:
 	. virtenv/bin/activate; \
 	cd $(PROJECT_NAME); \
@@ -189,35 +177,37 @@ test-perf:
 ## Run django tests and sbe standard tests
 test-sbe:
 	. virtenv/bin/activate; \
-	cd $(PROJECT_NAME); \
-	make test sbe
+	make -C $(PROJECT_NAME) test sbe
 
-## Mimic behavior describe in README.md as local development environment
+## Copy local source and run it on local docker
 test-dev:
 	make --no-print-directory clean-local
 	make --no-print-directory all-local
 	make --no-print-directory clean-local
 	@echo "\033[1;32mGreat! Local build works!\033[0m"
 
+## Copy local source and run in on local docker-machine with local CI/CD
 test-docker-machine:
 	make --no-print-directory clean-docker-machine
 	make --no-print-directory all-docker-machine
 	make --no-print-directory clean-docker-machine
 	@echo "\033[1;32mGreat! Docker-machine version works!\033[0m"
 
+## Copy local source and run in on remote docker host with local CI/CD
 test-remote:
 	make --no-print-directory clean-remote
 	make --no-print-directory all-remote
 	make --no-print-directory clean-remote
 	@echo "\033[1;32mGreat! Remote docker version works!\033[0m"
 
+## Get source from github and run in on local docker-machine with local CI/CD
 test-git:
 	make --no-print-directory clean-docker-machine
 	make --no-print-directory all-git-docker-machine
 	make --no-print-directory clean-docker-machine
 	@echo "\033[1;32mGreat! Docker-machine version from git works!\033[0m"
 
-## Test both local and docker-machine versions
+## Run all tests
 test:
 	make test-dev
 	make test-docker-machine
