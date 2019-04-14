@@ -8,7 +8,7 @@ clean-docker-machine:
 	-docker-machine start $(PROJECT_NAME)-cicd
 	-make -C $(PROJECT_NAME) clean-docker-machine-images
 	-docker-machine stop $(PROJECT_NAME)-cicd
-	make -C $(PROJECT_NAME) clean-cicd
+	-make -C $(PROJECT_NAME) clean-cicd
 	rm -rf ./dmt-template
 	rm -rf ./virtenv
 	rm -rf ./$(PROJECT_NAME)
@@ -206,9 +206,10 @@ test-git:
 
 ## Test both local and docker-machine versions
 test:
-	make --no-print-directory test-dev
+	make test-dev
+	make test-docker-machine
+
 # 	make --no-print-directory test-remote
-	make --no-print-directory test-docker-machine
 # 	make --no-print-directory test-git
 
 
