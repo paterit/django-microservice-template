@@ -211,8 +211,8 @@ test-git:
 test:
 	make test-dev
 	make test-docker-machine
-	make test-remote
-	make test-git
+# 	make test-remote
+# 	make test-git
 
 
 hello:
