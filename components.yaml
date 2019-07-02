@@ -151,7 +151,7 @@ requests:
   component-type: pypi
   current-version: 2.21.0
   files:
-  - requirements.txt
+  # - requirements.txt
   - dmt-testing/version-checker/requirements.txt
   next-version: 2.21.0
 sphinx:
