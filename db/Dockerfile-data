@@ -1,3 +1,3 @@
-FROM postgres:11.2-alpine
+FROM postgres:11.4-alpine
 LABEL "application"="{{ project_name }}-data"
 

@@ -128,7 +128,7 @@ portainer:
   next-version: 1.21.0
 postgres:
   component-type: docker-image
-  current-version: 11.2-alpine
+  current-version: 11.4-alpine
   docker-repo: library
   files:
   - cicd/db/Dockerfile
