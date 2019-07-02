@@ -149,9 +149,8 @@ python:
   next-version: 3.7.3-alpine3.10
 requests:
   component-type: pypi
-  current-version: 2.21.0
+  current-version: 2.20.0
   files:
-  - dmt-testing/version-checker/requirements.txt
   next-version: 2.22.0
 sphinx:
   component-type: docker-image
