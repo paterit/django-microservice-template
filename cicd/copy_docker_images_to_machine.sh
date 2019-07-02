@@ -40,7 +40,7 @@ declare -a ver=("python:3.7.3-alpine3.9"
                 "paterit/node-behave:12.4-alpine-behave1.2.6-python3"
                 "paterit/django-postgresql:2.2.2-python3.7.3-alpine3.9"
                 "paterit/buildbot-worker-docker:2.1.0-docker18.06.3"
-                "portainer/portainer:1.20.2"
+                "portainer/portainer:1.21.0"
 )
 
 for i in "${ver[@]}"
