@@ -147,11 +147,6 @@ python:
   - cicd/pull_base_docker_images.sh
   filter: /^\d+\.\d+\.\d+-alpine\d+\.\d+$/
   next-version: 3.7.3-alpine3.10
-requests:
-  component-type: pypi
-  current-version: 2.20.0
-  files:
-  next-version: 2.22.0
 sphinx:
   component-type: docker-image
   current-version: 2.0.1-python3.7.3-alpine3.9
