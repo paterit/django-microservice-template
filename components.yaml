@@ -33,13 +33,13 @@ buildbot-worker-docker:
   next-version: 2.1.0-docker18.06.3
 django-postgresql:
   component-type: docker-image
-  current-version: 2.2.2-python3.7.3-alpine3.9
+  current-version: 2.2.3-python3.7.3-alpine3.10
   docker-repo: paterit
   files:
   - cicd/copy_docker_images_to_machine.sh
   - cicd/pull_base_docker_images.sh
   - project_name-web/Dockerfile-web
-  next-version: 2.2.2-python3.7.3-alpine3.9
+  next-version: 2.2.3-python3.7.3-alpine3.10
 docker-compose:
   component-type: pypi
   current-version: 1.24.1
@@ -85,7 +85,7 @@ locustio:
   - cicd/copy_docker_images_to_machine.sh
   - cicd/pull_base_docker_images.sh
   - perf-testing/Dockerfile-perf
-  next-version: 0.11.0-3.7.3-alpine3.9
+  next-version: 0.11.0-3.7.3-alpine3.10
 logspout:
   component-type: docker-image
   current-version: v3.2.6
@@ -155,7 +155,7 @@ sphinx:
   - cicd/copy_docker_images_to_machine.sh
   - cicd/pull_base_docker_images.sh
   - docs/Dockerfile-docs
-  next-version: 2.1.2-python3.7.3-alpine3.9
+  next-version: 2.1.2-python3.7.3-alpine3.10
 statsd:
   component-type: pypi
   current-version: 3.3.0
