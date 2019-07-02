@@ -140,7 +140,7 @@ postgres:
   next-version: 11.4-alpine
 python:
   component-type: docker-image
-  current-version: 3.7.3-alpine3.9
+  current-version: 3.7.3-alpine3.10
   docker-repo: library
   files:
   - cicd/copy_docker_images_to_machine.sh
