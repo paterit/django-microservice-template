@@ -1,4 +1,4 @@
-FROM buildbot/buildbot-master:v2.0.0
+FROM buildbot/buildbot-master:v2.3.1
 
 LABEL "application"="{{ project_name }}-cicd-master"
 

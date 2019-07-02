@@ -13,7 +13,7 @@ GitPython:
   next-version: 2.1.11
 buildbot-master:
   component-type: docker-image
-  current-version: v2.0.0
+  current-version: v2.3.1
   docker-repo: buildbot
   exclude-versions:
   - v1.6.0
