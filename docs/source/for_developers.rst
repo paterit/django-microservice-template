@@ -230,9 +230,9 @@ Now using IP generated for your docker-machine machine (in my case it is
 
 Here is the `Django admin panel <http://192.168.99.100/admin>`__ (user: admin, password: admin).
 
-To read how it can be further used go to `docs <https://192.168.99.100/docs>`__. 
+To read how it can be further used go to `docs <http://192.168.99.100/docs>`__. 
 
-To see any other useful links go to `this page <https://127.0.0.1/docs/links_page.html>`__ in docs.
+To see any other useful links go to `this page <http://127.0.0.1/docs/links_page.html>`__ in docs.
 
 Whenever you do changes in your code, when you run any builders in Buildbot the fresh copy of your sources will be copied to Buildbot worker and tested.
 

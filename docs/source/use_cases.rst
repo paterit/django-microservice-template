@@ -3,6 +3,27 @@
 Some use cases for developing dmt
 =================================
 
+Locating problem with build on docker-machine (via buildbot)
+************************************************************
+
+- go to buildbot console (localhost:8010)
+- take a look which part failed
+- go to your project dir (eg. dmt-testing/yourservice)
+- set env variables for DOCKER
+
+.. code-block:: bash
+
+  set -a
+  . ./docker-machinve.docker.env
+  set +a
+
+- now you can use make commands like ``make logs-web`` to see logs for web container
+- when you are done, don't forget to uset DOCKER envs, by
+
+.. code-block:: bash
+
+  eval $(make unset-docker)
+
 Adding new sbe test
 *******************
 
@@ -57,6 +78,3 @@ Now when you force in Buildbot web console to run Full rebuid builder the new ta
 
 .. toctree::
    :maxdepth: 2
-
-
-
