@@ -1,4 +1,4 @@
-FROM paterit/locustio:0.11.0-3.7.3-alpine3.10
+FROM paterit/locustio:0.12.2-3.7.5-alpine3.10
 
 RUN apk update && \
         apk add --no-cache \

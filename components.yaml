@@ -81,7 +81,7 @@ grafana_graphite:
   next-version: latest
 locustio:
   component-type: docker-image
-  current-version: 0.11.0-3.7.3-alpine3.10
+  current-version: 0.12.2-3.7.5-alpine3.10
   docker-repo: paterit
   files:
   - cicd/copy_docker_images_to_machine.sh
