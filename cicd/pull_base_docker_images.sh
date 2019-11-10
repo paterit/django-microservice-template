@@ -20,4 +20,4 @@ docker pull paterit/sphinx:2.1.2-python3.7.3-alpine3.10
 docker pull paterit/node-behave:13.1-alpine-behave1.2.6-python3
 docker pull paterit/django-postgresql:2.2.7-python3.8.0-alpine3.10
 docker pull paterit/buildbot-worker-docker:2.1.0-docker18.06.3
-docker pull portainer/portainer:1.21.0
+docker pull portainer/portainer:1.22.2
