@@ -168,7 +168,7 @@ There are two dashboards:
 Performance testing
 *******************
 
-Performance testing is done with the ``Locust <https://locust.io>``_ tool. To build your own tests change the file ``locustfile.py`` in ``perf-testing`` folder.
+Performance testing is done with the `Locust <https://locust.io>`_ tool. To build your own tests change the file ``locustfile.py`` in ``perf-testing`` folder.
 
 Current configuration allows you to define basic performance tests as SBE tests with Behave. Take a look at ``testing/features/perf.feature`` file to see how it works.
 

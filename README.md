@@ -1,33 +1,34 @@
 # README #
 
-It is a Django template for django-admin [startproject](https://docs.djangoproject.com/en/1.10/ref/django-admin/#startproject) command that provides you containerized ([docker](https://www.docker.com/)) sets of components cooperating together which should allow you to focus mainly on the code having all devops stuff ready to improve.
+It is a Django template for django-admin [startproject](https://docs.djangoproject.com/en/1.10/ref/django-admin/#startproject) command that provides you containerized ([docker](https://www.docker.com/)) sets of components cooperating together which should allow you to focus mainly on the code having all devops/pipeline/testing stuff ready to improve.
 This project aims to be python centric, although there are some tools where good python replacement does not exist. Yet.
 
-Currently available components to build your services:
-- Relational DB: [Postgresql](https://www.postgresql.org/)
-- Web application: [Django](https://www.djangoproject.com/) + [Gunicorn](http://gunicorn.org/) 
-- Http server: [Nginx](https://nginx.org/) 
-- Balckbox testing: SBE by [Behave](http://pythonhosted.org/behave/)
-- Logs aggreagator: [ELK](https://www.elastic.co/products) stack
-- CI/CD machinery: [Buildbot](http://buildbot.net/)
-- Docker console: [Portainer](https://portainer.io/)
-- Monitoring: [Glances](https://nicolargo.github.io/glances/) + [Graphite](https://graphiteapp.org/) + [Grafana](https://grafana.com/)
-- Performance testing: [Locust.io](https://locust.io) - in progress
+Currently there are couple of things set up and ready to be used and improved:
+- Central logs aggregation with [ELK](https://www.elastic.co/products)
+- Access to all containers logs via simple `make` commands
+- Performance testing with [Locust.io](https://locust.io) supported by SBE (via [Behave](http://pythonhosted.org/behave/))
+- Monitoring of all components with [Glances](https://nicolargo.github.io/glances/) + [Graphite](https://graphiteapp.org/) + [Grafana](https://grafana.com/)
+- SBE/BDD testing with [Behave](http://pythonhosted.org/behave/)
+- Docker console with [Portainer](https://portainer.io/)
+- Building docs for your services with [Sphinx](https://www.sphinx-doc.org)
+- CI/CD pipline fired at local commits with [Buildbot](http://buildbot.net/)
+- Plugged in service for you app based on [Django](https://www.djangoproject.com/) and supported by [Gunicorn](http://gunicorn.org/), [Nginx](https://nginx.org/), [Postgresql](https://www.postgresql.org/)
 
-Planned to be added:
+In the next releases:
 - NoSql DB
 - Key-value store
 - Cache
-- Persistent queues 
+- Persistent queues
 - Alerting
 - Load balancing 
 - Service discovery
 - API gateway
-- Frontend machinery for React, Vue.js, Angular
+- Frontend with SSR (Vue.js)
+- Event sourcing approach built in
 
 ### Set up an environment ###
 
-You need Linux machine (tested on Ubuntu 16.04) with [docker engine](https://docs.docker.com/engine/), [make](http://www.gnu.org/software/make/), [virtualenv](https://virtualenv.pypa.io/en/stable/) with [Django](https://www.djangoproject.com/) and [docker-compose](https://docs.docker.com/compose/). If you want to set up CI-CD env locally then you need [docker-machine](https://docs.docker.com/machine/) and [Git](https://git-scm.com/) as well.
+You need Linux machine (tested on Ubuntu 18.04) with [docker engine](https://docs.docker.com/engine/), [make](http://www.gnu.org/software/make/), [virtualenv](https://virtualenv.pypa.io/en/stable/) with [Django](https://www.djangoproject.com/) and [docker-compose](https://docs.docker.com/compose/). If you want to set up CI-CD env locally then you need [docker-machine](https://docs.docker.com/machine/) and [Git](https://git-scm.com/) as well.
 
 Dependencies:
 
@@ -80,9 +81,6 @@ You should see among running containers some with names like :
     yourservice-docker-console - Portainer - web docker console
     yourservice-monitoring-agent - Glances - monitoring agent
     yourservice-monitoring-server - Graphit+Grafana - monitoring server
-
-And a couple of data containers to better manage logs:
-
     yourservice-https-logs - Logs for Nginx
     yourservice-web-logs - Logs for Django and Gunicorn
 
@@ -97,7 +95,7 @@ All of it creates a bunch of images and containers. But don't worry. It can be e
     make clean-all
 
 ### Building and running on local docker-machine with local CI/CD
-To create a virtual machine with local CI/CD machinery you need to [install](https://docs.docker.com/machine/install-machine/#install-machine-directly) docker-machine and pv command ( sudo apt-get install pv ).
+To create a virtual machine with local CI/CD machinery you need to [install docker-machine](https://docs.docker.com/machine/install-machine/#install-machine-directly) and pv command ( `sudo apt-get install pv` ).
 The following commands will set up local docker-machine and local docker containers with buildbot which will allow you to run and test your code within docker-machine. Start with:
 
     cd yourservice
@@ -124,7 +122,7 @@ You should see among others machines one with the name:
 Now you are able to use Buildbot through its [web interface](http://localhost:8010/). There are prepared [builders](http://localhost:8010/#/builders) that allow to build, run and test all containers in docker-machine.
 For the first time, you have to run at least once "Full rebuild" builder. While running it for the first time couple GBs of data will be downloaded so it may take a while. All base images for docker need to be downloaded to docker machine (just to name a few: Python, PostgreSQL, ELK, Nginx).
 This "Full rebuild" builder should be already started (this is the last step in setting up local CICD env).
-From now on whenever you commit any change locally to your project there will be message send to CICD via post-commit hook in Git.
+From now on whenever you commit any change locally to your project there will be message send to CICD via [post-commit hook](https://github.com/paterit/django-microservice-template/blob/master/cicd/hooks/post-commit) in your local git.
 
 Now using IP generated for your docker-machine machine (in my case it is 192.168.99.100 - you can verify it by reading the output from docker-machine ls ) you can start using your services.
 [Django admin panel](http://192.168.99.100/admin) (user: admin, password: admin)
