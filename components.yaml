@@ -1,26 +1,26 @@
 Django:
   component-type: pypi
-  current-version: 2.2.3
+  current-version: 2.2.7
   files:
   - requirements.txt
   filter: /^\d+\.\d+\.\d+$/
-  next-version: 2.2.3
+  next-version: 2.2.7
 GitPython:
   component-type: pypi
-  current-version: 2.1.3
+  current-version: 3.0.4
   files:
   - requirements.txt
-  next-version: 2.1.11
+  next-version: 3.0.4
 buildbot-master:
   component-type: docker-image
-  current-version: v2.3.1
+  current-version: v2.5.0
   docker-repo: buildbot
   exclude-versions:
   - v1.6.0
   files:
   - cicd/master/Dockerfile
   filter: /^v\d+\.\d+\.\d+$/
-  next-version: v2.3.1
+  next-version: v2.5.0
   prefix: v
 buildbot-worker-docker:
   component-type: docker-image
@@ -33,13 +33,13 @@ buildbot-worker-docker:
   next-version: 2.1.0-docker18.06.3
 django-postgresql:
   component-type: docker-image
-  current-version: 2.2.3-python3.7.3-alpine3.10
+  current-version: 2.2.7-python3.8.0-alpine3.10
   docker-repo: paterit
   files:
   - cicd/copy_docker_images_to_machine.sh
   - cicd/pull_base_docker_images.sh
   - project_name-web/Dockerfile-web
-  next-version: 2.2.3-python3.7.3-alpine3.10
+  next-version: 2.2.7-python3.8.0-alpine3.10
 docker-compose:
   component-type: pypi
   current-version: 1.24.1
@@ -56,7 +56,7 @@ elk:
   - cicd/copy_docker_images_to_machine.sh
   - cicd/pull_base_docker_images.sh
   filter: /^\d{3}$/
-  next-version: '720'
+  next-version: '740'
 glances:
   component-type: docker-image
   current-version: 2.11.1
@@ -85,7 +85,7 @@ locustio:
   - cicd/copy_docker_images_to_machine.sh
   - cicd/pull_base_docker_images.sh
   - perf-testing/Dockerfile-perf
-  next-version: 0.11.0-3.7.3-alpine3.10
+  next-version: 0.12.2-3.7.5-alpine3.10
 logspout:
   component-type: docker-image
   current-version: v3.2.6
@@ -106,7 +106,7 @@ nginx:
   - cicd/copy_docker_images_to_machine.sh
   - cicd/pull_base_docker_images.sh
   filter: /.*alpine$/
-  next-version: 1.17.1-alpine
+  next-version: 1.17.5-alpine
 node-behave:
   component-type: docker-image
   current-version: 12.5-alpine-behave1.2.6-python3
@@ -115,7 +115,7 @@ node-behave:
   - cicd/copy_docker_images_to_machine.sh
   - cicd/pull_base_docker_images.sh
   - testing/Dockerfile-testing
-  next-version: 12.5-alpine-behave1.2.6-python3
+  next-version: 13.1-alpine-behave1.2.6-python3
 portainer:
   component-type: docker-image
   current-version: 1.21.0
@@ -125,7 +125,7 @@ portainer:
   - cicd/copy_docker_images_to_machine.sh
   - cicd/pull_base_docker_images.sh
   filter: /^\d+\.\d+\.\d+$/
-  next-version: 1.21.0
+  next-version: 1.22.2
 postgres:
   component-type: docker-image
   current-version: 11.4-alpine
@@ -137,7 +137,7 @@ postgres:
   - cicd/copy_docker_images_to_machine.sh
   - cicd/pull_base_docker_images.sh
   filter: /^\d+\.\d+-alpine$/
-  next-version: 11.4-alpine
+  next-version: 12.0-alpine
 python:
   component-type: docker-image
   current-version: 3.7.3-alpine3.10
@@ -146,7 +146,7 @@ python:
   - cicd/copy_docker_images_to_machine.sh
   - cicd/pull_base_docker_images.sh
   filter: /^\d+\.\d+\.\d+-alpine\d+\.\d+$/
-  next-version: 3.7.3-alpine3.10
+  next-version: 3.8.0-alpine3.10
 sphinx:
   component-type: docker-image
   current-version: 2.1.2-python3.7.3-alpine3.10
@@ -155,7 +155,7 @@ sphinx:
   - cicd/copy_docker_images_to_machine.sh
   - cicd/pull_base_docker_images.sh
   - docs/Dockerfile-docs
-  next-version: 2.1.2-python3.7.3-alpine3.10
+  next-version: 2.2.1-python3.8.0-alpine3.10
 statsd:
   component-type: pypi
   current-version: 3.3.0
