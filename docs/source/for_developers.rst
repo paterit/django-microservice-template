@@ -243,7 +243,11 @@ If instead of `make dev-docker-machine` you run::
 
     make remote
 
-then your services will be built and run on remote docker host (as defined in remote.docker.env).
+then your services will be built and run on remote docker host (as defined in remote.docker.env). To use secure connection to your remote docker host from CI/CD put your remote docker TLS certificates (ca.pem, cert.pem, key.pem) into `cicd/worker/certs` folders. Don'f forget to set in remote.docker.env for the DOCKER_MACHINE_NAME value aligned with your certificates. If you don't uese secure connection to your remote machine, leave in the remote.docker.env only DOCKER_HOST value.
+
+To create certificates on you remote docker host you can use `this tool <https://github.com/paulczar/omgwtfssl>`__ .
+
+`Here <https://docs.docker.com/engine/security/https/>`__ you can find more on securing connection to your docker host.
 
 In order to have ElasticSearch working you have to set on your remote docker OS host
 
