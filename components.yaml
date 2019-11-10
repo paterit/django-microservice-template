@@ -101,7 +101,7 @@ logspout:
   prefix: v
 nginx:
   component-type: docker-image
-  current-version: 1.17.1-alpine
+  current-version: 1.17.5-alpine
   docker-repo: library
   files:
   - https/Dockerfile-https
