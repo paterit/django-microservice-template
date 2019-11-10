@@ -49,14 +49,16 @@ docker-compose:
   next-version: 1.24.1
 elk:
   component-type: docker-image
-  current-version: '720'
+  current-version: '740'
   docker-repo: sebp
+  exclude-versions:
+  - 740
   files:
   - logs/Dockerfile
   - cicd/copy_docker_images_to_machine.sh
   - cicd/pull_base_docker_images.sh
   filter: /^\d{3}$/
-  exclude-versions: [740] #problems on start
+  next-version: '740'
 glances:
   component-type: docker-image
   current-version: 2.11.1
