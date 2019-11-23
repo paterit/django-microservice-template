@@ -215,6 +215,14 @@ test:
 # 	make test-git
 
 
+## Copy the docs source to dmt-testing/yourservice folder.!!! Withouth proper project_name replacing !!!
+docs-dirty-reload:
+	rm -rf yourservice/docs/source
+	cp -R ../docs/source ./yourservice/docs
+	. virtenv/bin/activate; \
+	cd $(PROJECT_NAME); \
+	make upload-docs
+
 hello:
 	@echo "Hello!"
 

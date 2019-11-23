@@ -1,10 +1,11 @@
-.. {{ project_name }} documentation master file, created by
-   sphinx-quickstart on Tue Dec 29 19:06:20 2015.
-   You can adapt this file completely to your liking, but it should at least
-   contain the root `toctree` directive.
 
-For developers
-=========================================
+
+Installation and configuration
+==============================
+
+.. contents:: Table of Contents
+   :depth: 1
+   :local:
 
 Installation
 ************
@@ -19,26 +20,11 @@ In order to have ElasticSearch working you have to set on your OS host for {{ pr
   sudo sysctl -w vm.max_map_count=262144
 
 
-On Ubuntu based host.
----------------------
-
-When you will notice any network related problems (like being unable to reach internet during images building or from a built container; very slow network response within containers' network), check if in file on host machine::
-
-  /etc/default/docker
-
-you have uncommented::
-
-  DOCKER_OPTS="--dns 8.8.8.8 --dns 8.8.4.4"
-
-If you change this don't forget to restart docker-engine servie. For Ubuntu::
-
-  sudo service docker restart
-
 Local development
 ----------------- 
 
-All what you need is to have `Docker Engine <https://docs.docker.com/>`_ and `Docker Compose <https://docs.docker.com/>`_   installed on your OS.
-If you can read this doc you probably read README from {{ project_name }} project, but if not `check this <https://github.com/paterit/django-microservice-template>`_ out before further reading.
+All what you need is to have `Docker Engine <https://docs.docker.com/>`_ and `Docker Compose <https://docs.docker.com/compose/>`_   installed on your OS.
+If you can read this doc you probably heave read README from {{ project_name }} project, but if not `check this <https://github.com/paterit/django-microservice-template>`_ out before further reading.
 
 
 To build and run type::
@@ -97,7 +83,7 @@ To reload https container run::
 
 to reload changes in docs run::
 
-   make rebuild-docs
+   make upload-docs
 
 to reload changes in Locust run::
 

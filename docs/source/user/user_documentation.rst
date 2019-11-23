@@ -3,16 +3,16 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to {{ project_name }} documentation!
-=========================================
+User documentation
+==================
 
 {{ project_name }} is a project that brings value to it's users. This is the place where you can document your service.
 
 .. toctree::
    :maxdepth: 2
 
-   technical/technical
-   user/user_documentation
+   admin
+   end_user
 
 
 

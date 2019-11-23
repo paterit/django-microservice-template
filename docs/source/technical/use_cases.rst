@@ -1,7 +1,6 @@
 
-
-Some use cases for developing dmt
-=================================
+Technical use cases
+===================
 
 Locating problem with build on docker-machine (via buildbot)
 ************************************************************

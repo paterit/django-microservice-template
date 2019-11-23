@@ -53,8 +53,8 @@ master_doc = 'index'
 
 # General information about the project.
 project = '{{ project_name }}'
-copyright = '2015, Wojciech Semik'
-author = 'Wojciech Semik, Jakub Semik'
+copyright = '2019, Wojciech Semik PaterIT'
+author = 'Wojciech Semik'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the

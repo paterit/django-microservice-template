@@ -1,11 +1,11 @@
 # README #
 
-It is a Django template for django-admin [startproject](https://docs.djangoproject.com/en/1.10/ref/django-admin/#startproject) command that provides you containerized ([docker](https://www.docker.com/)) sets of components cooperating together which should allow you to focus mainly on the code having all devops/pipeline/testing stuff ready to improve.
+It is a Django template for django-admin [startproject](https://docs.djangoproject.com/en/1.10/ref/django-admin/#startproject) command that provides you containerized ([docker](https://www.docker.com/)) sets of components cooperating together. The goal is to maximize the time for coding having all devops/pipeline/testing stuff ready to improve.
 This project aims to be python centric, although there are some tools where good python replacement does not exist. Yet.
 
 Currently there are couple of things set up and ready to be used and improved:
 - Central logs aggregation with [ELK](https://www.elastic.co/products)
-- Access to all containers logs via simple `make` commands
+- Access to all containers logs and shells via simple `make` commands
 - Performance testing with [Locust.io](https://locust.io) supported by SBE (via [Behave](http://pythonhosted.org/behave/))
 - Monitoring of all components with [Glances](https://nicolargo.github.io/glances/) + [Graphite](https://graphiteapp.org/) + [Grafana](https://grafana.com/)
 - SBE/BDD testing with [Behave](http://pythonhosted.org/behave/)
