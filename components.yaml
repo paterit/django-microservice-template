@@ -42,11 +42,11 @@ django-postgresql:
   next-version: 2.2.7-python3.8.0-alpine3.10
 docker-compose:
   component-type: pypi
-  current-version: 1.24.1
+  current-version: 1.25.0
   files:
   - requirements.txt
   filter: /^\d+\.\d+\.\d+$/
-  next-version: 1.24.1
+  next-version: 1.25.0
 elk:
   component-type: docker-image
   current-version: '740'
@@ -108,7 +108,7 @@ nginx:
   - cicd/copy_docker_images_to_machine.sh
   - cicd/pull_base_docker_images.sh
   filter: /.*alpine$/
-  next-version: 1.17.5-alpine
+  next-version: 1.17.6-alpine
 node-behave:
   component-type: docker-image
   current-version: 13.1-alpine-behave1.2.6-python3
@@ -139,7 +139,7 @@ postgres:
   - cicd/copy_docker_images_to_machine.sh
   - cicd/pull_base_docker_images.sh
   filter: /^\d+\.\d+-alpine$/
-  next-version: 12.0-alpine
+  next-version: 12.1-alpine
 python:
   component-type: docker-image
   current-version: 3.8.0-alpine3.10
