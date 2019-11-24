@@ -12,7 +12,7 @@ docker pull alpine:3.8
 docker pull nginx:1.17.6-alpine
 docker pull sebp/elk:740
 docker pull gliderlabs/logspout:v3.2.6
-docker pull postgres:12.0-alpine
+docker pull postgres:12.1-alpine
 docker pull nicolargo/glances:v2.11.1
 docker pull kamon/grafana_graphite
 docker pull paterit/locustio:0.12.2-3.7.5-alpine3.10
