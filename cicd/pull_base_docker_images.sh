@@ -15,7 +15,7 @@ docker pull gliderlabs/logspout:v3.2.6
 docker pull postgres:12.1-alpine
 docker pull nicolargo/glances:v2.11.1
 docker pull kamon/grafana_graphite
-docker pull paterit/locustio:0.12.2-3.7.5-alpine3.10
+docker pull paterit/locustio:0.13.2-3.7.5-alpine3.10
 docker pull paterit/sphinx:2.2.1-python3.8.0-alpine3.10
 docker pull paterit/node-behave:13.1-alpine-behave1.2.6-python3
 docker pull paterit/django-postgresql:2.2.7-python3.8.0-alpine3.10
