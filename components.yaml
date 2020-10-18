@@ -42,7 +42,7 @@ django-postgresql:
   next-version: 3.1.2-python3.9.0-alpine3.12
 docker-compose:
   component-type: pypi
-  current-version: 1.25.0
+  current-version: 1.27.4
   files:
   - requirements.txt
   filter: /^\d+\.\d+\.\d+$/
