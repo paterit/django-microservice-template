@@ -1,4 +1,4 @@
-Django==2.2.7
+Django==3.1.2
 docker-compose==1.25.0
 GitPython==3.0.6
 requests==2.20.0
