@@ -41,6 +41,7 @@ declare -a ver=("python:3.8.0-alpine3.10"
                 "paterit/django-postgresql:3.1.2-python3.9.0-alpine3.12"
                 "paterit/buildbot-worker-docker:2.8.4-docker18.06.3"
                 "portainer/portainer:1.22.2"
+                "kamon/grafana_graphite"
 )
 
 for i in "${ver[@]}"
