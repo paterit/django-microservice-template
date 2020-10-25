@@ -7,7 +7,7 @@ Django:
   next-version: 3.1.2
 GitPython:
   component-type: pypi
-  current-version: 3.1.9
+  current-version: 3.1.11
   files:
   - requirements.txt
   next-version: 3.1.11
