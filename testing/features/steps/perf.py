@@ -2,6 +2,7 @@ from behave import *
 import json
 import requests
 import time
+import logging
 
 
 @given(u'running performance tests for {period} seconds with {clients_count} clients and with {clients_per_second} hatch rate, with the test url: {test_url} for {logged_user} users')
@@ -32,5 +33,6 @@ def step_impl(context, maxtime):
     times = [round(row[0], 2) for row in jr[0]['datapoints'] if row[0] is not None]
     assert len(times) != 0, "Repsonse times array is empty!"
     average = round(sum(times) / len(times), 2)
+    logging.info("DMT: Average response time (mean_95) is: " + str(average))
     assert average < float(maxtime), \
         "Average response time is " + str(average) + " ms in series " + str(times)

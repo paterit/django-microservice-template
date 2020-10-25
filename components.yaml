@@ -87,7 +87,7 @@ locustio:
   - cicd/copy_docker_images_to_machine.sh
   - cicd/pull_base_docker_images.sh
   - perf-testing/Dockerfile-perf
-  next-version: 0.14.6-3.9.0-alpine3.12
+  next-version: 1.3.1-3.8.6-alpine3.12
 logspout:
   component-type: docker-image
   current-version: v3.2.6

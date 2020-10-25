@@ -526,6 +526,9 @@ sbe-smoke:
 sbe-perf:
 	docker-compose restart perf
 	docker exec -t {{ project_name }}-testing behave --tags=perftest --no-skipped
+## Run SBE preformance smoke tests
+sbe-perf-smoke:
+	docker exec -t {{ project_name }}-testing behave --tags=perfsmoke --no-skipped --no-logcapture
 
 ## Regenerate docs
 rebuild-docs:
