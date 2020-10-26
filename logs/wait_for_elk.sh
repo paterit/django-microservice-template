@@ -5,7 +5,7 @@
 URL_KIBANA="localhost:5601"
 URL_ELASTIC="localhost:9200/_count?q=containername:doesntmatter-web&pretty"
 EXITCODE=1
-MAXRETR=200
+MAXRETR=300
 i="0"
 STATUSCODE_KIBANA=0
 STATUSCODE_ELASTIC=0
