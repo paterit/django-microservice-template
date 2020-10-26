@@ -28,7 +28,7 @@ unset DOCKER_CERT_PATH
 unset DOCKER_MACHINE_NAME
 unset DOCKER_MACHINE_IP
 
-declare -a ver=("python:3.8.0-alpine3.10"
+declare -a ver=("python:3.9.0-alpine3.12"
                 "alpine:3.8"
                 "nginx:1.19.3-alpine"
                 "sebp/elk:792"

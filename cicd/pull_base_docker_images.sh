@@ -7,7 +7,7 @@ unset DOCKER_CERT_PATH
 unset DOCKER_MACHINE_NAME
 unset DOCKER_MACHINE_IP
 
-docker pull python:3.8.0-alpine3.10
+docker pull python:3.9.0-alpine3.12
 docker pull alpine:3.8
 docker pull nginx:1.19.3-alpine
 docker pull sebp/elk:792
