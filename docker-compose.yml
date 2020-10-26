@@ -148,7 +148,7 @@ services:
     command: locust -f locustfile.py --host=http://{{ project_name }}-web:8000
 
   docker-console:
-      image: portainer/portainer:1.22.2
+      image: portainer/portainer:1.24.1
       container_name: {{ project_name }}-docker-console
       labels:
         application: "{{ project_name }}-docker-console"

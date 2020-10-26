@@ -120,7 +120,7 @@ node-behave:
   next-version: 14.14-alpine-behave1.2.6-python3
 portainer:
   component-type: docker-image
-  current-version: 1.22.2
+  current-version: 1.24.1
   docker-repo: portainer
   files:
   - docker-compose.yml
