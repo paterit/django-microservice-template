@@ -156,7 +156,7 @@ python:
   next-version: 3.9.0-alpine3.12
 sphinx:
   component-type: docker-image
-  current-version: 2.2.1-python3.8.0-alpine3.10
+  current-version: 3.2.1-python3.9.0-alpine3.12
   docker-repo: paterit
   files:
   - cicd/copy_docker_images_to_machine.sh
