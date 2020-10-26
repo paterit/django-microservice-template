@@ -30,7 +30,7 @@ unset DOCKER_MACHINE_IP
 
 declare -a ver=("python:3.8.0-alpine3.10"
                 "alpine:3.8"
-                "nginx:1.17.6-alpine"
+                "nginx:1.19.3-alpine"
                 "sebp/elk:792"
                 "gliderlabs/logspout:v3.2.12"
                 "postgres:12.1-alpine"
