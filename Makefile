@@ -247,6 +247,43 @@ stop-perf:
 stop-cicd:
 	@echo $(CONTS-CICD) | xargs -r docker stop
 
+#kill docker containers
+## kill DB containers
+kill-db:
+	@echo $(CONTS-DB) | xargs -r docker kill --time=1
+kill-data:
+	@echo $(CONTS-DATA) | xargs -r docker kill --time=1
+## kill WEB application's containers
+kill-web:
+	@echo $(CONTS-WEB) | xargs -r docker kill --time=1
+## kill Nginx container
+kill-https:
+	@echo $(CONTS-HTTPS) | xargs -r docker kill --time=1
+## kill container for SBE testing
+kill-testing:
+	@echo $(CONTS-TESTING) | xargs -r docker kill --time=1
+## kill ELK conteiners
+kill-logs:
+	@echo $(CONTS-LOGS) | xargs -r docker kill --time=1
+kill-logspout:
+	@echo $(CONTS-LOGSPOUT) | xargs -r docker kill --time=1
+## kill docker console
+kill-docker-console:
+	@echo $(CONTS-DOCKER-CONSOLE) | xargs -r docker kill --time=1
+## kill monitoring server
+kill-monitoring-server:
+	@echo $(CONTS-MONITORING-SERVER) | xargs -r docker kill --time=1
+## kill monitoring agent
+kill-monitoring-agent:
+	@echo $(CONTS-MONITORING-AGENT) | xargs -r docker kill --time=1
+## kill performance testing
+kill-perf:
+	@echo $(CONTS-PERF) | xargs -r docker kill --time=1
+
+## kill Buildbot containers
+kill-cicd:
+	@echo $(CONTS-CICD) | xargs -r docker kill --time=1
+
 ## Stop all applications' containers (without Buildbot)
 stop:
 	docker-compose stop
@@ -383,31 +420,31 @@ rmi: rmi-db rmi-web rmi-https rmi-logspout rmi-logs rmi-docker-console rmi-monit
 clean-pyc: 
 	docker exec -t {{ project_name }}-web rm -rf {{ project_name }}/__pycache__
 
-# stop containters, rmove containers, remove images
+# kill containters, rmove containers, remove images
 ## Remove containers and docker images for DB
-clean-db: stop-db rm-db rmi-db
+clean-db: kill-db rm-db rmi-db
 ## Remove containers and docker images for WEB application
-clean-web: stop-web rm-web rmi-web
+clean-web: kill-web rm-web rmi-web
 ## Remove containers and docker images for Nginx
-clean-https: stop-https rm-https rmi-https
+clean-https: kill-https rm-https rmi-https
 ## Remove containers and docker images for SBE testing
-clean-testing: stop-testing rm-testing rmi-testing
+clean-testing: kill-testing rm-testing rmi-testing
 ## Remove containers and docker images for docs generation
 clean-docs: rm-docs rmi-docs
-clean-data: stop-data rm-data rmi-data
+clean-data: kill-data rm-data rmi-data
 ## Remove containers and docker images for ELK
-clean-logs: stop-logs rm-logs rmi-logs
-clean-logspout: stop-logspout rm-logspout rmi-logspout
+clean-logs: kill-logs rm-logs rmi-logs
+clean-logspout: kill-logspout rm-logspout rmi-logspout
 ## Remove containers and docker images for docker console
-clean-docker-console: stop-docker-console rm-docker-console rmi-docker-console
+clean-docker-console: kill-docker-console rm-docker-console rmi-docker-console
 ## Remove containers and docker images for monitoring agent
-clean-monitoring-agent: stop-monitoring-agent rm-monitoring-agent rmi-monitoring-agent
+clean-monitoring-agent: kill-monitoring-agent rm-monitoring-agent rmi-monitoring-agent
 ## Remove containers and docker images for monitoring-server
-clean-monitoring-server: stop-monitoring-server rm-monitoring-server rmi-monitoring-server
+clean-monitoring-server: kill-monitoring-server rm-monitoring-server rmi-monitoring-server
 ## Remove containers and docker images for performance testing
-clean-perf: stop-perf rm-perf rmi-perf
+clean-perf: kill-perf rm-perf rmi-perf
 ## Remove containers and docker images for Buildbot
-clean-cicd: stop-cicd rm-cicd rmi-cicd
+clean-cicd: kill-cicd rm-cicd rmi-cicd
 clean-compose:
 	docker-compose rm -f
 ## Remove ophaned docker volumes
