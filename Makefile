@@ -250,39 +250,39 @@ stop-cicd:
 #kill docker containers
 ## kill DB containers
 kill-db:
-	@echo $(CONTS-DB) | xargs -r docker kill --time=1
+	@echo $(CONTS-DB) | xargs -r docker stop --time=1
 kill-data:
-	@echo $(CONTS-DATA) | xargs -r docker kill --time=1
+	@echo $(CONTS-DATA) | xargs -r docker stop --time=1
 ## kill WEB application's containers
 kill-web:
-	@echo $(CONTS-WEB) | xargs -r docker kill --time=1
+	@echo $(CONTS-WEB) | xargs -r docker stop --time=1
 ## kill Nginx container
 kill-https:
-	@echo $(CONTS-HTTPS) | xargs -r docker kill --time=1
+	@echo $(CONTS-HTTPS) | xargs -r docker stop --time=1
 ## kill container for SBE testing
 kill-testing:
-	@echo $(CONTS-TESTING) | xargs -r docker kill --time=1
+	@echo $(CONTS-TESTING) | xargs -r docker stop --time=1
 ## kill ELK conteiners
 kill-logs:
-	@echo $(CONTS-LOGS) | xargs -r docker kill --time=1
+	@echo $(CONTS-LOGS) | xargs -r docker stop --time=1
 kill-logspout:
-	@echo $(CONTS-LOGSPOUT) | xargs -r docker kill --time=1
+	@echo $(CONTS-LOGSPOUT) | xargs -r docker stop --time=1
 ## kill docker console
 kill-docker-console:
-	@echo $(CONTS-DOCKER-CONSOLE) | xargs -r docker kill --time=1
+	@echo $(CONTS-DOCKER-CONSOLE) | xargs -r docker stop --time=1
 ## kill monitoring server
 kill-monitoring-server:
-	@echo $(CONTS-MONITORING-SERVER) | xargs -r docker kill --time=1
+	@echo $(CONTS-MONITORING-SERVER) | xargs -r docker stop --time=1
 ## kill monitoring agent
 kill-monitoring-agent:
-	@echo $(CONTS-MONITORING-AGENT) | xargs -r docker kill --time=1
+	@echo $(CONTS-MONITORING-AGENT) | xargs -r docker stop --time=1
 ## kill performance testing
 kill-perf:
-	@echo $(CONTS-PERF) | xargs -r docker kill --time=1
+	@echo $(CONTS-PERF) | xargs -r docker stop --time=1
 
 ## kill Buildbot containers
 kill-cicd:
-	@echo $(CONTS-CICD) | xargs -r docker kill --time=1
+	@echo $(CONTS-CICD) | xargs -r docker stop --time=1
 
 ## Stop all applications' containers (without Buildbot)
 stop:
