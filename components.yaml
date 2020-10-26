@@ -132,6 +132,8 @@ postgres:
   component-type: docker-image
   current-version: 12.1-alpine
   docker-repo: library
+  exclude-versions:
+  - 13.0-alpine
   files:
   - cicd/db/Dockerfile
   - db/Dockerfile-db
@@ -139,7 +141,6 @@ postgres:
   - cicd/copy_docker_images_to_machine.sh
   - cicd/pull_base_docker_images.sh
   filter: /^\d+\.\d+-alpine$/
-  next-version: 13.0-alpine
 python:
   component-type: docker-image
   current-version: 3.8.0-alpine3.10
