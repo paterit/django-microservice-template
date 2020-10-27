@@ -2,6 +2,7 @@ SECRET_KEY==ol$^&d*^9eh)=&!qn4w5a!f+_ctgai7*agx@nd&st&oq3^3to
 DB_NAME=postgres
 DB_USER=postgres
 DB_PASS=postgres
+POSTGRES_PASSWORD=postgres
 DB_SERVICE=postgres
 DB_PORT=5432
 

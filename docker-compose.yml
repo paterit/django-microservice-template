@@ -75,6 +75,7 @@ services:
       - web-logs
 
   db:
+    env_file: ./{{ project_name }}-web/env
     image: "{{ project_name }}-db:1.0.1"
     container_name: "{{ project_name }}-db"
     build:
