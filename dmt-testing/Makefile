@@ -213,9 +213,9 @@ test-remote:
 
 ## Get source from github and run in on local docker-machine with local CI/CD
 test-git:
-	make --no-print-directory clean-docker-machine
+	make --no-print-directory clean-docker-machine-pre
 	make --no-print-directory all-git-docker-machine
-	make --no-print-directory clean-docker-machine
+	make --no-print-directory clean-docker-machine-post
 	@echo "\033[1;32mGreat! Docker-machine version from git works!\033[0m"
 
 ## Run all tests
