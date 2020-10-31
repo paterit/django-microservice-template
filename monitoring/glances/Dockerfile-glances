@@ -1,5 +1,5 @@
-FROM nicolargo/glances:v2.11.1
+FROM nicolargo/glances:latest
 LABEL "application"="{{ project_name }}-monitoring-agent"
 RUN mkdir -p /etc/glances  
 ADD glances.conf /etc/glances
-CMD python -m glances -C /glances/conf/glances.conf $GLANCES_OPT
+CMD python3 -m glances -C /glances/conf/glances.conf $GLANCES_OPT

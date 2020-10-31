@@ -61,14 +61,14 @@ elk:
   next-version: '793'
 glances:
   component-type: docker-image
-  current-version: 2.11.1
+  current-version: latest
   docker-repo: nicolargo
   files:
   - monitoring/glances/Dockerfile-glances
   - cicd/copy_docker_images_to_machine.sh
   - cicd/pull_base_docker_images.sh
-  filter: /^v\d+\.\d+\.\d+$/
-  next-version: 2.11.1
+  filter: /skip_this_as_it_is_latest/
+  next-version: latest
 grafana_graphite:
   component-type: docker-image
   current-version: latest
