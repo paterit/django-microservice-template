@@ -60,7 +60,18 @@ run-local:
 
 
 ## Clean code, docker machine and virtualen
-clean-docker-machine:
+clean-docker-machine-pre:
+	rm -rf ./dmt-template
+	rm -rf ./virtenv
+	rm -rf ./$(PROJECT_NAME)
+	make virtualenv-pip
+	make copy-current-dir
+	make create-project
+	make clean-docker-machine-post
+
+
+## Clean code, docker machine and virtualen
+clean-docker-machine-post:
 	-docker-machine start $(PROJECT_NAME)-cicd
 	-make -C $(PROJECT_NAME) clean-docker-machine-images
 	-docker-machine stop $(PROJECT_NAME)-cicd
@@ -188,9 +199,9 @@ test-dev:
 
 ## Copy local source and run in on local docker-machine with local CI/CD
 test-docker-machine:
-	make --no-print-directory clean-docker-machine
+	make --no-print-directory clean-docker-machine-pre
 	make --no-print-directory all-docker-machine
-	make --no-print-directory clean-docker-machine
+	make --no-print-directory clean-docker-machine-post
 	@echo "\033[1;32mGreat! Docker-machine version works!\033[0m"
 
 ## Copy local source and run in on remote docker host with local CI/CD
