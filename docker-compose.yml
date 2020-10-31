@@ -155,7 +155,8 @@ services:
         application: "{{ project_name }}-docker-console"
       ports:
         - "9000:9000"
-      command: -H unix:///var/run/docker.sock
+      # portainer will shut down without admin pass set, it is 'admin' password
+      command: -H unix:///var/run/docker.sock --admin-password='$$2y$$05$$HZbyaSOGIUoJmg4pOgJ/hOw66eiEP.iZdD5WpFIKJx4A0A22UEPvO'
       volumes:
         - /var/run/docker.sock:/var/run/docker.sock
         - portainer_data:/data
