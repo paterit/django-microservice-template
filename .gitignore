@@ -1,4 +1,5 @@
 virtenv
+.venv
 __pycache__
 db.sqlite3
 TODO
@@ -8,3 +9,4 @@ TODO
 /dmt-testing/dmt-template
 TODO.flow
 TODO.docs
+.vscode/settings.json

@@ -27,7 +27,7 @@ def on_locust_init(web_ui, **kw):
         web_ui.environment.runner.dmt_test_url = request.args.get("test_url", None)
         web_ui.environment.runner.dmt_logged_user = request.args.get("logged_user", NOT_LOGGED_USER)
 
-        web_ui.environment.runner.start_hatching(user_count, hatch_rate)
+        web_ui.environment.runner.start(user_count, hatch_rate)
         logging.info("DMT: Hatching request started for url: " + web_ui.environment.runner.dmt_test_url)
 
         return "OK"

@@ -32,18 +32,19 @@ You need Linux machine (tested on Ubuntu 18.04) with [docker engine](https://doc
 
 Dependencies:
 
-    Docker >= 17.12
-    Docker-compose >= 1.22
-    Django >= 2.1.2
-    Git >= 2.10
+    Docker >= 19.03
+    Docker-compose >= 1.27
+    Django >= 3.1
+    Git >= 2.25
 
 How to install docker see [here](https://docs.docker.com/engine/installation/).
 
 Configuration for docker-compose and Django:
 
-    virtualenv -p /usr/bin/python3 virtenv
-    source ./virtenv/bin/activate
-    pip install Django==2.1.2 docker-compose==1.22 GitPython==2.1.3 requests==2.18.4
+    python3 -m venv .venv
+    source .venv/bin/activate
+    python -m pip install Django==3.1 docker-compose==1.27 GitPython==3.1 requests==2.20
+    python -m pip install --upgrade pip 
     
 To create source code for your service based on this template you need to run:
 
