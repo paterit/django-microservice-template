@@ -1,4 +1,4 @@
-FROM sebp/elk:792
+FROM sebp/elk:793
 # https://github.com/spujadas/elk-docker
 LABEL "application"="{{ project_name }}-logs"
 ADD ./logstash.conf/30-output.conf /etc/logstash/conf.d/30-output.conf

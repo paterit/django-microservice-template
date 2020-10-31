@@ -49,7 +49,7 @@ docker-compose:
   next-version: 1.27.4
 elk:
   component-type: docker-image
-  current-version: '792'
+  current-version: '793'
   docker-repo: sebp
   exclude-versions:
   - 740
@@ -58,7 +58,7 @@ elk:
   - cicd/copy_docker_images_to_machine.sh
   - cicd/pull_base_docker_images.sh
   filter: /^\d{3}$/
-  next-version: '792'
+  next-version: '793'
 glances:
   component-type: docker-image
   current-version: 2.11.1
