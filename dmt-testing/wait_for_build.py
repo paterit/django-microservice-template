@@ -33,7 +33,7 @@ while (True):
     result = r.json()["builds"][0]["results"]
     state = r.json()["builds"][0]["state_string"]
 
-    if (state in ["building", "acquiring locks", "starting", "created"] or state is None):
+    if (state in ["building", "acquiring locks", "starting", "created", "preparing worker"] or state is None):
         print("Current build status is: '%s' ..." % (state))
         time.sleep(INTERVAL)
     else:
