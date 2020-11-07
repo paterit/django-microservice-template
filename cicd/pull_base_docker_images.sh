@@ -9,7 +9,7 @@ unset DOCKER_MACHINE_IP
 
 docker pull python:3.9.0-alpine3.12
 docker pull alpine:3.8
-docker pull nginx:1.19.3-alpine
+docker pull nginx:1.19.4-alpine
 docker pull sebp/elk:793
 docker pull gliderlabs/logspout:v3.2.12
 docker pull postgres:13.0-alpine
