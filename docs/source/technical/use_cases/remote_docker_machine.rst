@@ -11,10 +11,20 @@ Set up Remote Docker Machine
 Create Remote Docker Machine (RDM) ready for secure connections
 ---------------------------------------------------------------
 
-As an example we will use different than your workstation Ubunut server available in the same local network, but this solution should work for any machine that can be reach with its IP address.
-First of all we need to verify if docker machinie is ready to accept encrypted http connections. If this is a fresh Ubuntu instalation make sure that `this post-installation steps for Linux <https://docs.docker.com/install/linux/linux-postinstall/#configuring-remote-access-with-systemd-unit-file>`_ are done. 
+As an example we will use different than your workstation Ubunut server available in the same local network, but this solution 
+should work for any machine that can be reach with its IP address.
+First of all we need to verify if docker machinie is ready to accept encrypted http connections. 
+If this is a fresh Ubuntu instalation make sure 
+that `this post-installation steps for Linux <https://docs.docker.com/install/linux/linux-postinstall/#configuring-remote-access-with-systemd-unit-file>`_ are done. 
 
 To make the host available from any machine in your network in the file ``/lib/systemd/system/docker.service`` instead of ``-H tcp://127.0.0.1:2375`` put ``-H tcp://0.0.0.0:2375``.
+
+Flush changes and restart docker:
+
+.. code-block:: bash
+
+    sudo systemctl daemon-reload
+    sudo systemctl restart docker
 
 To test if your RDM is open to http connections (not encrypted yet), on your workstation in the new terminal window run:
 
@@ -35,11 +45,23 @@ Prepare certificates on you RDM
 
 Follow `the instruction <https://docs.docker.com/engine/security/https/>`_ to generate your certificates.
 
+You can also use `certs generator <https://github.com/paterit/ssl-server-client>`_ - take a look at ``make help`` output there.
+
 
 Configure your docker daemon on RDM to accept only secure http connections
 --------------------------------------------------------------------------
 
-Next step is to configure yur docker host to accept only secure http connections. Following `this doc <https://docs.docker.com/engine/security/https/>`_ and using certificates generated in previous step, in the config file ``/lib/systemd/system/docker.service`` add to ``ExecStart`` command parameters ``--tlsverify --tlscacert=ca.pem --tlscert=server-cert.pem --tlskey=server-key.pem`` and make sure that path to the cert files are correct.
+Next step is to configure yur docker host to accept only secure http connections. Following `this doc <https://docs.docker.com/engine/security/https/>`_ 
+and using certificates generated in previous step, in the config file ``/lib/systemd/system/docker.service`` 
+add to ``ExecStart`` command parameters ``--tlsverify --tlscacert=ca.pem --tlscert=server-cert.pem --tlskey=server-key.pem`` 
+and make sure that path to the cert files are correct.
+
+Flush changes and restart docker:
+
+.. code-block:: bash
+
+    sudo systemctl daemon-reload
+    sudo systemctl restart docke
 
 On your docker client machine run this code to verify the secure connetion:
 
