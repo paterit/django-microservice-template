@@ -94,6 +94,14 @@ CI/CD worker acts as a docker client for your RDM so copy your ca.pem, key.pem a
 Test if RDM works
 -----------------
 
+Go to ``dmt-testing`` directory and run:
+
+.. code-block:: text
+
+  make test-remote
+
+During test procedure variable defined in ``remote.docker.env`` file will be copied into ``cicd/cicd.docker.env`` file which is used by CI/CD worker to determine docker machine
+on which DMT will be installed and tested (trough ``env_file`` setting for ``cicd-worker`` service definition in docker-compose.cicd.yml).
 
 
 
