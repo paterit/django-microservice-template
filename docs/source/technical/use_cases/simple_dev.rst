@@ -21,7 +21,7 @@ Locating problem with build on docker-machine (via buildbot)
   set +a
 
 - now you can use make commands like ``make logs-web`` to see logs for web container
-- when you are done, don't forget to uset DOCKER envs, by
+- when you are done, don't forget to unset DOCKER envs, by
 
 .. code-block:: bash
 
@@ -32,7 +32,7 @@ Adding new sbe test
 
 - add new example.feature file in ``testing/features`` folder
 
-- run ``make sbe`` and grab proposed code snipets into ``testing/features/steps/example.py``
+- run ``make sbe`` and grab proposed code snippets into ``testing/features/steps/example.py``
 
 - rework the code and the test until ``make sbe`` produce only green output
 
@@ -40,7 +40,7 @@ Adding new sbe test
 Adding new make commands as a new task in Buildbot builder
 **********************************************************
 
-- add new command into ``Makefile`` in the main folder
+- add a new command into ``Makefile`` in the main folder
 
 .. code-block:: bash
   :linenos:
@@ -77,5 +77,5 @@ To make changes in Makefile effective in ``CICD`` context we need to rebuild cic
     source ../virtenv/bin/activate #not needed if already docker-compose is available
     make run-cicd
 
-Now when you force in Buildbot web console to run Full rebuid builder the new task will be fired.
+Now when you force in Buildbot web console to run Full rebuild builder the new task will be fired.
 

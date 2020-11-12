@@ -11,10 +11,10 @@ Set up Remote Docker Machine
 Create Remote Docker Machine (RDM) ready for secure connections
 ---------------------------------------------------------------
 
-As an example we will use different than your workstation Ubunut server available in the same local network, but this solution 
+As an example we will use different than your workstation Ubuntu server available in the same local network, but this solution 
 should work for any machine that can be reach with its IP address.
-First of all we need to verify if docker machinie is ready to accept encrypted http connections. 
-If this is a fresh Ubuntu instalation make sure 
+First of all we need to verify if docker machine is ready to accept encrypted http connections. 
+If this is a fresh Ubuntu installation make sure 
 that `this post-installation steps for Linux <https://docs.docker.com/install/linux/linux-postinstall/#configuring-remote-access-with-systemd-unit-file>`_ are done. 
 
 To make the host available from any machine in your network in the file ``/lib/systemd/system/docker.service`` instead of ``-H tcp://127.0.0.1:2375`` put ``-H tcp://0.0.0.0:2375``.
@@ -35,9 +35,9 @@ To test if your RDM is open to http connections (not encrypted yet), on your wor
     # export DOCKER_HOST=your.remote.docker.IP
     # in my case it would be
     export DOCKER_HOST=192.168.100.34
-    # Now as we are in the context of remoted DOCKER_HOST, runing
+    # Now as we are in the context of remoted DOCKER_HOST, running
     docker images
-    # will show empty list if your Ubuntu server is brand new or some other list if the server was already used for docker
+    # will show an empty list if your Ubuntu server is brand new or some other list if the server was already used for docker
 
 
 Prepare certificates on you RDM
@@ -100,7 +100,7 @@ Go to ``dmt-testing`` directory and run:
 
   make test-remote
 
-During test procedure variable defined in ``remote.docker.env`` file will be copied into ``cicd/cicd.docker.env`` file which is used by CI/CD worker to determine docker machine
+During the test procedure variable defined in ``remote.docker.env`` file will be copied into ``cicd/cicd.docker.env`` file which is used by CI/CD worker to determine docker machine
 on which DMT will be installed and tested (trough ``env_file`` setting for ``cicd-worker`` service definition in docker-compose.cicd.yml).
 
 
