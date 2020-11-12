@@ -10,7 +10,7 @@ Installation and configuration
 Installation
 ************
 
-Below is description how to use it in local development and production.
+Below is a description how to use it in local development and production.
 
 Requirements for ElasticSearch to work.
 ---------------------------------------
@@ -31,7 +31,7 @@ To build and run type::
 
     make
 
-This will build your base images then with docker compose build and start all your containers.
+This will build your base images then with docker-compose build and start all your containers.
 
 To let docker-compose to build and run what is needed run::
 
@@ -50,7 +50,7 @@ TODO
 Developing changes
 ******************
 
-When all docker containers are up and running, what can be checked by runing::
+When all docker containers are up and running, what can be checked by running::
 
   docker ps
 
@@ -92,7 +92,7 @@ to reload changes in Locust run::
 Short-cuts
 **********
 
-Makefile basicly covers all docker and docker-compose commands. Some of them can be useful like::
+Makefile basically covers all docker and docker-compose commands. Some of them can be useful like::
 
   make clean-apps
 
@@ -114,7 +114,7 @@ To see all make commands with short description just run::
 Docker shell
 ------------
 
-To easily open shell for conteiners you can use::
+To easily open the shell for containers you can use::
 
     make shell-web
     make shell-https
@@ -128,7 +128,7 @@ to see all shell make commands you can run ``make help | grep shell-``
 Logs
 *******************
 
-Logs from django and gunicorn are stored in volume container and written to /opt/{{ project_name }}/logs/web folder. You can access them by::
+Logs from Django and gunicorn are stored in volume container and written to /opt/{{ project_name }}/logs/web folder. You can access them by::
 
     make logs-web
 
@@ -136,8 +136,8 @@ Logs for Nginx are stored in volume container https-logs. You can access them by
 
     make logs-https
 
-Both web application's logs and Nginx' logs are transported to log collector container (ELK stack). You can analyze and watch them through `Kibana web intrface <http://127.0.0.1:5601/>`_.
-Idea of delivering logs to logs collector is to have volume container for each application which logs should be transmitted to logs collector. Application is writing the logs to that container and in the same time the logs are delivered to stdout to transfer them to docker. From docker logs are shipped to Logstash with Logspout containter.
+Both web application's logs and Nginx' logs are transported to logs collector container (ELK stack). You can analyze and watch them through `Kibana web interface <http://127.0.0.1:5601/>`_.
+The idea of delivering logs to the logs collector is to have a volume container for each application which logs should be transmitted to the logs collector. Application is writing the logs to that container and in the same time the logs are delivered to stdout to transfer them to docker. From docker logs are shipped to Logstash with Logspout container.
 
 
 Monitoring
@@ -156,26 +156,26 @@ Performance testing
 
 Performance testing is done with the `Locust <https://locust.io>`_ tool. To build your own tests change the file ``locustfile.py`` in ``perf-testing`` folder.
 
-Current configuration allows you to define basic performance tests as SBE tests with Behave. Take a look at ``testing/features/perf.feature`` file to see how it works.
+The current configuration allows you to define basic performance tests as SBE tests with Behave. Take a look at ``testing/features/perf.feature`` file to see how it works.
 
 To run performance tests you may run::
 
   make sbe-perf
 
-Container with Locust will be reeboted (Locust's problem with hungry memory allocation) and SBE test will be run. If you go to Grafana ("Performance testing" dashboard) you can see basic statistics regarding your tests like: response time, requests per second, CPU and memory usage on containers.
+Container with Locust will be rebooted (Locust's problem with hungry memory allocation) and SBE test will be run. If you go to Grafana ("Performance testing" dashboard) you can see basic statistics regarding your tests like: response time, requests per second, CPU and memory usage on containers.
 
 
 Local CI/CD with local docker-machine or remote docker host
 ***********************************************************
 
-You can set up docker-machine and docker containers with buildbot which
+You can set up docker-machine and Docker containers with buildbot which
 will allow you to run and test your code with in docker-machine. Start
 with::
 
     cd {{ project_name }}
     make dev-docker-machine
 
-To check if it runs propely verify if new containters are runing by
+To check if it runs properly verify if new containers are running by
 typing::
 
     docker ps
@@ -197,13 +197,12 @@ You should see among others machines one with the name::
 Now you are able to use Buildbot through its `web interface <http://localhost:8010/>`__. There are prepared `builders <http://localhost:8010/#/builders>`__ that allows to build,
 run and test all containers in docker-machine. 
 
-For the first time you have to run at least once "Full rebuild" builder. While runing it for
+For the first time you have to run at least once "Full rebuild" builder. While running it for
 the first time couple GBs of data will be downloaded so it make take a
-while. All base images for docker need to be downloaded to docker
-machine (just to name a few: Python, PostgreSQL, ELK, Nginx).
+while. All base images for docker need to be downloaded to docker-machine (just to name a few: Python, PostgreSQL, ELK, Nginx).
 
-If by any chance you already have those images localy on your machine you can use
-slightly faster way to copy them to your docker-machine. Simple bash
+If by any chance you already have those images locally on your machine you can use
+a slightly faster way to copy them to your docker-machine. Simple bash
 script to do that is stored in yor\_service project dir in the path:
 
 
@@ -229,11 +228,11 @@ If instead of `make dev-docker-machine` you run::
 
     make remote
 
-then your services will be built and run on remote docker host (as defined in remote.docker.env). To use secure connection to your remote docker host from CI/CD put your remote docker TLS certificates (ca.pem, cert.pem, key.pem) into `cicd/worker/certs` folders. Don'f forget to set in remote.docker.env for the DOCKER_MACHINE_NAME value aligned with your certificates. If you don't uese secure connection to your remote machine, leave in the remote.docker.env only DOCKER_HOST value.
+then your services will be built and run on a remote docker host (as defined in remote.docker.env). To use a secure connection to your remote docker host from CI/CD put your remote docker TLS certificates (ca.pem, cert.pem, key.pem) into `cicd/worker/certs` folders. Don't forget to set in remote.docker.env for the DOCKER_MACHINE_NAME value aligned with your certificates. If you don't use secure connection to your remote machine, leave in the remote.docker.env only DOCKER_HOST value.
 
 To create certificates on you remote docker host you can use `this tool <https://github.com/paulczar/omgwtfssl>`__ .
 
-`Here <https://docs.docker.com/engine/security/https/>`__ you can find more on securing connection to your docker host.
+`Here <https://docs.docker.com/engine/security/https/>`__ you can find more on securing the connection to your docker host.
 
 In order to have ElasticSearch working you have to set on your remote docker OS host
 
@@ -241,10 +240,10 @@ In order to have ElasticSearch working you have to set on your remote docker OS 
 
   sudo sysctl -w vm.max_map_count=262144
 
-Docker-engine context for cicd docker-machine
+The docker-engine context for cicd docker-machine
 ---------------------------------------------
 
-To be able to call docker commands in the context of the docker-engine located on your {{ project_name }}-cicd docker-machine you need to set up propely environment variable for DOCKER. You can do it by loading environment variables defined in `docker-machine.docker.env` file:
+To be able to call docker commands in the context of the docker-engine located on your {{ project_name }}-cicd docker-machine you need to set up properly environment variable for DOCKER. You can do it by loading environment variables defined in `docker-machine.docker.env` file:
 
 ::
 
@@ -252,9 +251,10 @@ To be able to call docker commands in the context of the docker-engine located o
     . ./docker-machine.docker.env
     set +a
 
-be careful as for now all docker commands will be exectued on the docker engine located in your {{ project_name }}-cicd docker-machine.
+be careful as for now all docker commands will be executed on the docker engine located in your {{ project_name }}-cicd docker-machine.
 
-Fore remote docker host you can use `remote.docker.env` file:
+Fore remote docker host you can use `remote.docker.env` file. Just remember that ``DOCKER_CERT_PATH`` in this file needs to be valid absolute
+path to certs on the remote docker host.
 
 ::
     set -a
@@ -301,23 +301,23 @@ Tests are tagged with:
 
 - @smoketest - those should be test that run quickly and allows to verify if all main parts are alive and connected
 - @perf - performance tests, usually not that fast
-- @slow - any test that takes more then 10 secs to exectue
+- @slow - any test that takes more then 10 secs to execute
 - @standard - when run make sbe all tests with @standard and @smoketest are run
 
-How to write new SBE test with Behave
+How to write a new SBE test with Behave
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-In the folder ``testing/features`` you will find files that holds test scenarios for different features. To add new one:
+In the folder ``testing/features`` you will find files that holds test scenarios for different features. To add a new one:
 
-1. Create new file, eg ``next.features`` in the folder ``testing/features``
+1. Create a new file, eg ``next.features`` in the folder ``testing/features``
 #. Put feature description and scenario in that file
 #. Run::
 
     make sbe
 
-#. Behave will print code snipet to use for @given @when @then to put in your ``steps`` files
+#. Behave will print code snippet to use for @given @when @then to put in your ``steps`` files
 #. Crate new file ``next.py`` int folder ``testing/features/steps``
-#. Implement each steps
+#. Implement each step
 #. Run::
 
     make sbe
