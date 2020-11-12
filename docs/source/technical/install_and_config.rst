@@ -31,7 +31,7 @@ To build and run type::
 
     make
 
-This will build your base images then with docker-compose build and start all your containers.
+This will build your base images then with the docker-compose build and start all your containers.
 
 To let docker-compose to build and run what is needed run::
 
@@ -136,7 +136,7 @@ Logs for Nginx are stored in volume container https-logs. You can access them by
 
     make logs-https
 
-Both web application's logs and Nginx' logs are transported to logs collector container (ELK stack). You can analyze and watch them through `Kibana web interface <http://127.0.0.1:5601/>`_.
+Both web application's logs and Nginx' logs are transported to the logs collector container (ELK stack). You can analyze and watch them through `Kibana web interface <http://127.0.0.1:5601/>`_.
 The idea of delivering logs to the logs collector is to have a volume container for each application which logs should be transmitted to the logs collector. Application is writing the logs to that container and in the same time the logs are delivered to stdout to transfer them to docker. From docker logs are shipped to Logstash with Logspout container.
 
 
@@ -162,7 +162,7 @@ To run performance tests you may run::
 
   make sbe-perf
 
-Container with Locust will be rebooted (Locust's problem with hungry memory allocation) and SBE test will be run. If you go to Grafana ("Performance testing" dashboard) you can see basic statistics regarding your tests like: response time, requests per second, CPU and memory usage on containers.
+Container with Locust will be rebooted (Locust's problem with hungry memory allocation) and the SBE test will be run. If you go to Grafana ("Performance testing" dashboard) you can see basic statistics regarding your tests like: response time, requests per second, CPU and memory usage on containers.
 
 
 Local CI/CD with local docker-machine or remote docker host
@@ -228,7 +228,7 @@ If instead of `make dev-docker-machine` you run::
 
     make remote
 
-then your services will be built and run on a remote docker host (as defined in remote.docker.env). To use a secure connection to your remote docker host from CI/CD put your remote docker TLS certificates (ca.pem, cert.pem, key.pem) into `cicd/worker/certs` folders. Don't forget to set in remote.docker.env for the DOCKER_MACHINE_NAME value aligned with your certificates. If you don't use secure connection to your remote machine, leave in the remote.docker.env only DOCKER_HOST value.
+then your services will be built and run on a remote docker host (as defined in remote.docker.env). To use a secure connection to your remote Docker host from CI/CD put your remote docker TLS certificates (ca.pem, cert.pem, key.pem) into `cicd/worker/certs` folders. Don't forget to set in remote.docker.env for the DOCKER_MACHINE_NAME value aligned with your certificates. If you don't use a secure connection to your remote machine, leave in the remote.docker.env only DOCKER_HOST value.
 
 To create certificates on you remote docker host you can use `this tool <https://github.com/paulczar/omgwtfssl>`__ .
 
@@ -241,9 +241,9 @@ In order to have ElasticSearch working you have to set on your remote docker OS 
   sudo sysctl -w vm.max_map_count=262144
 
 The docker-engine context for cicd docker-machine
----------------------------------------------
+-------------------------------------------------
 
-To be able to call docker commands in the context of the docker-engine located on your {{ project_name }}-cicd docker-machine you need to set up properly environment variable for DOCKER. You can do it by loading environment variables defined in `docker-machine.docker.env` file:
+To be able to call docker commands in the context of the docker-engine located on your {{ project_name }}-cicd docker-machine you need to set up properly environment variable for DOCKER. You can do it by loading environment variables defined in the `docker-machine.docker.env` file:
 
 ::
 
@@ -253,10 +253,11 @@ To be able to call docker commands in the context of the docker-engine located o
 
 be careful as for now all docker commands will be executed on the docker engine located in your {{ project_name }}-cicd docker-machine.
 
-Fore remote docker host you can use `remote.docker.env` file. Just remember that ``DOCKER_CERT_PATH`` in this file needs to be valid absolute
+Fore remote docker host you can use the `remote.docker.env` file. Just remember that ``DOCKER_CERT_PATH`` in this file needs to be valid absolute
 path to certs on the remote docker host.
 
 ::
+
     set -a
     . ./remote.docker.env
     set +a
@@ -305,7 +306,7 @@ Tests are tagged with:
 - @standard - when run make sbe all tests with @standard and @smoketest are run
 
 How to write a new SBE test with Behave
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 In the folder ``testing/features`` you will find files that holds test scenarios for different features. To add a new one:
 
@@ -349,7 +350,7 @@ If you change documentation (``docs/source folder``) you can rebuild it in the c
 
   make upload-docs
 
-Source files of the docs are where code source lives in folder ``docs/source``. While running ``make upload-docs`` the docs source files are copied to {{ project_name }}-docs container where are compiled by Sphinx to html and then copied to Nginx to be served as a static files.
+Source files of the docs are where code source lives in folder ``docs/source``. While running ``make upload-docs`` the docs source files are copied to {{ project_name }}-docs container where are compiled by Sphinx to HTML and then copied to Nginx to be served as static files.
 
 
 .. toctree::
