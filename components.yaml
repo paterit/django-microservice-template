@@ -130,7 +130,7 @@ portainer:
   next-version: 1.24.1
 postgres:
   component-type: docker-image
-  current-version: 13.0-alpine
+  current-version: 13.1-alpine
   docker-repo: library
   files:
   - cicd/db/Dockerfile
@@ -139,7 +139,7 @@ postgres:
   - cicd/copy_docker_images_to_machine.sh
   - cicd/pull_base_docker_images.sh
   filter: /^\d+\.\d+-alpine$/
-  next-version: 13.0-alpine
+  next-version: 13.1-alpine
 python:
   component-type: docker-image
   current-version: 3.9.0-alpine3.12
