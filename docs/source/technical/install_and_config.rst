@@ -254,7 +254,7 @@ To be able to call docker commands in the context of the docker-engine located o
 be careful as for now all docker commands will be executed on the docker engine located in your {{ project_name }}-cicd docker-machine.
 
 Fore remote docker host you can use the `remote.docker.env` file. Just remember that ``DOCKER_CERT_PATH`` in this file needs to be valid absolute
-path to certs on the remote docker host.
+path to certs on the client machine docker. For CI/CD worker ``DOCKER_CERT_PATH`` is overwritten in docker-compose file.
 
 ::
 

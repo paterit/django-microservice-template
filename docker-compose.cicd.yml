@@ -42,6 +42,7 @@ services:
     env_file:
         - ./cicd/cicd.docker.env
     environment:
+        DOCKER_CERT_PATH: //buildbot/certs
         BUILDMASTER: {{ project_name }}-cicd-master
         BUILDMASTER_PORT: 9989
         WORKERNAME: {{ project_name }}-worker
