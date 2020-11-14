@@ -33,7 +33,8 @@ all-prod:
 ## Build and run containters on the remote docker machine
 remote:
 	cp ./remote.docker.env ./cicd/cicd.docker.env
-	make cicd-local
+	cat ./remote.docker.env >> ./{{ project_name }}-web/env
+	make cicd-local-remote
 
 ## Set local docker-machine, creates Buildbot containers
 dev-docker-machine:
@@ -45,6 +46,14 @@ cicd-local:
 	echo "DOCKER_HOST: " $(DOCKER_HOST) "TARGET: " $(TARGET)
 	make chmod-x
 	make run-cicd
+	make cicd-wait-for-master
+	make cicd-initial-commit
+	make success-cicd
+
+cicd-local-remote:
+	echo "DOCKER_HOST: " $(DOCKER_HOST) "TARGET: " $(TARGET)
+	make chmod-x
+	make run-cicd-remote
 	make cicd-wait-for-master
 	make cicd-initial-commit
 	make success-cicd
@@ -149,6 +158,9 @@ run:
 run-cicd:
 	echo "DOCKER_HOST: " $(DOCKER_HOST) "TARGET: " $(TARGET)
 	-docker-machine start {{ project_name }}-cicd
+	docker-compose -f docker-compose.cicd.yml up -d
+run-cicd-remote:
+	echo "DOCKER_HOST: " $(DOCKER_HOST) "TARGET: " $(TARGET)
 	docker-compose -f docker-compose.cicd.yml up -d
 ## Run all applications' containers with production dockr-compose file
 run-prod:
@@ -286,6 +298,7 @@ kill-cicd:
 
 ## Stop all applications' containers (without Buildbot)
 stop:
+	echo "DOCKER_HOST: " $(DOCKER_HOST) "TARGET: " $(TARGET)
 	docker-compose stop
 
 #start docker containers

@@ -28,6 +28,7 @@ SECRET_KEY = '8fg!k-6-eps128x4%o6k3rhkrgm8+7a14)hcwo%_luvma7f-is'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 DOCKER_MACHINE_IP = os.environ.get('DOCKER_MACHINE_IP', 'localhost')
+DOCKER_HOST = os.environ.get('DOCKER_HOST', 'localhost').split(':')[0]
 
 ALLOWED_HOSTS = [gethostname(), gethostbyname(gethostname()),
                  '{{ project_name }}-web',
@@ -35,7 +36,7 @@ ALLOWED_HOSTS = [gethostname(), gethostbyname(gethostname()),
                  '{{ project_name }}-testing',
                  '{{ project_name }}-perf'
                  'web', 'https', 'testing', 'perf'
-                 'localhost','127.0.0.1', DOCKER_MACHINE_IP]
+                 'localhost','127.0.0.1', DOCKER_MACHINE_IP, DOCKER_HOST]
 
 LOGIN_REDIRECT_URL = '/admin/'
 
