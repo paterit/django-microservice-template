@@ -30,7 +30,7 @@ while [ $i -lt $MAXRETR ]; do
         fi
     fi
     i=$[$i+1]
-    sleep 0.5
+    sleep 2
 done
 
 date '+%Y-%m-%d %H-%M-%S.%N'

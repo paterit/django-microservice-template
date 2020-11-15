@@ -13,6 +13,9 @@ services:
       environment:
         # for this container Logspout will ignore any log entries 
         LOGSPOUT: ignore
+        ES_HEAP_SIZE: "2g"
+        LS_HEAP_SIZE: "1g"
+        ES_CONNECT_RETRY: 100
       ports:
         - "5601:5601"
         - "9200:9200"
