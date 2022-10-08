@@ -74,7 +74,7 @@ To make changes in Makefile effective in ``CICD`` context we need to rebuild cic
     :linenos:
 
     make clean-cicd
-    source ../virtenv/bin/activate #not needed if already docker-compose is available
+    source ../virtenv/bin/activate #not needed if already docker composeis available
     make run-cicd
 
 Now when you force in Buildbot web console to run Full rebuild builder the new task will be fired.

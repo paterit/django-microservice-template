@@ -31,9 +31,9 @@ To build and run type::
 
     make
 
-This will build your base images then with the docker-compose build and start all your containers.
+This will build your base images then with the docker composebuild and start all your containers.
 
-To let docker-compose to build and run what is needed run::
+To let docker composeto build and run what is needed run::
 
     make run
 
@@ -92,7 +92,7 @@ to reload changes in Locust run::
 Short-cuts
 **********
 
-Makefile basically covers all docker and docker-compose commands. Some of them can be useful like::
+Makefile basically covers all docker and docker composecommands. Some of them can be useful like::
 
   make clean-apps
 
@@ -254,7 +254,7 @@ To be able to call docker commands in the context of the docker-engine located o
 be careful as for now all docker commands will be executed on the docker engine located in your {{ project_name }}-cicd docker-machine.
 
 Fore remote docker host you can use the `remote.docker.env` file. Just remember that ``DOCKER_CERT_PATH`` in this file needs to be valid absolute
-path to certs on the client machine docker. For CI/CD worker ``DOCKER_CERT_PATH`` is overwritten in docker-compose file.
+path to certs on the client machine docker. For CI/CD worker ``DOCKER_CERT_PATH`` is overwritten in docker composefile.
 
 ::
 

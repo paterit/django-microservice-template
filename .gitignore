@@ -11,3 +11,4 @@ TODO.flow
 TODO.docs
 _build
 /cicd/worker/certs/
+.vscode/

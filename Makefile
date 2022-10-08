@@ -88,36 +88,36 @@ cicd-wait-for-master:
 #building docker images for each service
 ## Build DB containers
 build-db:
-	docker-compose build db
+	docker composebuild db
 build-data:
-	docker-compose build data
+	docker composebuild data
 ## Build WEB application containers
 build-web:
-	docker-compose build web
+	docker composebuild web
 ## Build containers for docs generation
 build-docs:
-	docker-compose build docs
+	docker composebuild docs
 ## Build Nginx container
 build-https:
-	docker-compose build https
+	docker composebuild https
 ## Build container for SBE tests
 build-testing:
-	docker-compose build testing
+	docker composebuild testing
 ## Build containers for ELK
 build-logs:
-	docker-compose build logs
+	docker composebuild logs
 ## Build containers for docker console
 build-docker-console:
-	docker-compose build docker-console
+	docker composebuild docker-console
 ## Build containers for monitoring agent
 build-monitoring-agent:
-	docker-compose build monitoring-agent
+	docker composebuild monitoring-agent
 ## Build containers for monitoring server
 build-monitoring-server:
-	docker-compose build monitoring-server
+	docker composebuild monitoring-server
 ## Build containers for performance testing
 build-perf:
-	docker-compose build perf
+	docker composebuild perf
 
 ## Build all applications' containers (without Buildbot)
 build: build-data build-db build-https build-web build-docs build-testing build-docker-console build-monitoring build-perf
@@ -125,49 +125,49 @@ build: build-data build-db build-https build-web build-docs build-testing build-
 #run docker images
 ## Run DB containers
 run-db:
-	docker-compose up -d data db
+	docker composeup -d data db
 ## Run WEB applicaton's containers
 run-web:
-	docker-compose up -d web
+	docker composeup -d web
 ## Run Nginx container
 run-https:
-	docker-compose up -d https
+	docker composeup -d https
 ## Run container for SBE testing
 run-testing:
-	docker-compose up -d testing
+	docker composeup -d testing
 ## Run container for ELK
 run-logs:
-	docker-compose up -d logs
+	docker composeup -d logs
 ## Run container for docker-console
 run-docker-console:
-	docker-compose up -d docker-console
+	docker composeup -d docker-console
 ## Run container for monitoring agent
 run-monitoring-agent:
-	docker-compose up -d monitoring-agent
+	docker composeup -d monitoring-agent
 ## Run container for monitoring server
 run-monitoring-server:
-	docker-compose up -d monitoring-server
+	docker composeup -d monitoring-server
 ## Run container for performance testing
 run-perf:
-	docker-compose up -d perf
+	docker composeup -d perf
 ## Run all applications' containers (without Buildbot)
 run:
 	echo "DOCKER_HOST: " $(DOCKER_HOST) "TARGET: " $(TARGET)
-	docker-compose up -d
+	docker compose up -d
 ## Run docker-machine and Buildbot containers
 run-cicd:
 	echo "DOCKER_HOST: " $(DOCKER_HOST) "TARGET: " $(TARGET)
 	-docker-machine start {{ project_name }}-cicd
-	docker-compose -f docker-compose.cicd.yml up -d
+	docker compose-f docker-compose.cicd.yml up -d
 run-cicd-remote:
 	echo "DOCKER_HOST: " $(DOCKER_HOST) "TARGET: " $(TARGET)
-	docker-compose -f docker-compose.cicd.yml up -d
+	docker compose-f docker-compose.cicd.yml up -d
 ## Run all applications' containers with production dockr-compose file
 run-prod:
 	echo "DOCKER_HOST: " $(DOCKER_HOST) "TARGET: " $(TARGET)
 	@echo "Start of make run-prod"
 	@date +%T.%N
-	docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d
+	docker compose-f docker-compose.yml -f docker-compose.prod.yml up -d
 	@date +%T.%N
 	@echo "End of make run-prod"
 
@@ -299,7 +299,7 @@ kill-cicd:
 ## Stop all applications' containers (without Buildbot)
 stop:
 	echo "DOCKER_HOST: " $(DOCKER_HOST) "TARGET: " $(TARGET)
-	docker-compose stop
+	docker composestop
 
 #start docker containers
 ## Start DB containers
@@ -330,10 +330,10 @@ start-perf:
 	docker start {{ project_name }}-perf
 ## Start all applications' containers (without Buildbot)
 start: 
-	docker-compose start
-## Start all applications' containers with docker-compose production file
+	docker composestart
+## Start all applications' containers with docker composeproduction file
 start-prod:
-	docker-compose -f docker-compose.yml -f docker-compose.prod.yml start
+	docker compose-f docker-compose.yml -f docker-compose.prod.yml start
 
 #remove docker containers
 ## Remove containers with data for DB
@@ -459,7 +459,7 @@ clean-perf: kill-perf rm-perf rmi-perf
 ## Remove containers and docker images for Buildbot
 clean-cicd: kill-cicd rm-cicd rmi-cicd
 clean-compose:
-	docker-compose rm -f
+	docker composerm -f
 ## Remove ophaned docker volumes
 clean-orphaned-volumes:
 	@docker volume ls -qf dangling=true | xargs -r docker volume rm
@@ -479,7 +479,7 @@ reload-cicd-db:
 	make stop-cicd
 	make rm-cicd-db
 	make rmi-cicd-db
-	docker-compose -f docker-compose.cicd.yml up -d
+	docker compose-f docker-compose.cicd.yml up -d
 	make cicd-wait-for-master
 
 ## Remove and recreate containers and docker iages for Nginx
@@ -574,7 +574,7 @@ sbe-smoke:
 	docker exec -t {{ project_name }}-testing behave --tags=smoketest  --no-skipped
 ## Run SBE performance tests
 sbe-perf:
-	docker-compose restart perf
+	docker composerestart perf
 	docker exec -t {{ project_name }}-testing behave --tags=perftest --no-skipped
 ## Run SBE preformance smoke tests
 sbe-perf-smoke:
@@ -617,7 +617,7 @@ dev-static:
 
 ## Docker compose down
 down:
-	docker-compose down
+	docker composedown
 
 ## Upload Buildbot config files and reload configuration
 cicd-upload:

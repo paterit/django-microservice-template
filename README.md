@@ -33,13 +33,13 @@ You need Linux machine (tested on Ubuntu 18.04) with [docker engine](https://doc
 Dependencies:
 
     Docker >= 19.03
-    Docker-compose >= 1.27
+    docker compose>= 1.27
     Django >= 3.1
     Git >= 2.25
 
 How to install docker see [here](https://docs.docker.com/engine/installation/).
 
-Configuration for docker-compose and Django:
+Configuration for docker composeand Django:
 
     python3 -m venv .venv
     source .venv/bin/activate
