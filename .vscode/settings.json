@@ -1,5 +1,6 @@
 {
     "git.ignoreLimitWarning": true,
     "python.pythonPath": "${workspaceFolder}/.venv/bin/python",
-    "restructuredtext.confPath": "${workspaceFolder}/docs/source"
+    "restructuredtext.confPath": "${workspaceFolder}/docs/source",
+    "esbonio.sphinx.confDir": "${workspaceFolder}/docs/source"
 }

@@ -26,7 +26,7 @@ prepare-local:
 
 ## Set virtualenv and install pip dependencies
 virtualenv-pip:
-	virtualenv -p /usr/bin/python3 virtenv
+	python3 -m venv virtenv
 	. virtenv/bin/activate; \
 	python --version; \
 	pip install --upgrade pip; \
